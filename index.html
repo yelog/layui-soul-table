@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>layui-select-multiple</title>
+    <title>layui-soul-table</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -11,57 +11,51 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="layui/css/layui.css" media="all"/>
     <link rel="stylesheet" href="animate.min.css" media="all"/>
-    <link rel="stylesheet" href="tablefilter.css" media="all"/>
+    <link rel="stylesheet" href="soulTable.css" media="all"/>
+    <style>
+        html,body{
+            height: 100%;
+            margin: 0;
+        }
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        .layui-tab-item {
+            height: calc(100vh - 121px);
+        }
+    </style>
 </head>
-<body class="childrenBody" style="padding: 10px">
-<h1>当前使用layui版本：2.3.0</h1>
-<table id="myTable" ></table>
-<script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</script>
+<body class="childrenBody">
+<h1>当前使用layui版本：v2.4.5</h1>
+<div class="layui-tab layui-tab-brief" lay-filter="tableClass">
+    <ul class="layui-tab-title">
+        <li class="layui-this">不分页</li>
+        <li>前端分页</li>
+        <li>后台分页</li>
+        <li>子表</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show"><iframe src="font-table.html"></iframe></div>
+        <div class="layui-tab-item"><iframe data-src="font-table-page.html"></iframe></div>
+        <div class="layui-tab-item"><iframe data-src="font-table-page.html"></iframe></div>
+        <div class="layui-tab-item"><iframe data-src="font-table-child.html"></iframe></div>
+    </div>
+</div>
 <script type="text/javascript" src="layui/layui.js"></script>
 <script>
-    // 自定义模块
-    layui.config({
-        base: 'ext/',   // 模块目录
-    }).extend({                         // 模块别名
-        soulTable: 'soulTable'
-    });
 
-    layui.use(['form', 'table','soulTable'], function () {
-        var table = layui.table,
-            soulTable = layui.soulTable,
+    layui.use(['element'], function () {
+        var element = layui.element
             $ = layui.$;
 
-        var myTable = table.render({
-            elem: '#myTable'
-            ,height: 500
-            ,limit: 30
-            ,page: true
-            ,cols: [[
-                {type: 'checkbox', fixed: 'left'}
-                ,{field:'poetry', title:'诗词', width:188}
-                ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
-                ,{field:'type', title:'类型', width:100, filter:true}
-                ,{field:'dynasty', title:'朝代',  width:150, filter:true}
-                ,{field:'sentences', title:'名句', width:400, filter:true}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
-            ]]
-            ,done: function () {
-                soulTable.render(myTable)
+        element.on('tab(tableClass)', function(){
+            var curIframe = $('.layui-tab-content>.layui-tab-item:eq('+$(this).index()+')>iframe');
+            if (!curIframe.attr('src')) {
+                curIframe.attr('src', curIframe.data('src'));
             }
         });
-        $.ajax({
-            url: 'data.json',
-            dataType: 'json',
-            success: function (res) {
-                myTable.reload({
-                    data: res.data
-                })
-
-            }
-        })
 
     })
 </script>
