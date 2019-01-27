@@ -459,26 +459,25 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                     conditionHtml.push(
                                         '<td>' +
                                         '   <div>' +
-                                        '      <input type="radio" lay-filter="conditionChange" name="' + id + '" value="and" title="与" ' + (!prefix || prefix == 'and' ? 'checked' : '') + '>' +
-                                        '      <input type="radio" lay-filter="conditionChange" name="' + id + '" value="or" title="或" ' + (prefix && prefix == 'or' ? 'checked' : '') + '>' +
+                                        '      <input type="checkbox" name="switch" lay-filter="soul-coondition-switch" lay-skin="switch" lay-text="与|或" ' + (!prefix || prefix === 'and' ? 'checked' : '') + '>' +
                                         '    </div>' +
                                         '</td>')
                                 }
-                                conditionHtml.push('<td><div class="layui-inline" ><select lay-filter="conditionChange">');
+                                conditionHtml.push('<td style="width: 110px;"><div class="layui-block" ><select lay-filter="conditionChange">');
                                 for (var key in conditionChangeItems) {
                                     conditionHtml.push('<option value="' + key + '" ' + (key === type ? 'selected' : '') + '>' + conditionChangeItems[key] + '</option>');
                                 }
                                 conditionHtml.push('</select></div></td>')
-                                conditionHtml.push('<td><div class="layui-inline" ><input class="layui-input value" value="' + (value || '') + '" placeholder="值" /></div></td>');
+                                conditionHtml.push('<td style="width: 110px;"><div class="layui-block" ><input class="layui-input value" value="' + (value || '') + '" placeholder="值" /></div></td>');
                                 conditionHtml.push('<td><i class="layui-icon layui-icon-delete del" style="font-size: 23px; color: #FF5722; cursor: pointer"></i></td>');
                                 conditionHtml.push('</tr>')
                             }
                         } else {
                             conditionHtml.push('<tr data-id="" data-type="eq" data-value="">'
                                 + '<td class="soul-condition-title">' + fieldMap[field] + '</td>'
-                                + '<td><div class="layui-inline" >' + selectStr
+                                + '<td style="width: 110px;"><div class="layui-block" >' + selectStr
                                 + '</div></td>'
-                                + '<td><div class="layui-inline" ><input class="layui-input value" placeholder="值" /></div></td>'
+                                + '<td style="width: 110px;"><div class="layui-block" ><input class="layui-input value" placeholder="值" /></div></td>'
                                 + '<td><i class="layui-icon layui-icon-delete del" style="font-size: 23px; color: #FF5722; cursor: pointer"></i></td>'
                                 + '</tr>');
                         }
@@ -488,6 +487,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             .html(conditionHtml.join(''))
                             .css({'top': $(this).offset().top, 'left': left})
                             .show().removeClass().addClass(animate + ' animated');
+
+                        $('.condition-table').on('click', function () {
+                            return false;
+                        })
 
                         // 新增与查询
                         $('#soul-condition' + tableId + ' button[data-type]').on('click', function () {
@@ -543,13 +546,12 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 // $tableHead.find('thead>tr>th[data-field="'+field+'"] .soul-table-filter').attr('soul-filter','true');
                                 var newId = groupId ? filterSo.id : filterSo.children[1].id;
                                 var newTr = '<tr data-id="' + newId + '"><td>' +
-                                    '<div>' +
-                                    '      <input type="radio" lay-filter="conditionChange" name="' + newId + '" value="and" title="与" checked>' +
-                                    '      <input type="radio" lay-filter="conditionChange" name="' + newId + '" value="or" title="或">' +
-                                    '    </div>' +
+                                    '   <div>' +
+                                    '      <input type="checkbox" name="switch" lay-filter="soul-coondition-switch" lay-skin="switch" lay-text="与|或" checked>' +
+                                    '   </div>' +
                                     '</td>'
-                                    + '<td><div class="layui-inline">' + selectStr + '</div></td>'
-                                    + '<td><div class="layui-inline" style="width: 100px"><input class="layui-input value" placeholder="值" /></div></td>'
+                                    + '<td style="width: 110px;"><div class="layui-block">' + selectStr + '</div></td>'
+                                    + '<td style="width: 110px;"><div class="layui-block"><input class="layui-input value" placeholder="值" /></div></td>'
                                     + '<td><i class="layui-icon layui-icon-delete del" style="font-size: 23px; color: #FF5722; cursor: pointer"></i></td></tr>';
 
                                 $('#soul-condition' + tableId + ">table>tbody").append(newTr)
@@ -568,7 +570,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 _this.soulReload(myTable);
                             }
                             form.render('select', 'orm');
-                            form.render('radio', 'orm');
+                            form.render('checkbox', 'orm');
                             return false;
                         });
 
@@ -581,7 +583,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         function updateTrWhere($tr) {
                             var id = $tr.data('id'),
                                 groupId = $('#soul-condition' + tableId).data('id'),
-                                prefix = $tr.find('input[type=radio]:checked').val(),
+                                prefix = $tr.find('input[lay-filter="soul-coondition-switch"]:checked').prop('checked')?'and':'or',
                                 type = $tr.find('select').val(),
                                 value = $tr.find('.value').val(),
                                 head = $('#soul-condition' + tableId).data('head') == 'true';
@@ -633,9 +635,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         })
 
                         // radio同步筛选条件
-                        form.on('radio(conditionChange)', function (data) {
+                        form.on('switch(soul-coondition-switch)', function (data) {
                             updateTrWhere($(this).parents('tr:eq(0)'));
-                        })
+                        });
 
                         // 删除当前行
                         $('#soul-condition' + tableId + ' .del').on('click', function () {
@@ -668,7 +670,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
                     }
                     form.render('select', 'orm');
-                    form.render('radio', 'orm');
+                    form.render('checkbox', 'orm');
 
                 });
 

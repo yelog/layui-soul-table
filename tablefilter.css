@@ -142,6 +142,7 @@
     line-height: 20px;
     color: #b2b2b2;
     cursor: pointer;
+    margin-left: 5px;
 }
 .soul-table-filter .soul-icon-filter-asc,.soul-table-filter .soul-icon-filter-desc {
     display: none;
@@ -186,6 +187,9 @@
 [id^=soul-condition] .layui-laydate-header {
     padding: 4px 70px 5px
 }
+[id^=soul-condition] hr{
+    margin: 5px 0;
+}
 [id^=soul-condition].soul-bf{
     min-width: 150px;
 }
@@ -217,11 +221,27 @@
 [id^=soul-condition] .layui-inline {
     width: 100px;
 }
-[id^=soul-condition] table.condition-table tr>td:first-child {
-    width: 120px;
+[id^=soul-condition] table.condition-table tr>td {
+    padding: 0 3px;
 }
-[id^=soul-condition] .layui-form-radio {
-    margin: initial;
+[id^=soul-condition] table.condition-table tr>td:first-child {
+    min-width: 60px;
+}
+[id^=soul-condition] .layui-form-switch {
+    background-color: #1E9FFF;
+    border: 1px solid #1E9FFF;
+    width: 35px;
+    margin-top: 0px;
+}
+[id^=soul-condition] .layui-form-switch.layui-form-onswitch {
+    background-color: #5FB878;
+    border: 1px solid #5FB878;
+}
+[id^=soul-condition] .layui-form-switch em {
+    color: #fff!important;
+}
+[id^=soul-condition] .layui-form-switch i {
+    background-color: #fff;
 }
 [data-type^=date][class$=Condition] {
     width: 273px;
