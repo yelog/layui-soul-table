@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui-select-multiple</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="animate.min.css" media="all"/>
+    <link rel="stylesheet" href="tablefilter.css" media="all"/>
+</head>
+<body class="childrenBody" style="padding: 10px">
+<h1>当前使用layui版本：2.3.0</h1>
+<table id="table1" ></table>
+<table id="table2" ></table>
+<table id="table3" ></table>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/javascript" src="layui/layui.js"></script>
+<script>
+    // 自定义模块
+    layui.config({
+        base: 'ext/',   // 模块目录
+    }).extend({                         // 模块别名
+        soulTable: 'soulTable'
+    });
+
+    layui.use(['form', 'table','soulTable'], function () {
+        var form = layui.form,
+            table = layui.table,
+            soulTable = layui.soulTable,
+            $ = layui.$;
+
+        var table1 = table.render({
+            elem: '#table1'
+            ,height: 500
+            ,limit: 30
+            ,page: true
+            ,cols: [[
+                {type: 'checkbox', fixed: 'left'}
+                ,{field:'poetry', title:'诗词', width:188}
+                ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
+                ,{field:'type', title:'类型', width:100, filter:true}
+                ,{field:'dynasty', title:'朝代',  width:150, filter:true}
+                ,{field:'sentences', title:'名句', width:400, filter:true}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
+            ]]
+            ,done: function () {
+                soulTable.render(table1)
+            }
+        });
+        $.ajax({
+            url: 'data.json',
+            dataType: 'json',
+            success: function (res) {
+                table1.reload({
+                    data: res.data
+                })
+
+            }
+        })
+        
+        var table2 = table.render({
+            elem: '#table2'
+            ,height: 500
+            ,url: 'data.json'
+            ,limit: 30
+            ,page: false
+            ,cols: [[
+                {type: 'checkbox', fixed: 'left'}
+                ,{field:'poetry', title:'诗词', width:188}
+                ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
+                ,{field:'type', title:'类型', width:100, filter:true}
+                ,{field:'dynasty', title:'朝代',  width:150, filter:true}
+                ,{field:'sentences', title:'名句', width:400, filter:true}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
+            ]]
+            ,done: function () {
+                soulTable.render(table2)
+            }
+        });
+
+        var table3 = table.render({
+            elem: '#table3'
+            ,url: 'data.json'
+            ,height: 600
+            ,limit: 30
+            ,page: false
+            ,cols: [[
+                {type: 'checkbox'}
+                ,{title:'#', type: 'child', show:'1', width:50, filter:true, type: 'child', children: [
+                        {
+                            title: '表格1'
+                            ,height: 300
+                            ,url: 'data.json'
+                            ,limit: 30
+                            ,page: false
+                            ,cols: [[
+                                {type: 'checkbox', fixed: 'left'}
+                                ,{field:'poetry', title:'诗词', width:188}
+                                ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
+                                ,{field:'type', title:'类型', width:100, filter:true}
+                                ,{field:'dynasty', title:'朝代',  width:150, filter:true}
+                                ,{field:'sentences', title:'名句', width:400, filter:true}
+                                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
+                            ]]
+                            ,done: function () {
+
+                            }
+                        },
+                        {
+                            title: '表格2'
+                            ,height: 300
+                            ,url: 'data.json'
+                            ,limit: 30
+                            ,page: true
+                            ,cols: [[
+                                {type: 'checkbox', fixed: 'left'}
+                                ,{field:'poetry', title:'诗词', width:188}
+                                ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
+                                ,{field:'type', title:'类型', width:100, filter:true}
+                                ,{field:'dynasty', title:'朝代',  width:150, filter:true}
+                                ,{field:'sentences', title:'名句', width:400, filter:true}
+                                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
+                            ]]
+                            ,done: function () {
+
+                            }
+                        }
+                    ]}
+                ,{field:'poetry', title:'诗词', width:188}
+                ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
+                ,{field:'type', title:'类型', width:100, filter:true}
+                ,{field:'dynasty', title:'朝代',  width:150, filter:true}
+                ,{field:'sentences', title:'名句', width:400, filter:true}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
+            ]]
+            ,done: function () {
+                soulTable.render(table3)
+            }
+        });
+
+    })
+</script>
+</body>
+</html>
