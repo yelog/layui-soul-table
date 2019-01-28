@@ -28,7 +28,7 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
 
             // 获取子表配置信息
             for (var i=0;i<columns.length;i++) {
-                if (columns[i].type == 'child') {
+                if (columns[i].children) {
                     child = columns[i];
                     childIndex=i;
                     break;
