@@ -15,7 +15,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
             tableFilter.render(myTable);
             tableChild.render(myTable);
 
-            if (typeof myTable.config.drag == 'undefined' || myTable.config.drag) {
+            if (typeof myTable.drag == 'undefined' || myTable.drag) {
                 this.drag(myTable);
             }
         }
@@ -24,10 +24,10 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
         }
         , drag: function (myTable) {
             var _this = this,
-                $table = $(myTable.config.elem),
+                $table = $(myTable.elem),
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
-                columns = [].concat.apply([], myTable.config.cols),
+                columns = [].concat.apply([], myTable.cols),
                 tableId = $table.attr('id'),
                 isDraging = false, isStart = false;
 
@@ -98,9 +98,9 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
 
                                             // 更新配置信息
                                             var x, y;
-                                            for (var i = 0; i < myTable.config.cols.length; i++) {
-                                                for (var j = 0; j < myTable.config.cols[i].length; j++) {
-                                                    if (myTable.config.cols[i][j].field == $this.data('field')) {
+                                            for (var i = 0; i < myTable.cols.length; i++) {
+                                                for (var j = 0; j < myTable.cols[i].length; j++) {
+                                                    if (myTable.cols[i][j].field == $this.data('field')) {
                                                         x = i;
                                                         y = j;
                                                         break;
@@ -110,9 +110,9 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                                     break;
                                                 }
                                             }
-                                            var tempCols = myTable.config.cols[x][y - 1];
-                                            myTable.config.cols[x][y - 1] = myTable.config.cols[x][y];
-                                            myTable.config.cols[x][y] = tempCols;
+                                            var tempCols = myTable.cols[x][y - 1];
+                                            myTable.cols[x][y - 1] = myTable.cols[x][y];
+                                            myTable.cols[x][y] = tempCols;
 
                                         }
                                     } else if (!$cloneHead.next().hasClass('layui-table-patch') && rightMove) {
@@ -124,9 +124,9 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
 
                                             // 更新配置信息
                                             var x, y;
-                                            for (var i = 0; i < myTable.config.cols.length; i++) {
-                                                for (var j = 0; j < myTable.config.cols[i].length; j++) {
-                                                    if (myTable.config.cols[i][j].field == $this.data('field')) {
+                                            for (var i = 0; i < myTable.cols.length; i++) {
+                                                for (var j = 0; j < myTable.cols[i].length; j++) {
+                                                    if (myTable.cols[i][j].field == $this.data('field')) {
                                                         x = i;
                                                         y = j;
                                                         break;
@@ -136,9 +136,9 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                                     break;
                                                 }
                                             }
-                                            var tempCols = myTable.config.cols[x][y + 1];
-                                            myTable.config.cols[x][y + 1] = myTable.config.cols[x][y];
-                                            myTable.config.cols[x][y] = tempCols;
+                                            var tempCols = myTable.cols[x][y + 1];
+                                            myTable.cols[x][y + 1] = myTable.cols[x][y];
+                                            myTable.cols[x][y] = tempCols;
 
                                         }
                                     }

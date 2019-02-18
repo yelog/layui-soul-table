@@ -57,7 +57,7 @@
                                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
                             ]]
                             ,done: function () {
-
+                                layui.soulTable.render(this);
                             }
                         },
                         {
@@ -65,9 +65,9 @@
                             ,url: 'data.json'
                             ,height: 300
                             ,limit: 30
-                            ,page: false
+                            ,page: true
                             ,cols: [[
-                                {type: 'checkbox', fixed: 'left'}
+                                {type: 'radio', fixed: 'left'}
                                 ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
                                 ,{field:'poetry', title:'诗词', width:188}
                                 ,{field:'type', title:'类型', width:100, filter:true}
@@ -76,7 +76,7 @@
                                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
                             ]]
                             ,done: function () {
-
+                                layui.soulTable.render(this);
                             }
                         }
                     ]}
@@ -88,7 +88,7 @@
                 ,{title:'操作', toolbar: '#barDemo', width:150, filter:true}
             ]]
             ,done: function () {
-                soulTable.render(myTable)
+                soulTable.render(this)
             }
         });
         $.ajax({
