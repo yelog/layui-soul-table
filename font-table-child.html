@@ -14,6 +14,32 @@
     <link rel="stylesheet" href="soulTable.css" media="all"/>
 </head>
 <body>
+<div class="layui-row">
+    <div class="layui-col-lg3 layui-col-md4 layui-col-sm6">
+        <div class="layui-inline">
+            <label class="layui-form-label">诗词</label>
+            <div class="layui-input-inline" >
+                <input type="text" name="title"
+                       class="layui-input" placeholder="请输入诗词关键字">
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-lg3 layui-col-md4 layui-col-sm6">
+        <div class="layui-inline">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-inline">
+                <input type="text" name="content"
+                       class="layui-input" placeholder="请选择内容关键词">
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-lg1 layui-col-md1 layui-col-sm2 layui-col-xs3">
+        <button class="layui-btn mgl-20" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>查询</button>
+    </div>
+    <div class="layui-col-lg1 layui-col-md1 layui-col-sm2 layui-col-xs3">
+        <button class="layui-btn mgl-20" lay-submit="" lay-filter="export"><i class="layui-icon">&#xe615;</i>导出</button>
+    </div>
+</div>
 <table id="myTable" ></table>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -30,6 +56,7 @@
 
     layui.use(['form', 'table','soulTable'], function () {
         var table = layui.table,
+            form = layui.form,
             soulTable = layui.soulTable,
             $ = layui.$;
 
@@ -45,7 +72,7 @@
                             title: '表格一'
                             ,url: 'data.json'
                             ,height: 300
-                            ,limit: 30
+                            ,limit: 1000000
                             ,page: false
                             ,cols: [[
                                 {type: 'checkbox', fixed: 'left'}
@@ -80,7 +107,7 @@
                             }
                         }
                     ]}
-                ,{field:'poetry', title:'诗词', width:188}
+                ,{field:'poetry', title:'诗词', width:188, filter:true, sort: true}
                 ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
                 ,{field:'type', title:'类型', width:100, filter:true}
                 ,{field:'dynasty', title:'朝代',  width:150, filter:true}
@@ -91,15 +118,28 @@
                 soulTable.render(this)
             }
         });
-        $.ajax({
-            url: 'data.json',
-            dataType: 'json',
-            success: function (res) {
-                myTable.reload({
-                    data: res.data
-                })
-
-            }
+        search({});
+        function search(data) {
+            var loading = layer.load(2);
+            $.ajax({
+                url: 'data.json',
+                data: data,
+                dataType: 'json',
+                success: function (res) {
+                    myTable.reload({
+                        data: res.data
+                    })
+                },
+                complete: function () {
+                    layer.close(loading)
+                }
+            })
+        }
+        form.on('submit(search)', function (data) {
+            search(data.field);
+        })
+        form.on('submit(export)', function () {
+            soulTable.export(myTable);
         })
 
     })

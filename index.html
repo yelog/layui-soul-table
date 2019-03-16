@@ -32,22 +32,22 @@
 <div class="layui-tab layui-tab-brief" lay-filter="tableClass">
     <ul class="layui-tab-title">
         <li class="layui-this">不分页</li>
-        <li>前端分页</li>
-        <li>后台分页</li>
+        <li>前台分页</li>
         <li>子表</li>
+        <li>后台分页</li>
     </ul>
     <div class="layui-tab-content">
         <div class="layui-tab-item layui-show"><iframe src="font-table.html"></iframe></div>
         <div class="layui-tab-item"><iframe data-src="font-table-page.html"></iframe></div>
-        <div class="layui-tab-item"><iframe data-src="font-table-page.html"></iframe></div>
         <div class="layui-tab-item"><iframe data-src="font-table-child.html"></iframe></div>
+        <div class="layui-tab-item"><iframe data-src="font-table-page.html"></iframe></div>
     </div>
 </div>
 <script type="text/javascript" src="layui/layui.js"></script>
 <script>
 
     layui.use(['element'], function () {
-        var element = layui.element
+        var element = layui.element,
             $ = layui.$;
 
         element.on('tab(tableClass)', function(){

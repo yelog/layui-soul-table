@@ -1,5 +1,5 @@
-## 为 layui 扩展的 下拉多选select
-当前layui版本：**2.3.0** （2.2.5版本可在release中找到）  
+## 给 layui-table 注入点灵魂
+当前layui版本：**2.4.5**  
 在线demo： [http://yelog.org/layui-select-multiple/](http://yelog.org/layui-select-multiple/)
 
 这个在线 demo就是本项目的 `index.html`。 可将项目 `clone` 到本地查看效果。
