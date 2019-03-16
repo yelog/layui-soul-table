@@ -37,7 +37,7 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
             if (child) {
                 var width = child.width? child.width : 50;
                 $tableHead.find('th:eq('+childIndex+')>div').css('width', width);
-                $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').attr('lay-event','childTable').css({'width': width,'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="soul-icon soul-icon-fold"></i>');
+                $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').attr('lay-event','childTable').css({'width': width,'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
                 // $tableBody.find('tr').find('td:eq('+childIndex+'):not([child])>div').css({'width':'50px'});
 
                 table.on('tool('+$table.attr('lay-filter')+')', function (obj) {
@@ -45,10 +45,10 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
 
                         if (child.show == 1) { // 展开模式
 
-                            $(this).find('i').toggleClass('soul-icon-unfold');
+                            $(this).find('i').toggleClass('layui-icon-down');
                             var rowspanIndex=$(this).parents('td').attr("rowspan");
 
-                            if ($(this).find('i').hasClass('soul-icon-unfold')) {
+                            if ($(this).find('i').hasClass('layui-icon-down')) {
                                 var newTr = [];
                                 newTr.push('<tr class="noHover childTr"><td colspan="'+$tableHead.find('th:visible').length+'" style="padding: 0; width: '+$(this).parents('tr').width()+'px">');
                                 newTr.push(_this.getTables(this, obj, child, tableId));
