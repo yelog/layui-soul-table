@@ -88,7 +88,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             // 渲染底部筛选条件
             if ($table.next().children('.soul-bottom-contion').length === 0) {
                 $table.next().children('.layui-table-box').after('<div class="soul-bottom-contion"><div class="condition-items"></div><div class="editCondtion"><a class="layui-btn layui-btn-primary">编辑筛选条件</a></div></div>')
-                var changeHeight = $table.next().children('.layui-table-box').children('.layui-table-body').height() - $table.next().children('.soul-bottom-contion').height();
+                var changeHeight = $table.next().children('.layui-table-box').children('.layui-table-body').outerHeight() - $table.next().children('.soul-bottom-contion').outerHeight();
+                if (myTable.page && $table.next().children('.layui-table-page').hasClass('layui-hide')) {changeHeight += $table.next().children('.layui-table-page').outerHeight()}
                 $table.next().children('.layui-table-box').children('.layui-table-body').css('height', changeHeight)
                 $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').css('height', changeHeight)
                 $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', ($table.next().children('.soul-bottom-contion').width() - $table.next().children('.soul-bottom-contion').children('.editCondtion').width()) + 'px');
