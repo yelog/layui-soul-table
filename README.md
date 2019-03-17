@@ -3,7 +3,7 @@
 在线demo： [https://yelog.org/layui-soul-table/](https://yelog.org/layui-soul-table/)
 
 ## 扩展功能
-1. 表头筛选、自定义条件（支持前端筛选、后台筛选介绍请看 [](#导出excel相关)）
+1. 表头筛选、自定义条件（支持前端筛选、后台筛选介绍请看 [三、后台筛选](#三、后台筛选)）
 2. 拖动列调整顺序、隐藏显示列
 3. excel导出（根据筛选条件和列顺序导出）
 4. 子表（表中表、无限层级、子表同样支持前3个功能）
@@ -40,7 +40,7 @@ layui.config({
     soulTable: 'soulTable'  // 模块别名
 });
 ```  
-3.引入 `soulTable.css` 到自己项目中。
+3.引入 `soulTable.css` 和 `animate.min.css` 到自己项目中。
 
 4.在 `table.render()` 中使用。   
 ①`done` 中加入  `soulTable.render(this)`   
@@ -81,7 +81,7 @@ table.render({
 即 `url: xxxxx`, `page: true`
 
 >由于前两种筛选都是在前端完成,所以可以直接使用，但是 `后台分页`的情况下，前台数据是不完整，所以需要后台支持
-java 的 mybatis 拦截器我已经做了，支持 mysql、oracle 数据库。所以如果你后台是 java， 且使用了mybatis作为持久层框架，那么恭喜你可以移步这里来集成。
+java 的 mybatis 拦截器我已经做了，支持 mysql、oracle 数据库。所以如果你后台是 java， 且使用了mybatis作为持久层框架，那么恭喜你可以移步[这里](https://github.com/yelog/layui-soul-table-java)来集成。
 其他语言或框架，暂时没有需求，欢迎进行扩展（有问题欢迎交流）。
  
 
@@ -119,9 +119,9 @@ var myTable = table.render({
     }
 });
 ```
-### 三、后台导出
+### 三、后台筛选
 目前支持 `java` 且使用了 `mybatis` 框架。
-如果符合上面的条件，则可以移步到包含后端的完整项目即介绍：点我
+如果符合上面的条件，则可以移步到包含后端的完整项目即介绍：[https://github.com/yelog/layui-soul-table-java](https://github.com/yelog/layui-soul-table-java)
 ### 四、导出excel相关
 1.配置默认样式  
 <table><thead><tr><th colspan=2>参数</th><th>类型</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td colspan="2">on</td><td>boolean</td><td>表头下拉中开启excel导出功能（默认：true）</td><td>true</td></tr><tr><td colspan="2">filename</td><td>string/function</td><td>导出excel文件名（默认：表格数据.xlsx）,支持后缀：xlsx/xls&lt;br&gt; 也可传入方法,带上当天日期：<code>function(){return '诗词'+util.todatestring(new date(), 'yyyymmdd')+'xlsx'}</code></td><td>'诗词.xlsx'</td></tr><tr><td rowspan="4">head</td><td>family</td><td>string</td><td>表头字体（默认：calibri）</td><td>'helvetica'</td></tr><tr><td>size</td><td>number</td><td>表头字号（默认：12）</td><td>15</td></tr><tr><td>color</td><td>string</td><td>表头颜色（默认：'000000'） 注意：这里只能用hex（十六进制颜色码），且不能加 `#` 如红色：'ff0000'</td><td>'ff0000'</td></tr><tr><td>bgcolor</td><td>string</td><td>表头背景色（默认：'c7c7c7'）注意事项参考 head-&gt;color</td><td>'c7c7c7'</td></tr><tr><td rowspan="4">font</td><td>family</td><td>string</td><td>表头字体（默认：calibri）</td><td>'helvetica'</td></tr><tr><td>size</td><td>number</td><td>表头字号（默认：12）</td><td>15</td></tr><tr><td>color</td><td>string</td><td>表头颜色（默认：'000000'） 注意事项参考 head-&gt;color</td><td>'ff0000'</td></tr><tr><td>bgcolor</td><td>string</td><td>表头背景色（默认：'ffffff'）注意事项参考 head-&gt;color</td><td>'c7c7c7'</td></tr></tbody></table>
