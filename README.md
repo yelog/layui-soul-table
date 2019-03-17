@@ -1,5 +1,5 @@
 ## 给 layui-table 注入点灵魂
-当前layui版本：**2.4.5**  
+当前layui版本 `v2.4.5` 
 在线demo： [https://yelog.org/layui-soul-table/](https://yelog.org/layui-soul-table/)
 
 ## 扩展功能
