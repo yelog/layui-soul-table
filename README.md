@@ -256,3 +256,6 @@ var myTable = table.render({
 |:-|:-|:-|
 | layui | https://github.com/sentsin/layui | 土壤框架 |
 | layui-excel | https://github.com/wangerzi/layui-excel | excel文件导出 |
+
+## 最后
+当然具体的可以clone下来代码查看，有问题可以在 issue 区提问，我会尽可能快的回复。
