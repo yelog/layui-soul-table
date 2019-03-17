@@ -16,7 +16,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         conditionTimeOut,
         bfColumnTimeOut,
         bfCond1TimeOut,
-        tables = {},
+        isFilterReload = {},
         cache = {},
         HIDE = 'layui-hide',
         maxId = 1,
@@ -70,7 +70,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 $('#soulCondition' + tableId).remove();
                 $('#soulDropList' + tableId).remove();
 
-                delete tables[tableId];
+                delete isFilterReload[tableId];
                 delete where_cache[tableId];
             }
         },
@@ -117,7 +117,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             /**
              * 不重载表头数据，重新绑定事件后结束
              */
-            if (myTable.where&&myTable.where.filterSos) {
+            if (!initFilter || isFilterReload[myTable.id]) {
+                isFilterReload[myTable.id] = false
                 this.bindFilterClick(myTable);
 
                 // 表头样式
@@ -1556,7 +1557,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 $table = $(myTable.elem),
                 scrollLeft = $table.next().children('.layui-table-box').children('.layui-table-main').scrollLeft();
 
-
+            isFilterReload[myTable.id]=true;
             if (typeof myTable.url != 'undefined' && myTable.page) {
                 $table.data('scrollLeft', scrollLeft);
                 /**
