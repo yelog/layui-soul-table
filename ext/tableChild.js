@@ -43,7 +43,13 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
                 table.on('tool('+$table.attr('lay-filter')+')', function (obj) {
                     if (obj.event === 'childTable') {
 
-                        if (child.show == 1) { // 展开模式
+                        if (child.show == 2) { // 展开模式
+
+                            layer.open({type: 1, title: '子表', maxmin: true ,content: _this.getTables(this, obj, child, tableId), area: '1000px'});
+                            _this.renderTable(this, obj, child, tableId);
+
+
+                        } else { // 弹窗模式
 
                             $(this).find('i').toggleClass('layui-icon-down');
                             var rowspanIndex=$(this).parents('td').attr("rowspan");
@@ -73,10 +79,6 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
                                 tableFilter.destroy(tables);
                                 delete tableChildren[tableId + $(this).parents('tr').data('index')]
                             }
-
-                        } else if (child.show == 2){ // 弹窗模式
-                            layer.open({type: 1, title: '子表', maxmin: true ,content: _this.getTables(this, obj, child, tableId), area: '1000px'});
-                            _this.renderTable(this, obj, child, tableId);
 
                         }
                     }

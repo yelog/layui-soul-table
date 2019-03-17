@@ -2,6 +2,7 @@
  * Created by YujieYang.
  * @name:  表格筛选扩展
  * @author: 杨玉杰
+ * @version: 1.0
  */
 layui.define(['tableFilter', 'tableChild'], function (exports) {
 
