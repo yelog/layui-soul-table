@@ -22,20 +22,38 @@
             width: 100%;
             height: 100%;
         }
+        .site-h1 {
+            margin: 0 0 20px 20px;
+            line-height: 60px;
+            padding-bottom: 10px;
+            color: #393D49;
+            border-bottom: 1px solid #eee;
+            font-size: 28px;
+            font-weight: 300;
+        }
         .layui-tab-item {
-            height: calc(100vh - 121px);
+            height: calc(100vh - 345px);
         }
     </style>
 </head>
 <body class="childrenBody">
-<h1>当前使用layui版本：v2.4.5</h1>
+<h1 class="site-h1">给layui的table注入点灵魂</h1>
+<blockquote class="layui-elem-quote">
+    github地址：<a style="color: deepskyblue;" href="https://github.com/yelog/layui-soul-table" target="_blank">https://github.com/yelog/layui-soul-table</a>， 当前使用的layui版本：<b>2.4.5</b><br>
+    功能点：<br>
+    <ul>
+        <li>1. 表头筛选、自定义条件（支持前台筛选、后台筛选[mysql|oracle]）</li>
+        <li>2. 拖动列调整顺序、隐藏显示列</li>
+        <li>3. excel导出（根据筛选条件和列顺序导出）</li>
+        <li>4. 子表（表中表、无限层级、子表同样支持前3个功能）</li>
+    </ul>
+</blockquote>
 <div class="layui-tab layui-tab-brief" lay-filter="tableClass">
     <ul class="layui-tab-title">
         <li class="layui-this">不分页</li>
         <li>前台分页</li>
         <li>子表</li>
         <li>后台分页</li>
-        <li>文档</li>
     </ul>
     <div class="layui-tab-content">
         <div class="layui-tab-item layui-show"><iframe src="font-table.html"></iframe></div>
@@ -60,5 +78,6 @@
 
     })
 </script>
+<a target="_blank" href="https://github.com/yelog/layui-soul-table"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 </body>
 </html>
