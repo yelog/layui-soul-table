@@ -21,6 +21,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         HIDE = 'layui-hide',
         maxId = 1,
         where_cache = {},
+        table_cache = {},
         conditionChangeItems = {
             'eq': '等于',
             'ne': '≠ 不等于',
@@ -72,6 +73,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
 
                 delete isFilterReload[tableId];
                 delete where_cache[tableId];
+                delete table_cache[tableId];
             }
         },
         render: function (myTable) {
@@ -113,6 +115,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 }
             }
             if (!needFilter) {return} //如果没筛选列，直接退出
+            table_cache[myTable.id] = myTable // 缓存table配置
 
             /**
              * 不重载表头数据，重新绑定事件后结束
@@ -685,7 +688,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     e.stopPropagation();
                 }).on('click', function () {
                     $('#main-list' + tableId).hide();
-                    _this.export(myTable)
+                    _this.export(table_cache[myTable.id])
                 });
 
                 $('#main-list' + tableId).on('mouseover', function (e) {
