@@ -1697,30 +1697,66 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     break;
                 case "date":
                     var format = tableFilterTypes[field].replace(/date\[|\]/g, '').replace(/yy/g, 'YY').replace(/dd/g, 'DD');
+                    var dateVal = new Date(Date.parse(item[field].replace(/-/g, "/")));
                     switch (filterSo.type) {
                         case 'all':
                             status = true;
                             break;
                         case 'yesterday':
-                            status = item[field] && moment(item[field], format).isBetween(moment().startOf('day').subtract(1, 'days'), moment().endOf('day').subtract(1, 'days'));
+                            status = item[field] && isBetween(dateVal,getToday()-1, getToday()-86400);
                             break;
                         case 'thisWeek':
-                            status = item[field] && moment(item[field], format).isBetween(moment().startOf('week').add(1, 'd'), moment().endOf('week').add(1, 'd'))
+                            status = item[field] && isBetween(dateVal,getFirstDayOfWeek(), getFirstDayOfWeek()+86400*7-1);
                             break;
                         case 'lastWeek':
-                            status = item[field] && moment(item[field], format).isBetween(moment().startOf('week').subtract(6, 'd'), moment().endOf('week').subtract(6, 'd'))
+                            status = item[field] && isBetween(dateVal,getFirstDayOfWeek()-86400*7, getFirstDayOfWeek()-1);
                             break;
                         case 'thisMonth':
-                            status = item[field] && moment(item[field], format).isBetween(moment().startOf('month'), moment().endOf('month'))
+                            status = item[field] && isBetween(dateVal,getFirstDayOfMonth(), getCurrentMonthLast());
                             break;
                         case 'thisYear':
-                            status = item[field] && moment(item[field], format).isBetween(moment().startOf('year'), moment().endOf('year'))
+                            status = item[field] && isBetween(dateVal,new Date(new Date().getFullYear(), 1, 1)/1000, new Date(new Date().getFullYear()+1, 1, 1)/1000-1);
                             break;
                         case 'specific':
-                            status = item[field] && moment(item[field], format).format("YYYY-MM-DD") == value
+                            var dateFormat = dateVal.getFullYear();
+                            dateFormat += '-'+(timeAdd0(dateVal.getMonth()+1));
+                            dateFormat += '-'+timeAdd0(dateVal.getDate());
+                            status = item[field] && dateFormat == value
                             break;
                     }
                     break;
+            }
+            // 今天凌晨
+            function getToday() {
+                return new Date().setHours(0, 0, 0, 0) / 1000;
+            }
+            // 本周第一天
+            function getFirstDayOfWeek() {
+                var now = new Date();
+                var weekday = now.getDay()||7; //获取星期几,getDay()返回值是 0（周日） 到 6（周六） 之间的一个整数。0||7为7，即weekday的值为1-7
+                return new Date(now.setDate(now.getDate()-weekday+1)).setHours(0, 0, 0, 0) / 1000;//往前算（weekday-1）天，年份、月份会自动变化
+            }
+            //获取当月第一天
+            function getFirstDayOfMonth () {
+                return new Date(new Date().setDate(1)).setHours(0, 0, 0, 0) / 1000;
+            }
+            //获取当月最后一天最后一秒
+            function getCurrentMonthLast(){
+                var date=new Date();
+                var currentMonth=date.getMonth();
+                var nextMonth=++currentMonth;
+                var nextMonthFirstDay=new Date(date.getFullYear(),nextMonth,1);
+                return nextMonthFirstDay/1000 -1;
+            }
+            function isBetween(v , a , b) {
+                return (v.getTime()/1000)>=a&&(v.getTime()/1000)<=b;
+            }
+            function timeAdd0(str) {
+                str += "";
+                if(str.length<=1){
+                    str='0'+str;
+                }
+                return str
             }
             return isOr ? show || status : show && status;
         }

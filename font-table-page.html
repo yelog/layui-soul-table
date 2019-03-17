@@ -41,7 +41,7 @@
     </div>
 </div>
 <table id="myTable" ></table>
-<script type="text/html" id="barDemo">
+<script type="text/html" id="bar">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
@@ -66,13 +66,15 @@
             ,limit: 20
             ,page: true
             ,cols: [[
-                {type: 'checkbox', fixed: 'left'}
-                ,{field:'poetry', title:'诗词', width:188}
-                ,{field:'name',  title:'诗人', width:100, filter:true, sort: true}
-                ,{field:'type', title:'类型', width:100, filter:true}
-                ,{field:'dynasty', title:'朝代',  width:150, filter:true}
-                ,{field:'sentences', title:'名句', width:400, filter:true}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150, filter:true}
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+                {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+                {field: 'author', title: '作者', width: 165 , filter: true},
+                {field: 'content', title: '内容', width: 123, filter: true},
+                {field: 'type', title: '类型', width: 112,  filter: true, sort:true},
+                {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
+                {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
+                {title: '操作', width: 156, templet: '#bar'}
             ]]
             ,done: function () {
                 soulTable.render(this)
