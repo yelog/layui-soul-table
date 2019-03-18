@@ -93,11 +93,25 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 var changeHeight = $table.next().children('.layui-table-box').children('.layui-table-body').outerHeight() - $table.next().children('.soul-bottom-contion').outerHeight();
                 if (myTable.page && $table.next().children('.layui-table-page').hasClass('layui-hide')) {changeHeight += $table.next().children('.layui-table-page').outerHeight()}
                 $table.next().children('.layui-table-box').children('.layui-table-body').css('height', changeHeight)
-                $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').css('height', changeHeight)
+                $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').css('height', changeHeight-getScrollWidth())
                 $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', ($table.next().children('.soul-bottom-contion').width() - $table.next().children('.soul-bottom-contion').children('.editCondtion').width()) + 'px');
                 $table.next().children('.soul-bottom-contion').children('.editCondtion').children('a').on('click', function () {
                     _this.showConditionBoard(myTable);
                 })
+            }
+
+            /**
+             * 获取滚动条宽度
+             * @returns {number}
+             */
+            function getScrollWidth() {
+                var noScroll, scroll, oDiv = document.createElement("DIV");
+                oDiv.style.cssText = "position:absolute; top:-1000px; width:100px; height:100px; overflow:hidden;";
+                noScroll = document.body.appendChild(oDiv).clientWidth;
+                oDiv.style.overflowY = "scroll";
+                scroll = oDiv.clientWidth;
+                document.body.removeChild(oDiv);
+                return noScroll-scroll;
             }
 
             for (var i = 0; i < columns.length; i++) {
@@ -107,9 +121,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         initFilter = true;
                         if ($tableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').length>0) {
                             $tableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').hide()
-                            $tableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-column="'+columns[i].field+'" lay-sort="'+$tableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').attr('lay-sort')+'"><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+                            $tableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-column="'+columns[i].field+'" lay-sort="'+$tableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').attr('lay-sort')+'" '+(typeof columns[i].filter.split === 'undefined'?'':'data-split="'+columns[i].filter.split+'"')+'><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
                         } else {
-                            $tableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="soul-table-filter layui-inline" data-column="'+columns[i].field+'" ><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+                            $tableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="soul-table-filter layui-inline" data-column="'+columns[i].field+'" '+(typeof columns[i].filter.split === 'undefined'?'':'data-split="'+columns[i].filter.split+'"')+'><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
                         }
                     }
                 }
@@ -362,7 +376,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         head: 'true',
                         'id': id,
                         prefix: prefix,
-                        refresh: true
+                        refresh: true,
+                        split: $('#main-list' + tableId).data('split')
                     }).html($('#soulDropList' + tableId).find('.' + field + 'DropList li').clone());
 
                     $('#soul-dropList' + tableId).css({'top': $(this).offset().top, 'left': left})
@@ -761,6 +776,25 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                         var columnsConfigs = columns;
                                         for (var j = 0; j < columnsConfigs.length; j++) {
                                             if (columnsConfigs[j].field == key) {
+                                                if (columnsConfigs[j].filter.split) {
+                                                    var tempList = []
+                                                    for (var i = 0; i < list.length; i++) {
+                                                        var tempList2 = list[i].split(columnsConfigs[j].filter.split)
+                                                        for (var k = 0; k < tempList2.length; k++) {
+                                                            if (tempList.indexOf(tempList2[k]) === -1) {
+                                                                tempList.push(tempList2[k]);
+                                                            }
+                                                        }
+                                                    }
+                                                    list = tempList;
+                                                }
+                                                list.sort(function (a, b) {
+                                                    if (isNaN(a)||isNaN(b)) {
+                                                        return String(a)>=String(b)
+                                                    } else {
+                                                        return Number(a) - Number(b)
+                                                    }
+                                                })
                                                 for (var i = 0; i < list.length; i++) {
                                                     if (list[i]) {
                                                         var line = {};
@@ -805,7 +839,19 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         for (var j = 0; j < columnsConfigs.length; j++) {
                             var key = columnsConfigs[j].field;
                             var list = dropDatas[key];
-                            if (list && !(list.length == 1 && list[0] == '')) {
+                            if (list && !(list.length === 1 && list[0] == '')) {
+                                if (columnsConfigs[j].filter && columnsConfigs[j].filter.split) {
+                                    var tempList = []
+                                    for (var i = 0; i < list.length; i++) {
+                                        var tempList2 = list[i].split(columnsConfigs[j].filter.split);
+                                        for (var k = 0; k < tempList2.length; k++) {
+                                            if (tempList.indexOf(tempList2[k])===-1) {
+                                                tempList.push(tempList2[k])
+                                            }
+                                        }
+                                    }
+                                    list = tempList;
+                                }
                                 list.sort(function (a, b) {
                                     if (isNaN(a)||isNaN(b)) {
                                         return String(a)>=String(b)
@@ -1364,7 +1410,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 _this.hideCondition(myTable, false);
                 $('[id^=main-list]').hide();
 
-                $('#main-list' + tableId).data('field', $that.data('column'))
+                $('#main-list' + tableId).data({'field': $that.data('column'),'split':$that.data('split')});
 
                 $('#soul-columns' + tableId + ' [type=checkbox]').attr('disabled', false);
                 // if (myTable.cols[0][0].type=='checkbox') {
@@ -1458,7 +1504,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 values = [],
                 head = $('#soul-dropList' + tableId + '>ul').data('head') == 'true',
                 prefix = $('#soul-dropList' + tableId + '>ul').data('prefix'),
-                refresh = $('#soul-dropList' + tableId + '>ul').data('refresh');
+                refresh = $('#soul-dropList' + tableId + '>ul').data('refresh'),
+                split = $('#soul-dropList' + tableId + '>ul').data('split');
             if ($checkedDom.length > 0) {
                 $checkedDom.each(function () {
                     values.push($(this).val())
@@ -1470,6 +1517,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 prefix: prefix || 'and',
                 mode: 'in',
                 field: field,
+                split: split,
                 values: values
             };
             _this.updateWhere(myTable, filterSo);
@@ -1646,7 +1694,18 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             switch (filterSo.mode) {
                 case "in":
                     if (filterSo.values && filterSo.values.length > 0) {
-                        status = filterSo.values.indexOf(item[field]+'') !== -1
+                        if (filterSo.split) {
+                            var tempList = (item[field]+'').split(filterSo.split);
+                            var tempStatus = false;
+                            for (var i = 0; i < tempList.length; i++) {
+                                if (filterSo.values.indexOf(tempList[i]) !== -1) {
+                                    tempStatus = true;
+                                }
+                            }
+                            status = tempStatus;
+                        } else {
+                            status = filterSo.values.indexOf(item[field]+'') !== -1
+                        }
                     } else {
                         return show;
                     }
