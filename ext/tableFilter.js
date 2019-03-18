@@ -324,7 +324,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                     $('#soul-columns' + tableId).show();
                     var left, animate;
-                    if ($(this).parent().offset().left + $(this).parent().width() + $('#soul-columns' + tableId).width() < $(document).width()) {
+                    if ($(this).parent().offset().left + $(this).parent().width() + $('#soul-columns' + tableId).width() < document.body.clientWidth) {
                         left = $(this).parent().offset().left + $(this).parent().width();
                         animate = 'fadeInLeft'
                     } else {
@@ -348,7 +348,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     $('#soul-dropList' + tableId + '>.filter-search>input').val('');
                     $('#soul-dropList' + tableId).show();
                     var left, animate, field = $('#main-list' + tableId).data('field');
-                    if ($('#main-list' + tableId).offset().left + $('#soul-dropList' + tableId).width() + $('#soul-dropList' + tableId).width() < $(document).width()) {
+                    if ($('#main-list' + tableId).offset().left + $('#soul-dropList' + tableId).width() + $('#soul-dropList' + tableId).width() < document.body.clientWidth) {
                         left = $('#main-list' + tableId).offset().left + $('#main-list' + tableId).width();
                         animate = 'fadeInLeft';
                     } else {
@@ -413,7 +413,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     if (conditionTimeOut) {
                         clearTimeout(conditionTimeOut);
                     }
-                    var documentWidth = $(document).width();
+                    var documentWidth = document.body.clientWidth;
                     $('#soul-condition' + tableId).show();
                     var left, animate, field = $(this).parent().data('field');
                     if ($(this).parent().offset().left + $(this).parent().width() + $('#soul-condition' + tableId).width() < documentWidth) {
@@ -1429,11 +1429,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     clearTimeout(mainListTimeOut)
                 }
                 var left, animate;
-                if ($that.offset().left + 125 < $(document).width()) {
+                if ($that.offset().left + $('#main-list'+tableId).outerWidth() < document.body.clientWidth) {
                     left = $that.offset().left + 10;
                     animate = 'fadeInLeft';
                 } else {
-                    left = $that.offset().left - 115;
+                    left = $that.offset().left - $('#main-list'+tableId).outerWidth();
                     animate = 'fadeInRight';
                 }
                 $('#main-list' + tableId).data('type',myTable.where.tableFilterType?JSON.parse(myTable.where.tableFilterType)[$that.data('column')]||'':'').hide().css({
@@ -1826,7 +1826,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             var _this = this,
                 tableId = myTable.id,
                 conditionHtml = [],
-                documentWidth = $(document).width(),
+                documentWidth = document.body.clientWidth,
                 animate;
             conditionHtml.push('<div class="' + field + 'Condition" data-value="' + field + '" style="padding: 5px;" >');
             conditionHtml.push('<div class="layui-row">');
