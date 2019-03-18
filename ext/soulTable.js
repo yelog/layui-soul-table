@@ -106,7 +106,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                             var x, y;
                                             for (var i = 0; i < myTable.cols.length; i++) {
                                                 for (var j = 0; j < myTable.cols[i].length; j++) {
-                                                    if (myTable.cols[i][j].field == $this.data('field')) {
+                                                    if (myTable.cols[i][j].key == $this.data('key').substring(2)) {
                                                         x = i;
                                                         y = j;
                                                         break;
@@ -132,7 +132,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                             var x, y;
                                             for (var i = 0; i < myTable.cols.length; i++) {
                                                 for (var j = 0; j < myTable.cols[i].length; j++) {
-                                                    if (myTable.cols[i][j].field == $this.data('field')) {
+                                                    if (myTable.cols[i][j].key == $this.data('key').substring(2)) {
                                                         x = i;
                                                         y = j;
                                                         break;
