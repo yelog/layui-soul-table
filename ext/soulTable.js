@@ -96,7 +96,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                     moveDistince = Math.abs($cloneHead.position().left - left); //记录移动距离
                                     $this.css('left', left);
                                     if (leftMove) {
-                                        if ($cloneHead.prev().prev().length != 0) {
+                                        if ($cloneHead.prev().prev().length !== 0) {
                                             $cloneHead.after($cloneHead.prev().prev());
 
                                             // 更新隐藏列顺序
@@ -180,7 +180,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                             }).on('mouseup', function () {
                                 if (isStart && $cloneHead) {
                                     isStart = false;
-                                    $(document).unbind("selectstart");
+                                    $(document).unbind("selectstart").off('mousemove');
                                     if (isDraging) {
                                         $that.on('click', function (e) {
                                             e.stopPropagation();
@@ -192,7 +192,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                             'left': 'inherit',
                                             'border-left': 'inherit'
                                         });
-                                        $cloneHead.remove();
+                                        $this.next().remove();
                                         $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
                                             $(this).prev().css({
                                                 'position': 'relative',
