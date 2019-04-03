@@ -84,7 +84,7 @@ java 的 mybatis 拦截器我已经做了，支持 mysql、oracle 数据库。�
  
 
 ### 二、筛选相关
-<table><thead><tr><th>参数</th><th>类型</th><th colspan=4>说明</th><th></th><th></th><th></th></tr></thead><tbody><tr><td rowspan="2">filter</td><td>boolean</td><td colspan="3">true</td><td rowspan=2>默认值：false</td></tr><tr><td>object</td><td>type</td><td>date[yyyy-mm-dd hh:mm:ss]</td><td>目前做了时间类型优化（可以筛选昨天、本周、本月等） ，中括号内的格式要按照实际的数据格式进行调整。其他类型有好的想法可以进行交流扩展</td></tr></tbody></table>
+<table><thead><tr><th>参数</th><th>类型</th><th colspan=4>说明</th></tr></thead><tbody><tr><td rowspan="2">filter</td><td>boolean</td><td colspan="3">true</td><td rowspan=2>默认值：false</td></tr><tr><td>object</td><td>type</td><td>date[yyyy-mm-dd hh:mm:ss]</td><td>目前做了时间类型优化（可以筛选昨天、本周、本月等） ，中括号内的格式要按照实际的数据格式进行调整。其他类型有好的想法可以进行交流扩展</td></tr></tbody></table>
 
 1.时间类型增强, `filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}` ,格式根据具体的显示格式
 ```js
@@ -128,7 +128,7 @@ var myTable = table.render({
 配置在 `cols` 中，这一列为展开、隐藏的入口，可以放在任意一列
 
 | 参数 | 类型 | 说明 | 示例值 | 
-|:-|:-|:-|  
+|:-|:-|:-|:-|  
 | show | Number | 展开类型(默认值: 1)<br>1: 子表在表内展开展示 <br>2: 子表以弹窗方式展示 | 1 |  
 | children | Array | 子表参数定义，数组的一个元素代表一个子表 | 可参考layui-table的api |  
 
