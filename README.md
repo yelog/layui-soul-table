@@ -144,8 +144,6 @@ var myTable = table.render({
 | where    | Object/Function | 子表请求参数<br>1: 赋值json数据<br>2: 方法返回json数据，参数为当前行数据 | 1. where: {name:'小明'}<br>2. where: function(d){ <br>  console.log(d); <br>  return {name: d.name}<br>} |
 | 其他参数 | -               | 与layui 的 table 一致，[官方文档](<https://www.layui.com/doc/modules/table.html>) | **注意： 子表的没有 elem 参数**                              |
 
-2⃣️
-
 #### 3⃣️ 示例
 
 ```js
