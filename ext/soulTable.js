@@ -66,7 +66,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                             });
 
                             // 移动事件
-                            $(document).on('mousemove', function (e) {
+                            $('body').on('mousemove', function (e) {
                                 if (isStart && $cloneHead) {
                                     if (!isDraging) {
                                         $this.after($cloneHead);
@@ -96,7 +96,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                     moveDistince = Math.abs($cloneHead.position().left - left); //记录移动距离
                                     $this.css('left', left);
                                     if (leftMove) {
-                                        if ($cloneHead.prev().prev().length !== 0) {
+                                        if ($cloneHead.prev().prev().length != 0) {
                                             $cloneHead.after($cloneHead.prev().prev());
 
                                             // 更新隐藏列顺序
@@ -180,7 +180,8 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                             }).on('mouseup', function () {
                                 if (isStart && $cloneHead) {
                                     isStart = false;
-                                    $(document).unbind("selectstart").off('mousemove');
+                                    $(document).unbind("selectstart");
+                                    $('body').off('mousemove')
                                     if (isDraging) {
                                         $that.on('click', function (e) {
                                             e.stopPropagation();
