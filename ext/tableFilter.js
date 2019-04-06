@@ -80,6 +80,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             var _this = this,
                 $table = $(myTable.elem),
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
+                $fixedLeftTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-l').children('.layui-table-header').children('table'),
+                $fixedRigthTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
                 tableId = $table.attr('id'),
                 columns = [].concat.apply([], myTable.cols),
                 filterItems = myTable.filter?myTable.filter.items||['column','data','condition','editCondition','excel']:['column','data','condition','editCondition','excel'],
@@ -125,6 +127,18 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         } else {
                             $tableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="soul-table-filter layui-inline" data-column="'+columns[i].field+'" '+(typeof columns[i].filter.split === 'undefined'?'':'data-split="'+columns[i].filter.split+'"')+'><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
                         }
+                        if ($fixedLeftTableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').length>0) {
+                            $fixedLeftTableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').hide()
+                            $fixedLeftTableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-column="'+columns[i].field+'" lay-sort="'+$fixedLeftTableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').attr('lay-sort')+'" '+(typeof columns[i].filter.split === 'undefined'?'':'data-split="'+columns[i].filter.split+'"')+'><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+                        } else {
+                            $fixedLeftTableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="soul-table-filter layui-inline" data-column="'+columns[i].field+'" '+(typeof columns[i].filter.split === 'undefined'?'':'data-split="'+columns[i].filter.split+'"')+'><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+                        }
+                        if ($fixedRigthTableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').length>0) {
+                            $fixedRigthTableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').hide()
+                            $fixedRigthTableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-column="'+columns[i].field+'" lay-sort="'+$fixedRigthTableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.layui-table-sort').attr('lay-sort')+'" '+(typeof columns[i].filter.split === 'undefined'?'':'data-split="'+columns[i].filter.split+'"')+'><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+                        } else {
+                            $fixedRigthTableHead.find('th[data-field="'+columns[i].field+'"]').children().append('<span class="soul-table-filter layui-inline" data-column="'+columns[i].field+'" '+(typeof columns[i].filter.split === 'undefined'?'':'data-split="'+columns[i].filter.split+'"')+'><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+                        }
                     }
                 }
             }
@@ -164,6 +178,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 break;
                         }
                         $tableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
+                        $fixedLeftTableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
+                        $fixedRigthTableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
                     }
                 }
 
@@ -1383,6 +1399,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             var _this = this,
                 $table = $(myTable.elem),
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
+                $fixedLeftTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-l').children('.layui-table-header').children('table'),
+                $fixedRigthTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
                 tableId = $table.attr('id'),
                 mainListTimeOut;
 
@@ -1391,8 +1409,38 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 e.stopPropagation();
                 showFilter($(this))
             });
+            $fixedLeftTableHead.find('.soul-table-filter').off('click').on('click', function (e) {
+                e.stopPropagation();
+                showFilter($(this))
+            });
+            $fixedRigthTableHead.find('.soul-table-filter').off('click').on('click', function (e) {
+                e.stopPropagation();
+                showFilter($(this))
+            });
 
             $tableHead.find('thead>tr>th').on('contextmenu', function (e) {
+                return false;
+            }).mousedown(function (e) {
+                if (3 == e.which) {
+                    e.stopPropagation();
+                    if ($(this).find('.soul-table-filter').length > 0) {
+                        showFilter($(this).find('.soul-table-filter'))
+                    }
+                    return false;
+                }
+            })
+            $fixedLeftTableHead.find('thead>tr>th').on('contextmenu', function (e) {
+                return false;
+            }).mousedown(function (e) {
+                if (3 == e.which) {
+                    e.stopPropagation();
+                    if ($(this).find('.soul-table-filter').length > 0) {
+                        showFilter($(this).find('.soul-table-filter'))
+                    }
+                    return false;
+                }
+            })
+            $fixedRigthTableHead.find('thead>tr>th').on('contextmenu', function (e) {
                 return false;
             }).mousedown(function (e) {
                 if (3 == e.which) {
