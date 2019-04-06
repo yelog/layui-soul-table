@@ -91,9 +91,13 @@
                         },
                         {
                             title: '表格一'
-                            ,url: 'data.json'
                             ,height: 300
                             ,limit: 1000000
+                            ,data: function (d) {
+                                // d 为当前行数据
+                                console.log(d)
+                                return [d];
+                            }
                             ,page: false
                             ,cols: [[
                                 {type: 'checkbox', fixed: 'left'},

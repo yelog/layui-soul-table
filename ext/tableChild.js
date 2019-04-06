@@ -124,9 +124,11 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
                 var param = this.cloneJSON(child.children[i]),
                     childTableId = tableId + $(_this).parents('tr').data('index') + i;
                 param.where = child.children[i].where;
+                param.data = child.children[i].data;
                 param.id = childTableId;
                 param.elem = '#'+childTableId;
                 typeof param.where === 'function' && (param.where = param.where(obj.data));
+                typeof param.data === 'function' && (param.data = param.data(obj.data));
                 tables.push(table.render(param));
                 if (i!=0) {
                     $('#'+childTableId).parents('.layui-tab-item').removeClass('layui-show'); //解决隐藏时计算表格高度有问题
