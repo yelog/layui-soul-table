@@ -89,33 +89,6 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 initFilter = false, // 是否为第一次筛选
                 mainExcel = typeof myTable.excel == 'undefined' || ((myTable.excel && (typeof myTable.excel.on == 'undefined' || myTable.excel.on)) ? myTable.excel : false);
 
-            // 渲染底部筛选条件
-            if ($table.next().children('.soul-bottom-contion').length === 0) {
-                $table.next().children('.layui-table-box').after('<div class="soul-bottom-contion"><div class="condition-items"></div><div class="editCondtion"><a class="layui-btn layui-btn-primary">编辑筛选条件</a></div></div>')
-                var changeHeight = $table.next().children('.layui-table-box').children('.layui-table-body').outerHeight() - $table.next().children('.soul-bottom-contion').outerHeight();
-                if (myTable.page && $table.next().children('.layui-table-page').hasClass('layui-hide')) {changeHeight += $table.next().children('.layui-table-page').outerHeight()}
-                $table.next().children('.layui-table-box').children('.layui-table-body').css('height', changeHeight)
-                $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').css('height', changeHeight-getScrollWidth())
-                $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', ($table.next().children('.soul-bottom-contion').width() - $table.next().children('.soul-bottom-contion').children('.editCondtion').width()) + 'px');
-                $table.next().children('.soul-bottom-contion').children('.editCondtion').children('a').on('click', function () {
-                    _this.showConditionBoard(myTable);
-                })
-            }
-
-            /**
-             * 获取滚动条宽度
-             * @returns {number}
-             */
-            function getScrollWidth() {
-                var noScroll, scroll, oDiv = document.createElement("DIV");
-                oDiv.style.cssText = "position:absolute; top:-1000px; width:100px; height:100px; overflow:hidden;";
-                noScroll = document.body.appendChild(oDiv).clientWidth;
-                oDiv.style.overflowY = "scroll";
-                scroll = oDiv.clientWidth;
-                document.body.removeChild(oDiv);
-                return noScroll-scroll;
-            }
-
             for (var i = 0; i < columns.length; i++) {
                 if (columns[i].field && columns[i].filter) {
                     needFilter = true;
@@ -144,6 +117,33 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
             if (!needFilter) {return} //如果没筛选列，直接退出
             table_cache[myTable.id] = myTable // 缓存table配置
+
+            // 渲染底部筛选条件
+            if ($table.next().children('.soul-bottom-contion').length === 0) {
+                $table.next().children('.layui-table-box').after('<div class="soul-bottom-contion"><div class="condition-items"></div><div class="editCondtion"><a class="layui-btn layui-btn-primary">编辑筛选条件</a></div></div>')
+                var changeHeight = $table.next().children('.layui-table-box').children('.layui-table-body').outerHeight() - $table.next().children('.soul-bottom-contion').outerHeight();
+                if (myTable.page && $table.next().children('.layui-table-page').hasClass('layui-hide')) {changeHeight += $table.next().children('.layui-table-page').outerHeight()}
+                $table.next().children('.layui-table-box').children('.layui-table-body').css('height', changeHeight)
+                $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').css('height', changeHeight-getScrollWidth())
+                $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', ($table.next().children('.soul-bottom-contion').width() - $table.next().children('.soul-bottom-contion').children('.editCondtion').width()) + 'px');
+                $table.next().children('.soul-bottom-contion').children('.editCondtion').children('a').on('click', function () {
+                    _this.showConditionBoard(myTable);
+                })
+            }
+
+            /**
+             * 获取滚动条宽度
+             * @returns {number}
+             */
+            function getScrollWidth() {
+                var noScroll, scroll, oDiv = document.createElement("DIV");
+                oDiv.style.cssText = "position:absolute; top:-1000px; width:100px; height:100px; overflow:hidden;";
+                noScroll = document.body.appendChild(oDiv).clientWidth;
+                oDiv.style.overflowY = "scroll";
+                scroll = oDiv.clientWidth;
+                document.body.removeChild(oDiv);
+                return noScroll-scroll;
+            }
 
             /**
              * 不重载表头数据，重新绑定事件后结束
