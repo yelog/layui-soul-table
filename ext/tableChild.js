@@ -116,20 +116,28 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
          * @param tableId
          */
         renderTable: function (_this, data, child, tableId) {
-            var tables = [];
+            var tables = [],_that = this;
             for (var i=0;i<child.children.length;i++) {
-                var param = this.cloneJSON(child.children[i]),
-                    childTableId = tableId + $(_this).parents('tr').data('index') + i;
-                param.where = child.children[i].where;
-                param.data = child.children[i].data;
-                param.id = childTableId;
-                param.elem = '#'+childTableId;
-                typeof param.where === 'function' && (param.where = param.where(data));
-                typeof param.data === 'function' && (param.data = param.data(data));
-                tables.push(table.render(param));
-                if (i!=0) {
-                    $('#'+childTableId).parents('.layui-tab-item').removeClass('layui-show'); //解决隐藏时计算表格高度有问题
-                }
+                (function () {
+                    var param = _that.cloneJSON(child.children[i]),
+                        childTableId = tableId + $(_this).parents('tr').data('index') + i;
+                    param.where = child.children[i].where;
+                    param.data = child.children[i].data;
+                    param.toolEvent = child.children[i].toolEvent;
+                    param.id = childTableId;
+                    param.elem = '#'+childTableId;
+                    typeof param.where === 'function' && (param.where = param.where(data));
+                    typeof param.data === 'function' && (param.data = param.data(data));
+                    tables.push(table.render(param));
+                    if (i!=0) {
+                        $('#'+childTableId).parents('.layui-tab-item').removeClass('layui-show'); //解决隐藏时计算表格高度有问题
+                    }
+                    if (typeof param.toolEvent == 'function') {
+                        table.on('tool('+childTableId+')', function (obj) {
+                            param.toolEvent(obj)
+                        })
+                    }
+                }());
             }
             tableChildren[tableId + $(_this).parents('tr').data('index')]=tables
         },

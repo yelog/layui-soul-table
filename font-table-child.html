@@ -56,6 +56,10 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
+<script type="text/html" id="childBar">
+    <a class="layui-btn layui-btn-xs" lay-event="childEdit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="childDel">删除</a>
+</script>
 <div class="unshow">
     <pre id="result">
 
@@ -90,6 +94,26 @@
                             ,height: 300
                             ,limit: 10000000
                             ,page: false
+                            ,toolEvent: function (obj) {
+                                if (obj.event === 'childEdit') {
+                                    $('#result').html(syntaxHighlight(obj.data));
+                                    layer.open({
+                                        type: 1,
+                                        title: '子表1-编辑',
+                                        shadeClose: true,
+                                        content:$('#result')
+                                    });
+                                } else if (obj.event === 'childDel') {
+                                    $('#result').html(syntaxHighlight(obj.data));
+                                    layer.open({
+                                        type: 1,
+                                        title: '子表1-删除',
+                                        shadeClose: true,
+                                        content:$('#result')
+                                    });
+                                }
+
+                            }
                             ,cols: [[
                                 {type: 'checkbox', fixed: 'left'},
                                 {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
@@ -99,7 +123,7 @@
                                 {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
                                 {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
                                 {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
-                                {title: '操作', width: 156, templet: '#bar'}
+                                {title: '操作', width: 156, templet: '#childBar'}
                             ]]
                             ,done: function () {
                                 layui.soulTable.render(this);
@@ -114,6 +138,26 @@
                                 console.log(d)
                                 return [d];
                             }
+                            ,toolEvent: function (obj) {
+                                if (obj.event === 'childEdit') {
+                                    $('#result').html(syntaxHighlight(obj.data));
+                                    layer.open({
+                                        type: 1,
+                                        title: '子表2-编辑',
+                                        shadeClose: true,
+                                        content:$('#result')
+                                    });
+                                } else if (obj.event === 'childDel') {
+                                    $('#result').html(syntaxHighlight(obj.data));
+                                    layer.open({
+                                        type: 1,
+                                        title: '子表2-删除',
+                                        shadeClose: true,
+                                        content:$('#result')
+                                    });
+                                }
+
+                            }
                             ,page: false
                             ,cols: [[
                                 {type: 'checkbox', fixed: 'left'},
@@ -124,7 +168,7 @@
                                 {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
                                 {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
                                 {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
-                                {title: '操作', width: 156, templet: '#bar'}
+                                {title: '操作', width: 156, templet: '#childBar'}
                             ]]
                             ,done: function () {
                                 layui.soulTable.render(this);
@@ -169,13 +213,23 @@
         })
 
         table.on('tool(myTable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-            $('#result').html(syntaxHighlight(obj.data));
-            layer.open({
-                type: 1,
-                title: '提交信息',
-                shadeClose: true,
-                content:$('#result')
-            });
+            if (obj.event === 'edit') {
+                $('#result').html(syntaxHighlight(obj.data));
+                layer.open({
+                    type: 1,
+                    title: '主表-编辑',
+                    shadeClose: true,
+                    content:$('#result')
+                });
+            } else if (obj.event === 'del') {
+                $('#result').html(syntaxHighlight(obj.data));
+                layer.open({
+                    type: 1,
+                    title: '主表-删除',
+                    shadeClose: true,
+                    content:$('#result')
+                });
+            }
         })
         // json 格式化+高亮
         function syntaxHighlight(json) {
