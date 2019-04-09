@@ -94,6 +94,13 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                         leftMove = $cloneHead.position().left - left > $cloneHead.prev().prev().width() / 2.0,
                                         rightMove = left - $cloneHead.position().left > $cloneHead.next().width() / 2.0;
                                     moveDistince = Math.abs($cloneHead.position().left - left); //记录移动距离
+                                    if ($cloneHead.position().left - left > 0 ? myTable.cols[$cloneHead.prev().prev().data('key').split('-')[1]][$cloneHead.prev().prev().data('key').split('-')[2]].fixed : myTable.cols[$cloneHead.prev().prev().data('key').split('-')[1]][$cloneHead.next().data('key').split('-')[2]].fixed) {
+                                        $this.css('left',$cloneHead.position().left);
+                                        $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
+                                            $(this).prev().css('left', $cloneHead.position().left);
+                                        })
+                                        return;
+                                    }
                                     $this.css('left', left);
                                     if (leftMove) {
                                         if ($cloneHead.prev().prev().length != 0) {
