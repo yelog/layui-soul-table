@@ -33,6 +33,7 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                 $table = $(myTable.elem),
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
+                $totalTable = $table.next().children('.layui-table-total').children('table'),
                 columns = [].concat.apply([], myTable.cols),
                 tableId = $table.attr('id'),
                 isDraging = false, isStart = false;
@@ -88,6 +89,18 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                                 'width': width
                                             });
                                         })
+                                        if ($totalTable.length>0) {
+                                            $totalTable.find('td[data-field=' + $this.data('field') + ']').each(function (e) {
+                                                $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
+                                                $(this).css({
+                                                    'position': 'absolute',
+                                                    'z-index': 1,
+                                                    'border-left': '1px solid #e6e6e6',
+                                                    'background-color': $(this).css('background-color'),
+                                                    'width': width
+                                                });
+                                            })
+                                        }
                                     }
                                     isDraging = true;
                                     var left = e.clientX - disX,
@@ -99,6 +112,11 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                         $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
                                             $(this).prev().css('left', $cloneHead.position().left);
                                         })
+                                        if ($totalTable.length>0) {
+                                            $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
+                                                $(this).prev().css('left', $cloneHead.position().left);
+                                            })
+                                        }
                                         return;
                                     }
                                     $this.css('left', left);
@@ -169,6 +187,22 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                             }
                                         }
                                     })
+                                    if ($totalTable.length>0) {
+                                        $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
+                                            $(this).prev().css('left', left);
+
+                                            if (leftMove) {
+                                                if ($(this).prev().prev().length != 0) {
+                                                    $(this).after($(this).prev().prev());
+                                                }
+                                            } else if (rightMove) {
+                                                if ($(this).next().length != 0) {
+                                                    $(this).prev().before($(this).next());
+                                                }
+                                            }
+                                        })
+                                    }
+
                                     /* 拖动隐藏列 */
                                     if (e.clientY - originTop < -15) {
                                         if ($('#column-remove').length == 0) {
@@ -210,6 +244,17 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                             });
                                             $(this).remove();
                                         });
+                                        if ($totalTable.length>0) {
+                                            $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
+                                                $(this).prev().css({
+                                                    'position': 'relative',
+                                                    'z-index': 'inherit',
+                                                    'left': 'inherit',
+                                                    'border-left': 'inherit'
+                                                });
+                                                $(this).remove();
+                                            });
+                                        }
                                         $cloneHead = null;
                                     } else {
                                         $that.unbind('click');
