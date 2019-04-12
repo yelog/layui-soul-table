@@ -119,7 +119,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             table_cache[myTable.id] = myTable // 缓存table配置
 
             // 渲染底部筛选条件
-            if ($table.next().children('.soul-bottom-contion').length === 0) {
+            if (!(myTable.filter && !myTable.filter.bottom) && $table.next().children('.soul-bottom-contion').length === 0) {
                 $table.next().children('.layui-table-box').after('<div class="soul-bottom-contion"><div class="condition-items"></div><div class="editCondtion"><a class="layui-btn layui-btn-primary">编辑筛选条件</a></div></div>')
                 var changeHeight = $table.next().children('.layui-table-box').children('.layui-table-body').outerHeight() - $table.next().children('.soul-bottom-contion').outerHeight();
                 if (myTable.page && $table.next().children('.layui-table-page').hasClass('layui-hide')) {changeHeight += $table.next().children('.layui-table-page').outerHeight()}

@@ -78,6 +78,10 @@
                 {field: 'createTime', title: '录入时间', width: 165,fixed:'right',  filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
                 {title: '操作', width: 156,fixed:'right',  templet: '#bar'}
             ]]
+            , filter: {
+                items:['column','data','condition','editCondition','excel'] //用于控制表头下拉显示，可以控制顺序、显示
+                ,bottom: false // 是否显示底部筛选区域，默认为true
+            }
             ,done: function () {
                 soulTable.render(this)
             }
