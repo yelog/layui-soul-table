@@ -66,7 +66,6 @@
             ,height: $(document).height() - $('#myTable').offset().top - 20
             ,limit: 20
             ,page: true
-            ,totalRow: true
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'title', title: '诗词', fixed:'left', width: 200, sort: true, filter: true, totalRowText: '合集'},
@@ -74,7 +73,7 @@
                 {field: 'author', title: '作者', width: 165 , filter: true},
                 {field: 'content', title: '内容', width: 123, filter: true},
                 {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
-                {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true, totalRow: true},
+                {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
                 {field: 'createTime', title: '录入时间', width: 165,fixed:'right',  filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
                 {title: '操作', width: 156,fixed:'right',  templet: '#bar'}
             ]]
