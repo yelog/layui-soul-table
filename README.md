@@ -118,7 +118,27 @@ var myTable = table.render({
     }
 });
 ```
+3.隐藏底部筛选区域，默认为 `true` (显示)
+
+```js
+var myTable = table.render({
+    ... 
+    cols: [[
+       ... 
+    ]]
+    , filter: {
+        bottom: false
+    }
+    , done: function (res, curr, count) {
+        soulTable.render(this)
+    }
+});
+```
+
+
+
 ### 三、后台筛选
+
 目前支持 `java` 且使用了 `mybatis` 框架。
 如果符合上面的条件，则可以移步到包含后端的完整项目即介绍：[https://github.com/yelog/layui-soul-table-java](https://github.com/yelog/layui-soul-table-java)
 ### 四、导出excel相关
