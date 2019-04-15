@@ -42,12 +42,12 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
 
                 $tableBody.children('tbody').children('tr').children('td').children('.childTable').on('click', function () {
                     var data = table.cache[myTable.id][$(this).parents('tr:eq(0)').data('index')];
-                    if (child.show == 2) { // 展开模式
+                    if (child.show == 2) { // 弹窗模式
 
                         layer.open({type: 1, title: '子表', maxmin: true ,content: _this.getTables(this, data, child, myTable), area: '1000px', offset: '100px'});
                         _this.renderTable(this, data, child, tableId);
 
-                    } else { // 弹窗模式
+                    } else { // 展开模式
 
                         $(this).find('i').toggleClass('layui-icon-down');
                         var rowspanIndex=$(this).parents('td').attr("rowspan");
@@ -80,6 +80,9 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
 
                     }
                 })
+                if (child.spread && child.show!=2) {
+                    $tableBody.children('tbody').children('tr').children('td').children('.childTable').trigger('click');
+                }
 
             }
         },
