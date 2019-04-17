@@ -233,10 +233,10 @@ layui.define(['tableFilter', 'tableChild'], function (exports) {
                                     }
                                 }
                             }).on('mouseup', function () {
+                                $(document).unbind("selectstart");
+                                $('body').off('mousemove').off('mouseup')
                                 if (isStart && $cloneHead) {
                                     isStart = false;
-                                    $(document).unbind("selectstart");
-                                    $('body').off('mousemove')
                                     if (isDraging) {
                                         $that.on('click', function (e) {
                                             e.stopPropagation();
