@@ -2503,7 +2503,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                     title[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i].title;
                     showField[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = function (field, line, data, curIndex) {
-                        var bgColor = 'ffffff', color = '000000', family = 'Calibri', size = 12;
+                        var bgColor = 'ffffff', color = '000000', family = 'Calibri', size = 12, cellType = 's';
                         if (curIndex === 0) {
                             bgColor = 'C7C7C7';
                             if (mainExcel.head) {
@@ -2538,6 +2538,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                     color = colExcel.color || color;
                                     family = colExcel.family || family;
                                     size = colExcel.size || size;
+                                    cellType = colExcel.cellType || cellType;
                                 }
                             }
                         }
@@ -2576,6 +2577,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                     },
                                 }
                             },
+                            t: cellType
                         };
                     }
                 }
