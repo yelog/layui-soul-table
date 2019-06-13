@@ -82,7 +82,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
                 $fixedLeftTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-l').children('.layui-table-header').children('table'),
                 $fixedRigthTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
-                tableId = $table.attr('id'),
+                tableId = myTable.id,
                 columns = [].concat.apply([], myTable.cols),
                 filterItems = myTable.filter?myTable.filter.items||['column','data','condition','editCondition','excel']:['column','data','condition','editCondition','excel'],
                 needFilter = false, // 是否存在筛选列需要进行初始化
@@ -901,7 +901,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         showConditionBoard: function (myTable) {
             var _this = this,
                 $table = $(myTable.elem),
-                tableId = $table.attr('id'),
+                tableId = myTable.id,
                 where = where_cache[myTable.id]||{},
                 tableFilterTypes = where.tableFilterType ? JSON.parse(where.tableFilterType) : {},
                 filterSos = where.filterSos ? JSON.parse(where.filterSos) : [],
@@ -1304,7 +1304,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         }
         , hideColumns: function (myTable, animate) {
             var $table = $(myTable.elem),
-                tableId = $table.attr('id');
+                tableId = myTable.id;
 
             $('#soul-columns' + tableId).removeClass().addClass('fadeOutLeft animated')
             if (columnsTimeOut) {
@@ -1321,7 +1321,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         }
         , hideDropList: function (myTable, animate) {
             var $table = $(myTable.elem),
-                tableId = $table.attr('id');
+                tableId = myTable.id;
             $('#soul-dropList' + tableId).removeClass().addClass('fadeOutLeft animated')
             if (dorpListTimeOut) {
                 clearTimeout(dorpListTimeOut);
@@ -1337,7 +1337,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         }
         , hideCondition: function (myTable, animate) {
             var $table = $(myTable.elem),
-                tableId = $table.attr('id');
+                tableId = myTable.id;
             $('#soul-condition' + tableId).removeClass().addClass('fadeOutLeft animated')
             if (conditionTimeOut) {
                 clearTimeout(conditionTimeOut);
@@ -1352,7 +1352,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         }
         , hideBfPrefix: function (myTable, animate) {
             var $table = $(myTable.elem),
-                tableId = $table.attr('id');
+                tableId = myTable.id;
             $('#soul-bf-prefix' + tableId).removeClass().addClass('fadeOutDown animated')
             if (bfColumnTimeOut) {
                 clearTimeout(bfColumnTimeOut);
@@ -1367,7 +1367,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         }
         , hideBfColumn: function (myTable, animate) {
             var $table = $(myTable.elem),
-                tableId = $table.attr('id');
+                tableId = myTable.id;
             $('#soul-bf-column' + tableId).removeClass().addClass('fadeOutDown animated')
             if (bfColumnTimeOut) {
                 clearTimeout(bfColumnTimeOut);
@@ -1382,7 +1382,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         }
         , hideBfType: function (myTable, animate) {
             var $table = $(myTable.elem),
-                tableId = $table.attr('id');
+                tableId = myTable.id;
             $('#soul-bf-type' + tableId).removeClass().addClass('fadeOutDown animated')
             if (bfCond1TimeOut) {
                 clearTimeout(bfCond1TimeOut);
@@ -1401,7 +1401,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
                 $fixedLeftTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-l').children('.layui-table-header').children('table'),
                 $fixedRigthTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
-                tableId = $table.attr('id'),
+                tableId = myTable.id,
                 mainListTimeOut;
 
             // 显示筛选框
@@ -1546,7 +1546,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         , updateDropList: function (myTable, field) {
             var _this = this,
                 $table = $(myTable.elem),
-                tableId = $table.attr('id'),
+                tableId = myTable.id,
                 id = $('#soul-dropList' + tableId + '>ul').data('id'),
                 $checkedDom = $('#soul-dropList' + tableId + '>ul input[type=checkbox]:checked'),
                 values = [],
@@ -2036,7 +2036,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 filterSos = where.filterSos ? JSON.parse(where.filterSos) : [],
                 tableFilterTypes = where.tableFilterType ? JSON.parse(where.tableFilterType) : {},
                 $table = $(myTable.elem),
-                tableId = $table.attr('id'),
+                tableId = myTable.id,
                 $bottomCondition = $table.next().children('.soul-bottom-contion'),
                 fieldMap = {}, bcHtml = [],
                 filterItems = myTable.filter?myTable.filter.items||['column','data','condition','editCondition','excel']:['column','data','condition','editCondition','excel'],
