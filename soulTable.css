@@ -179,6 +179,9 @@
     border: 1px solid #e6e6e6;
     border-radius: 5px;
 }
+[id^=main-list] {
+    max-height: initial;
+}
 [id^=soul-condition] {
     overflow-y: visible;
     max-height: initial;
