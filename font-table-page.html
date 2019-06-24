@@ -83,8 +83,9 @@
             ]]
             , filter: {
                 items:['column','data','condition','editCondition','excel','clearCache'] //用于控制表头下拉显示，可以控制顺序、显示
+                // ,clearFilter: true // table.reload 清除筛选条件，默认false，不清除
                 ,bottom: true // 是否显示底部筛选区域，默认为true
-                ,cache: true //是否缓存数据，默认false
+                ,cache: true // 是否缓存数据列顺序等数据（刷新页面也不丢失），默认false
             }
             ,done: function () {
                 soulTable.render(this)

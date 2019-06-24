@@ -185,13 +185,21 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
 
                 return;
             } else {
-                where_cache[myTable.id] = myTable.where || {}
+                /**
+                 * 缓存所有数据
+                 */
+                cache[myTable.id] = myTable.data || layui.table.cache[myTable.id]
+                if (myTable.filter && myTable.filter.clearFilter) {
+                    where_cache[myTable.id] = myTable.where || {}
+                } else if (where_cache[myTable.id] && JSON.parse(where_cache[myTable.id].filterSos || '[]').length>0) {
+                    myTable.where['filterSos'] = where_cache[myTable.id].filterSos
+                    where_cache[myTable.id] = myTable.where;
+                    _this.soulReload(myTable);
+                    return;
+                } else {
+                    where_cache[myTable.id] = myTable.where || {}
+                }
             }
-
-            /**
-             * 缓存所有数据
-             */
-            cache[myTable.id] = myTable.data || layui.table.cache[myTable.id]
 
             // 第一次渲染时，追加数据
             if ($('#soul-filter-list' + tableId).length == 0) {
