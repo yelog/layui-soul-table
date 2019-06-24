@@ -185,7 +185,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
 
                 return;
             } else {
-                where_cache[myTable.id] = {}
+                where_cache[myTable.id] = myTable.where || {}
             }
 
             /**
@@ -1631,8 +1631,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     id: _this.getDifId()
                 }))
             }
-            myTable.where['filterSos'] = JSON.stringify(filterSos);
-            where_cache[myTable.id] = myTable.where;
+            where['filterSos'] = JSON.stringify(filterSos);
+            where_cache[myTable.id] = where;
 
             function updateFilterSo(filterSo, newFilterSo) {
                 var isMatch = false;
