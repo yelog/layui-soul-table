@@ -215,7 +215,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         soulFilterList.push('<li class="layui-hide"><input type="checkbox" title="' + columns[i].title + '" /></li>')
                         continue;
                     }
-                    soulFilterList.push('<li data-value="' + columns[i].field + '"><input type="checkbox" value="' + (columns[i].field || i) + '" title="' + columns[i].title + '" data-fixed="' + (columns[i].fixed || "") + '" lay-skin="primary" lay-filter="changeColumns' + tableId + '" ' + (columns[i].hide ? '' : 'checked') + '></li>');
+                    soulFilterList.push('<li data-value="' + columns[i].field + '" data-key="'+ i +'"><input type="checkbox" value="' + (columns[i].field || i) + '" title="' + columns[i].title + '" data-fixed="' + (columns[i].fixed || "") + '" lay-skin="primary" lay-filter="changeColumns' + tableId + '" ' + (columns[i].hide ? '' : 'checked') + '></li>');
 
                     //存储过滤数据的类型
                     if (columns[i].filter && columns[i].filter.type) {
@@ -1452,7 +1452,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 // if (myTable.cols[0][0].type=='checkbox') {
                 //     $('#soul-columns'+tableId+' [type=checkbox]:eq('+($that.parents('th').data('key').split('-')[2]-1)+')').attr('disabled', true);
                 // } else {
-                $('#soul-columns' + tableId + ' [type=checkbox]:eq(' + $that.parents('th').data('key').split('-')[2] + ')').attr('disabled', true);
+                $('#soul-columns' + tableId + ' li[data-key=' + $that.parents('th').data('key').split('-')[2] + '] [type=checkbox]').attr('disabled', true);
                 // }
 
                 // 是否显示排序框
