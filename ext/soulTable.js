@@ -29,11 +29,76 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                 if (typeof myTable.drag == 'undefined' || myTable.drag) {
                     this.drag(myTable);
                 }
+                this.autoColumnWidth(myTable)
             }
 
         }
+        /**
+         * excel表格导出
+         * @param myTable
+         * @param curExcel
+         */
         , export: function (myTable, curExcel) {
             tableFilter.export(myTable.config, curExcel);
+        }
+        , autoColumnWidth: function (myTable) {
+            var $table = $(myTable.elem),
+                th = $table.next().children('.layui-table-box').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
+                fixTh = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
+                $tableBodytr = $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr');
+            String.prototype.width = function(font) {
+                var f = font || $('body').css('font'),
+                    o = $('<div>' + this + '</div>')
+                        .css({'position': 'absolute', 'float': 'left', 'white-space': 'nowrap', 'visibility': 'hidden', 'font': f})
+                        .appendTo($('body')),
+                    w = o.width();
+
+                o.remove();
+                return w;
+            }
+            var getCssRule = function(that, key, callback){
+                var style = that.elem.next().find('style')[0]
+                    ,sheet = style.sheet || style.styleSheet || {}
+                    ,rules = sheet.cssRules || sheet.rules;
+                layui.each(rules, function(i, item){
+                    if(item.selectorText === ('.laytable-cell-'+ key)){
+                        return callback(item), true;
+                    }
+                });
+            };
+            th.add(fixTh).on('dblclick', function(e){
+                var othis = $(this)
+                    ,field = othis.data('field')
+                    ,key = othis.data('key')
+                    ,oLeft = othis.offset().left
+                    ,pLeft = e.clientX - oLeft;
+                if(othis.attr('colspan') > 1){
+                    return;
+                }
+                if (othis.width() - pLeft<=10) {
+                    var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
+                    $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
+                        var curWidth = $(this).text().width(font);
+                        if ( maxWidth <curWidth) {
+                            maxWidth = curWidth
+                        }
+                    })
+
+                    maxWidth +=32;
+
+                    getCssRule(myTable, key, function(item){
+                        item.style.width = maxWidth+'px'
+                    });
+                    for (var i = 0; i < myTable.cols.length; i++) {
+                        for (var j = 0; j < myTable.cols[i].length; j++) {
+                            if (myTable.cols[i][j].field === field) {
+                                myTable.cols[i][j].width = maxWidth;
+                                break;
+                            }
+                        }
+                    }
+                }
+            })
         }
         /**
          * 左右拖拽调整列顺序、向上拖隐藏列
