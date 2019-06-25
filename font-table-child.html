@@ -95,7 +95,9 @@
                             ,height: 300
                             ,limit: 10000000
                             ,page: false
-                            ,toolEvent: function (obj) {
+                            ,toolEvent: function (obj, pdata) {
+                                // obj 子表当前行对象
+                                // pdata 父表当前行数据
                                 if (obj.event === 'childEdit') {
                                     $('#result').html(syntaxHighlight(obj.data));
                                     layer.open({
@@ -114,6 +116,24 @@
                                     });
                                 }
 
+                            }
+                            ,rowEvent: function (obj, pdata) {
+                                // 单击行事件
+                                // obj 子表当前行对象
+                                // pdata 父表当前行数据
+                            }
+                            ,rowDoubleEvent: function (obj, pdata) {
+                                // 双击行事件
+                                // obj 子表当前行对象
+                                // pdata 父表当前行数据
+                                $('#result').html('子表数据：<br>' + syntaxHighlight(obj.data)+
+                                        '<br> 父表数据：<br>' +syntaxHighlight(pdata));
+                                layer.open({
+                                    type: 1,
+                                    title: '子表1-双击行事件',
+                                    shadeClose: true,
+                                    content:$('#result')
+                                });
                             }
                             ,cols: [[
                                 {type: 'checkbox', fixed: 'left'},

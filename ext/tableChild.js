@@ -128,6 +128,8 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
                     param.data = child.children[i].data;
                     param.url = child.children[i].url;
                     param.toolEvent = child.children[i].toolEvent;
+                    param.rowEvent = child.children[i].rowEvent;
+                    param.rowDoubleEvent = child.children[i].rowDoubleEvent;
                     param.id = childTableId;
                     param.elem = '#'+childTableId;
                     typeof param.where === 'function' && (param.where = param.where(data));
@@ -139,7 +141,19 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
                     }
                     if (typeof param.toolEvent == 'function') {
                         table.on('tool('+childTableId+')', function (obj) {
-                            param.toolEvent(obj)
+                            param.toolEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                        })
+                    }
+                    // 绑定单击行事件
+                    if (typeof param.rowEvent === 'function') {
+                        table.on('row('+childTableId+')', function (obj) {
+                            param.rowEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                        })
+                    }
+                    // 绑定双击行事件
+                    if (typeof param.rowDoubleEvent === 'function') {
+                        table.on('rowDouble('+childTableId+')', function (obj) {
+                            param.rowDoubleEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
                         })
                     }
                 }());
