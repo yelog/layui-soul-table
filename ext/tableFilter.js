@@ -1696,6 +1696,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     filterSos = JSON.parse(where.filterSos ? where.filterSos : '[]'),
                     tableFilterTypes = where.tableFilterType ? JSON.parse(where.tableFilterType) : {},
                     loading = layer.load(2);
+                // 修复前端不分页时，layui table bug 导致的只显示10条数据的问题
+                myTable.limit = 100000000
                 if (filterSos.length > 0) {
                     var newData = [];
                     layui.each(cache[myTable.id], function (index, item) {
