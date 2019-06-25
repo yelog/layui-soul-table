@@ -148,41 +148,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             /**
              * 不重载表头数据，重新绑定事件后结束
              */
-            if (!initFilter || isFilterReload[myTable.id]) {
+            if (!initFilter || isFilterReload[myTable.id] || myTable.isSoulFrontFilter) {
                 isFilterReload[myTable.id] = false
                 this.bindFilterClick(myTable);
-
-                // 表头样式
-                var where = where_cache[myTable.id]||{},
-                    filterSos = JSON.parse(where.filterSos ? where.filterSos : '[]');
-
-                for (var i = 0; i < filterSos.length; i++) {
-                    if (filterSos[i].head) {
-                        var hasFilter = false;
-                        switch (filterSos[i].mode) {
-                            case 'in':
-                                if (filterSos[i].values && filterSos[i].values.length > 0) {
-                                    hasFilter = true
-                                }
-                                break;
-                            case 'date':
-                                if (filterSos[i].type != 'all' && typeof filterSos[i].value != 'undefined' && filterSos[i].value != '') {
-                                    hasFilter = true
-                                }
-                                break;
-                            case 'group':
-                                if (filterSos[i].children && filterSos[i].children.length > 0) {
-                                    hasFilter = true
-                                }
-                            default:
-                                break;
-                        }
-                        $tableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
-                        $fixedLeftTableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
-                        $fixedRigthTableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
-                    }
-                }
-
                 return;
             } else {
                 /**
@@ -191,10 +159,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 cache[myTable.id] = myTable.data || layui.table.cache[myTable.id]
                 if (myTable.filter && myTable.filter.clearFilter) {
                     where_cache[myTable.id] = myTable.where || {}
-                } else if (where_cache[myTable.id] && JSON.parse(where_cache[myTable.id].filterSos || '[]').length>0) {
+                } else if ((typeof myTable.url != 'undefined' && myTable.page ? typeof myTable.where.filterSos === 'undefined' : true) && where_cache[myTable.id] && JSON.parse(where_cache[myTable.id].filterSos || '[]').length>0) {
                     myTable.where['filterSos'] = where_cache[myTable.id].filterSos
                     where_cache[myTable.id] = myTable.where;
-                    _this.soulReload(myTable);
+                    _this.soulReload(myTable, false);
                     return;
                 } else {
                     where_cache[myTable.id] = myTable.where || {}
@@ -209,7 +177,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     table.on('sort(' + myTable.id + ')', function (obj) {
                         where_cache[myTable.id].field = obj.field;
                         where_cache[myTable.id].order = obj.type;
-
+                        isFilterReload[myTable.id] = true
                         table.render($.extend(myTable,{
                             initSort: obj
                             , where: where_cache[myTable.id]
@@ -1557,6 +1525,37 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }, 300)
                 }
             })
+
+            // 表头样式
+            var where = where_cache[myTable.id]||{},
+                filterSos = JSON.parse(where.filterSos ? where.filterSos : '[]');
+
+            for (var i = 0; i < filterSos.length; i++) {
+                if (filterSos[i].head) {
+                    var hasFilter = false;
+                    switch (filterSos[i].mode) {
+                        case 'in':
+                            if (filterSos[i].values && filterSos[i].values.length > 0) {
+                                hasFilter = true
+                            }
+                            break;
+                        case 'date':
+                            if (filterSos[i].type != 'all' && typeof filterSos[i].value != 'undefined' && filterSos[i].value != '') {
+                                hasFilter = true
+                            }
+                            break;
+                        case 'group':
+                            if (filterSos[i].children && filterSos[i].children.length > 0) {
+                                hasFilter = true
+                            }
+                        default:
+                            break;
+                    }
+                    $tableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
+                    $fixedLeftTableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
+                    $fixedRigthTableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
+                }
+            }
         }
         /**
          * 同步当前 droplist
@@ -1671,12 +1670,12 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 return isMatch;
             }
         }
-        , soulReload: function (myTable) {
+        , soulReload: function (myTable, isr) {
             var _this = this,
                 $table = $(myTable.elem),
                 scrollLeft = $table.next().children('.layui-table-box').children('.layui-table-main').scrollLeft();
 
-            isFilterReload[myTable.id]=true;
+            isFilterReload[myTable.id]= typeof isr === 'undefined' ? true : isr;
             if (typeof myTable.url != 'undefined' && myTable.page) {
                 $table.data('scrollLeft', scrollLeft);
                 /**
@@ -1714,6 +1713,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     if (myTable.page) {
                         table.reload(myTable.id, {
                             data: newData
+                            , isSoulFrontFilter: true
                             , page: {
                                 curr: 1 //重新从第 1 页开始
                             }
@@ -1722,6 +1722,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         var url = myTable.url;
                         table.reload(myTable.id, {
                             url: ''
+                            , isSoulFrontFilter: true
                             , data: newData
                         })
                         myTable.url = url;
@@ -1732,6 +1733,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     if (myTable.page) {
                         table.reload(myTable.id, {
                             data: cache[myTable.id]
+                            , isSoulFrontFilter: true
                             , page: {
                                 curr: 1 //重新从第 1 页开始
                             }
@@ -1739,6 +1741,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     } else {
                         table.reload(myTable.id, {
                             data: cache[myTable.id]
+                            , isSoulFrontFilter: true
                         })
                     }
                     myTable.data = cache[myTable.id]
