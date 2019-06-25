@@ -261,7 +261,8 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                                             'position': 'relative',
                                             'z-index': 'inherit',
                                             'left': 'inherit',
-                                            'border-left': 'inherit'
+                                            'border-left': 'inherit',
+                                            'background-color': 'inherit'
                                         });
                                         $this.next().remove();
                                         $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
@@ -269,7 +270,8 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                                                 'position': 'relative',
                                                 'z-index': 'inherit',
                                                 'left': 'inherit',
-                                                'border-left': 'inherit'
+                                                'border-left': 'inherit',
+                                                'background-color': 'inherit'
                                             });
                                             $(this).remove();
                                         });
@@ -279,7 +281,8 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                                                     'position': 'relative',
                                                     'z-index': 'inherit',
                                                     'left': 'inherit',
-                                                    'border-left': 'inherit'
+                                                    'border-left': 'inherit',
+                                                    'background-color': 'inherit'
                                                 });
                                                 $(this).remove();
                                             });
