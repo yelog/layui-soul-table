@@ -773,7 +773,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 var uls = [];
                                 for (var key in result) {
                                     var list = result[key];
-                                    if (!(list.length == 1 && list[0] == '')) {
+                                    if (!((list.length === 1 && list[0] === '') || list.length === 0)) {
                                         var ul = [];
                                         ul.push("<ul class='" + key + "DropList' data-value='" + key + "'>");
 
