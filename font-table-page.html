@@ -99,7 +99,10 @@
                 data: data,
                 dataType: 'json',
                 success: function (res) {
-                    myTable.reload({
+                    // myTable.reload({
+                    //     data: res.data
+                    // })
+                    table.reload('myTable', {
                         data: res.data
                     })
                 },
