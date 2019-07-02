@@ -407,7 +407,8 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                 }
                 return value;
             })||{};
-        }
+        },
+        cache: tableFilter.cache
 
     }
 
