@@ -2633,7 +2633,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 return value;
             });
         }
-
+        ,cache: cache
     };
 
     // 输出
