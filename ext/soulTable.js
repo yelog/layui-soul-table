@@ -111,7 +111,7 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
                 $totalTable = $table.next().children('.layui-table-total').children('table'),
                 columns = [].concat.apply([], myTable.cols),
-                tableId = $table.attr('id'),
+                tableId = myTable.id,
                 isDraging = false, isStart = false;
 
             var fieldMap = {};
