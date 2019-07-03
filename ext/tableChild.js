@@ -54,7 +54,7 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
 
                         if ($(this).find('i').hasClass('layui-icon-down')) {
                             var newTr = [];
-                            newTr.push('<tr class="noHover childTr"><td colspan="'+$tableHead.find('th:visible').length+'" style="padding: 0; width: '+$(this).parents('tr:eq(0)').width()+'px">');
+                            newTr.push('<tr class="noHover childTr"><td colspan="'+$tableHead.find('th:visible').length+'" style="cursor: inherit; padding: 0; width: '+$(this).parents('tr:eq(0)').width()+'px">');
                             newTr.push(_this.getTables(this, data, child, myTable));
 
                             newTr.push('</td></tr>');
