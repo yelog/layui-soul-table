@@ -19,7 +19,7 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
         render: function (myTable) {
             var _this = this,
                 $table = $(myTable.elem),
-                tableId = $table.attr('id'),
+                tableId = myTable.id,
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
                 columns = myTable.cols[0],
@@ -97,7 +97,7 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
         getTables: function (_this, data, child, myTable) {
             var tables = [],
                 $table = $(myTable.elem),
-                tableId = $table.attr('id'),
+                tableId = myTable.id,
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table');
             tables.push('<div class="layui-tab layui-tab-card" style="margin: 0;border: 0;"><ul class="layui-tab-title">');
             for (var i=0;i<child.children.length;i++) {
