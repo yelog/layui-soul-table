@@ -91,7 +91,7 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
          * @param _this
          * @param data
          * @param child
-         * @param tableId
+         * @param myTable
          * @returns {string}
          */
         getTables: function (_this, data, child, myTable) {
