@@ -125,7 +125,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 var changeHeight = $table.next().children('.layui-table-box').children('.layui-table-body').outerHeight() - $table.next().children('.soul-bottom-contion').outerHeight();
                 if (myTable.page && $table.next().children('.layui-table-page').hasClass('layui-hide')) {changeHeight += $table.next().children('.layui-table-page').outerHeight()}
                 $table.next().children('.layui-table-box').children('.layui-table-body').css('height', changeHeight)
-                $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').css('height', changeHeight-_this.getScrollWidth($tableMain[0]))
+                var fixHeight = changeHeight-_this.getScrollWidth($tableMain[0]), layMainTableHeight = $tableMain.children('table').height()
+                $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').css('height',layMainTableHeight >= fixHeight ? fixHeight : 'auto')
                 $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', ($table.next().children('.soul-bottom-contion').width() - $table.next().children('.soul-bottom-contion').children('.editCondtion').width()) + 'px');
                 $table.next().children('.soul-bottom-contion').children('.editCondtion').children('a').on('click', function () {
                     _this.showConditionBoard(myTable);
@@ -1511,7 +1512,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         bodyHeight = bodyHeight - $table.next().children('.layui-table-box').children('.layui-table-header').outerHeight();
 
                         $table.next().children('.layui-table-box').children('.layui-table-body').height(bodyHeight)
-                        $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').height(bodyHeight - _this.getScrollWidth($tableMain[0]))
+                        var fixHeight = bodyHeight - _this.getScrollWidth($tableMain[0]), layMainTableHeight = $tableMain.children('table').height()
+                        $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').height(layMainTableHeight >= fixHeight ? fixHeight : 'auto')
                     }, 300)
                 }
             })
