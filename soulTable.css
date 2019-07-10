@@ -1,13 +1,13 @@
 /** 自定义字体 **/
-/** 这里使用在线字体，如果需要离线包，联系作者索取：jaytp@qq.com **/
+/** 这里使用在线字体，如果需要离线包，请看 font/README.md **/
 @font-face {
     font-family: 'soul-icon';  /* project id 677836 */
-    src: url('//at.alicdn.com/t/font_677836_jwq362m0tt.eot');
-    src: url('//at.alicdn.com/t/font_677836_jwq362m0tt.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_677836_jwq362m0tt.woff2') format('woff2'),
-    url('//at.alicdn.com/t/font_677836_jwq362m0tt.woff') format('woff'),
-    url('//at.alicdn.com/t/font_677836_jwq362m0tt.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_677836_jwq362m0tt.svg#iconfont') format('svg');
+    src: url('font/iconfont.eot');
+    src: url('font/iconfont.eot?#iefix') format('embedded-opentype'),
+    url('font/iconfont.woff2') format('woff2'),
+    url('font/iconfont.woff') format('woff'),
+    url('font/iconfont.ttf') format('truetype'),
+    url('font/iconfont.svg#iconfont') format('svg');
 }
 
 .soul-icon {
