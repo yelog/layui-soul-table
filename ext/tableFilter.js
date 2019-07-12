@@ -855,10 +855,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 var ul = [];
                                 ul.push("<ul class='" + key + "DropList' data-value='" + key + "'>");
                                 for (var i = 0; i < list.length; i++) {
-                                    if (list[i]==='' || typeof list[i] === 'undefined'){continue}
-                                    var line = {};
-                                    line[key] = list[i];
-                                    ul.push('<li data-value="' + list[i].toString().toLowerCase() + '"><input type="checkbox" value="' + list[i] + '" title="' + ((columnsConfigs[j].templet && typeof columnsConfigs[j].templet == 'function' ? columnsConfigs[j].templet.call(this, line) : list[i]) + "").replace(/\"|\'/g, '\'') + '" lay-skin="primary" lay-filter="soulDropList' + tableId + '"></li>')
+                                    if (list[i]) {
+                                        var line = {};
+                                        line[key] = list[i];
+                                        ul.push('<li data-value="' + list[i].toString().toLowerCase() + '"><input type="checkbox" value="' + list[i] + '" title="' + ((columnsConfigs[j].templet && typeof columnsConfigs[j].templet == 'function' ? columnsConfigs[j].templet.call(this, line) : list[i]) + "").replace(/\"|\'/g, '\'') + '" lay-skin="primary" lay-filter="soulDropList' + tableId + '"></li>')
+                                    }
                                 }
                                 ul.push("</ul>");
                                 uls.push(ul.join(''));
