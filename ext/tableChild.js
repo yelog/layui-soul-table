@@ -37,7 +37,15 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
             if (child) {
                 var width = child.width? child.width : 50;
                 $tableHead.find('th:eq('+childIndex+')>div').css('width', width);
-                $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').addClass('childTable').css({'width': width,'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
+                if (child.isChild && typeof child.isChild === 'function') {
+                    $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').each(function (index) {
+                        if (child.isChild(layui.table.cache[tableId][index])) {
+                            $(this).addClass('childTable').css({'width': width,'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
+                        }
+                    })
+                } else {
+                    $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').addClass('childTable').css({'width': width,'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
+                }
                 // $tableBody.find('tr').find('td:eq('+childIndex+'):not([child])>div').css({'width':'50px'});
 
                 $tableBody.children('tbody').children('tr').children('td').children('.childTable').on('click', function () {

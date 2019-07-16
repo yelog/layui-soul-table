@@ -22,9 +22,20 @@
         .boolean { color: blue; }
         .null { color: magenta; }
         .key { color: red; }
+        blockquote {
+            padding: 20px;
+            margin: 1em 0;
+            background-color: #f7f7f7;
+            border-left: 0.25em solid #b4b4b4;
+            word-break: break-word;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 30px;
+        }
     </style>
 </head>
 <body>
+<blockquote>通过 <code>isChild: function(row){return row.dynasty === '唐代'}</code>控制只有朝代为唐代的会有子表展示入口</blockquote>
 <div class="layui-row">
     <div class="layui-col-lg3 layui-col-md4 layui-col-sm6">
         <div class="layui-inline">
@@ -70,7 +81,7 @@
     // 自定义模块
     layui.config({
         base: 'ext/',   // 模块目录
-        version: 'v1.2.5'
+        version: 'v1.2.8'
     }).extend({                         // 模块别名
         soulTable: 'soulTable'
     });
@@ -88,7 +99,7 @@
             ,sort: 'back'
             ,page: true
             ,cols: [[
-                {title: '#', width: 50, children:[
+                {title: '#', width: 50, isChild: function(row){return row.dynasty === '唐代'}, children:[
                         {
                             title: '表格一'
                             ,url: 'data.json'
