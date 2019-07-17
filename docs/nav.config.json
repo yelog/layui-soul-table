@@ -1,0 +1,91 @@
+{
+  "zh-CN": [
+    {
+      "path": "/changelog",
+      "name": "更新日志"
+    },
+    {
+      "name": "开发指南",
+      "children": [
+        {
+          "path": "/start/install",
+          "name": "安装"
+        }
+      ]
+    },
+    {
+      "name": "基本功能",
+      "children": [
+        {
+          "path": "/basic/drag",
+          "name": "拖拽列"
+        },
+        {
+          "path": "/basic/auto-width",
+          "name": "自适应列宽"
+        },
+        {
+          "path": "/basic/cache",
+          "name": "记忆功能"
+        }
+      ]
+    },
+    {
+      "name": "筛选",
+      "children": [
+        {
+          "path": "/filter/basic",
+          "name": "基本筛选"
+        },
+        {
+          "path": "/filter/font-page",
+          "name": "前台分页"
+        },
+        {
+          "path": "/filter/reload",
+          "name": "表格重载"
+        },
+        {
+          "path": "/filter/menu",
+          "name": "下拉菜单/底栏定制"
+        },
+        {
+          "path": "/filter/excel",
+          "name": "excel导出"
+        }
+      ]
+    },
+    {
+      "name": "子表",
+      "children": [
+        {
+          "path": "/child/basic",
+          "name": "基础子表"
+        },
+        {
+          "path": "/child/request",
+          "name": "子表数据来源"
+        },
+        {
+          "path": "/child/is-child",
+          "name": "是否显示入口"
+        },
+        {
+          "path": "/child/deep",
+          "name": "无限层级"
+        }
+      ]
+    }
+  ],
+  "en-US": [
+    {
+      "name": "Development",
+      "children": [
+        {
+          "path": "/changelog",
+          "name": "changelog"
+        }
+      ]
+    }
+  ]
+}
