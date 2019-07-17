@@ -9,9 +9,9 @@ const config = require('./config');
 
 const webpackConfig = {
   mode: 'development',
-  entry: './docs/entry.js',
+  entry: './documents/entry.js',
   output: {
-    path: path.resolve(process.cwd(), './dist/'),
+    path: path.resolve(process.cwd(), './docs/'),
     publicPath: process.env.CI_ENV || '',
     filename: '[name].[hash:7].js',
     chunkFilename: '[name].js'
@@ -94,12 +94,12 @@ const webpackConfig = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      template: './docs/index.tpl',
+      template: './documents/index.tpl',
       filename: './index.html',
-      favicon: './docs/favicon.ico'
+      favicon: './documents/favicon.ico'
     }),
     new CopyWebpackPlugin([
-      { from: 'docs/versions.json' },
+      { from: 'documents/versions.json' },
       { from: 'animate.min.css' },
       { from: 'soulTable.css' },
       { from: 'data.json' },

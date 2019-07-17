@@ -1,7 +1,7 @@
 var path = require('path');
 
 exports.alias = {
-  docs: path.resolve(__dirname, '../docs')
+  documents: path.resolve(__dirname, '../documents')
 };
 
 exports.vue = {
