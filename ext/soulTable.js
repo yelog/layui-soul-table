@@ -16,7 +16,7 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
     // 封装方法
     var mod = {
         render: function (myTable) {
-            var curTableSession = localStorage.getItem(location.pathname + myTable.id);
+            var curTableSession = localStorage.getItem(location.pathname + location.hash + myTable.id);
 
             if (myTable.filter && myTable.filter.cache && isFirst && curTableSession) {
                myTable.cols = this.deepParse(curTableSession);
@@ -235,7 +235,7 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                                             myTable.cols[x][y - 1] = myTable.cols[x][y];
                                             myTable.cols[x][y] = tempCols;
                                             if (myTable.filter && myTable.filter.cache) {
-                                                localStorage.setItem(location.pathname + myTable.id, _this.deepStringify(myTable.cols))
+                                                localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                                             }
                                         }
                                     } else if (!$cloneHead.next().hasClass('layui-table-patch') && rightMove) {
@@ -263,7 +263,7 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                                             myTable.cols[x][y + 1] = myTable.cols[x][y];
                                             myTable.cols[x][y] = tempCols;
                                             if (myTable.filter && myTable.filter.cache) {
-                                                localStorage.setItem(location.pathname + myTable.id, _this.deepStringify(myTable.cols))
+                                                localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                                             }
                                         }
                                     }
@@ -371,7 +371,7 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
                                             }
                                         }
                                         if (myTable.filter && myTable.filter.cache) {
-                                            localStorage.setItem(location.pathname + myTable.id, _this.deepStringify(myTable.cols))
+                                            localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                                         }
                                         // 更新下拉隐藏
                                         $('#soul-columns' + tableId).find('li[data-value="' + $this.data('field') + '"]>input').prop('checked', false);

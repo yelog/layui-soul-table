@@ -251,7 +251,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
                     }
                     if (myTable.filter && myTable.filter.cache) {
-                        localStorage.setItem(location.pathname + myTable.id, _this.deepStringify(myTable.cols))
+                        localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                     }
                     $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr.childTr').children('td').attr('colspan', $table.next().children('.layui-table-box').children('.layui-table-header').find('thead>tr>th:visible').length)
                 });
@@ -695,8 +695,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     e.stopPropagation();
                 }).on('click', function () {
                     $('#main-list' + tableId).hide();
-                    localStorage.removeItem(location.pathname + myTable.id)
-                    layer.msg('清除成功！', {icon: 1, time: 1000})
+                    localStorage.removeItem(location.pathname + location.hash + myTable.id)
+                    layer.msg('清除成功！请刷新页面！', {icon: 1, time: 1000})
                 });
 
                 $('#main-list' + tableId).on('mouseover', function (e) {
