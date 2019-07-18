@@ -50,7 +50,6 @@ router.beforeEach(async(to, from, next) => {
       config:{id: 'myTable5'}
     }])
   }
-  console.log(layui)
   next()
 })
 

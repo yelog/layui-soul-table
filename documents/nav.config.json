@@ -73,6 +73,10 @@
         {
           "path": "/child/deep",
           "name": "无限层级"
+        },
+        {
+          "path": "/child/event",
+          "name": "事件监听"
         }
       ]
     }
