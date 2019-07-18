@@ -3,11 +3,10 @@
  * @name:  子表格扩展
  * @author: 杨玉杰
  */
-layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
+layui.define(['table' ,'element', 'form'], function (exports) {
 
     var $ = layui.jquery,
         table = layui.table,
-        tableFilter = layui.tableFilter,
         tableChildren={};
 
     // 封装方法
@@ -82,7 +81,9 @@ layui.define(['table', 'tableFilter' ,'element', 'form'], function (exports) {
                                 $(this).parents('tr:eq(0)').next().remove();
                             }
                             var tables = tableChildren[tableId + $(this).parents('tr:eq(0)').data('index')];
-                            tableFilter.destroy(tables);
+                            if (layui.tableFilter) { //如果使用了筛选功能，怎同时清理筛选渲染的数据
+                                layui.tableFilter.destroy(tables);
+                            }
                             delete tableChildren[tableId + $(this).parents('tr:eq(0)').data('index')]
                         }
 

@@ -31,6 +31,8 @@
 
 [优化] 使用了新的文档系统
 
+[优化] 子表 `tableChild.js`可以单独使用 通过 `tableChild.render(this)` 使用
+
 ### **1.2.8** <small>`2019-07-16`</small>
 [新增] 子表 新增 isChild 字段，用于根据当前行数据是否显示子表入口
 
