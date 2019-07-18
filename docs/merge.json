@@ -1,0 +1,91 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 300,
+  "data": [
+    {
+      "poetry": "《江畔独步寻花·其六》",
+      "name": "杜甫",
+      "dynasty": "唐代",
+      "type": "绝句",
+      "sentences": "留连戏蝶时时舞，自在娇莺恰恰啼。"
+    },
+    {
+      "poetry": "《绝句》",
+      "name": "杜甫",
+      "dynasty": "唐代",
+      "type": "绝句",
+      "sentences": "窗含西岭千秋雪，门泊东吴万里船。"
+    },
+    {
+      "poetry": "《秋兴八首（其一）》",
+      "name": "杜甫",
+      "dynasty": "唐代",
+      "type": "七律",
+      "sentences": "丛菊两开他日泪，孤舟一系故园心。"
+    },
+    {
+      "poetry": "《蜀相》",
+      "name": "杜甫",
+      "dynasty": "唐代",
+      "type": "七律",
+      "sentences": "出师未捷身先死，长使英雄泪满襟。"
+    },
+    {
+      "poetry": "《客至》",
+      "name": "杜甫",
+      "dynasty": "唐代",
+      "type": "七律",
+      "sentences": "花径不曾缘客扫，蓬门今始为君开"
+    },
+    {
+      "poetry": "《登金陵凤凰台》",
+      "name": "李白",
+      "dynasty": "唐代",
+      "type": "七律",
+      "sentences": "凤凰台上凤凰游，凤去台空江自流。"
+    },
+    {
+      "poetry": "《行路难·其一》",
+      "name": "李白",
+      "dynasty": "唐代",
+      "type": "七律",
+      "sentences": "长风破浪会有时，直挂云帆济沧海。"
+    },
+    {
+      "poetry": "《《望庐山瀑布》",
+      "name": "李白",
+      "dynasty": "唐代",
+      "type": "七绝",
+      "sentences": "飞流直下三千尺，疑是银河落九天。"
+    },
+    {
+      "poetry": "《望天门山》",
+      "name": "李白",
+      "dynasty": "唐代",
+      "type": "七绝",
+      "sentences": "两岸青山相对出，孤帆一片日边来。"
+    },
+    {
+      "poetry": "《清明》",
+      "name": "杜牧",
+      "dynasty": "唐代",
+      "type": "七绝",
+      "sentences": "借问酒家何处有，牧童遥指杏花村。"
+    },
+    {
+      "poetry": "《江南春》",
+      "name": "杜牧",
+      "dynasty": "唐代",
+      "type": "七绝",
+      "sentences": "千里莺啼绿映红，水村山郭酒旗风。"
+    },
+    {
+      "poetry": "《阿房宫赋》",
+      "name": "杜牧",
+      "dynasty": "唐代",
+      "type": "赋",
+      "sentences": "灭六国者六国也，非秦也；族秦者秦也，非天下也。"
+    }
+  ]
+}  

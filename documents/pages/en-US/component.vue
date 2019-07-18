@@ -88,9 +88,6 @@
             color: #606266;
           }
 
-          th:first-child, td:first-child {
-            padding-left: 10px;
-          }
         }
 
         ul:not(.timeline) {

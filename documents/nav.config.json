@@ -77,6 +77,23 @@
         {
           "path": "/child/event",
           "name": "事件监听"
+        },
+        {
+          "path": "/child/alone",
+          "name": "独立使用"
+        }
+      ]
+    },
+    {
+      "name": "单元格合并",
+      "children": [
+        {
+          "path": "/merge/basic",
+          "name": "列自动合并"
+        },
+        {
+          "path": "/merge/alone",
+          "name": "独立使用"
         }
       ]
     }

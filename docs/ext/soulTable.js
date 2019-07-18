@@ -4,10 +4,11 @@
  * @author: 杨玉杰
  * @version: 1.0
  */
-layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
+layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 
     var tableFilter = layui.tableFilter,
         tableChild = layui.tableChild,
+        tableMerge = layui.tableMerge,
         $ = layui.$,
         table = layui.table,
         HIDE = 'layui-hide',
@@ -25,6 +26,7 @@ layui.define(['table', 'tableFilter', 'tableChild'], function (exports) {
             } else {
                 tableFilter.render(myTable);
                 tableChild.render(myTable);
+                tableMerge.render(myTable);
 
                 if (typeof myTable.drag == 'undefined' || myTable.drag) {
                     this.drag(myTable);

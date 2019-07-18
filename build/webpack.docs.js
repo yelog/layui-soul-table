@@ -105,6 +105,7 @@ const webpackConfig = {
       { from: 'data.json' },
       { from: 'data-1.json' },
       { from: 'child.json' },
+      { from: 'merge.json' },
       {
         from: 'layui',
         to: 'layui'

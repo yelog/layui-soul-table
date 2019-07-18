@@ -4,6 +4,7 @@
 >soulTable.js     总入口  
   tableFilter.js  表头筛选   
   tableChild.js   子表    
+  tableMerge.js   单元格合并    
   excel.js        excel导出    
   FileSaver.js    excel导出   
   xlsx.js         excel导出   
