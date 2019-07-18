@@ -37,14 +37,14 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             // 绑定一下主表事件
             if (!tableChildren[tableId]) {
                 if (typeof myTable.rowEvent === 'function') {
-                    table.on('row('+tableId+')', function (obj) {
+                    table.on('row('+$table.attr('lay-filter')+')', function (obj) {
                         var index = $(this).data('index')
                         obj.tr = $.merge($tableFixed.children('tbody').children('tr[data-index="'+index+'"]'), $tableBody.children('tbody').children('tr[data-index="'+index+'"]'))
                         myTable.rowEvent.call(this, obj);
                     })
                 }
                 if (typeof myTable.rowDoubleEvent === 'function') {
-                    table.on('rowDouble('+tableId+')', function (obj) {
+                    table.on('rowDouble('+$table.attr('lay-filter')+')', function (obj) {
                         var index = $(this).data('index')
                         obj.tr = $.merge($tableFixed.children('tbody').children('tr[data-index="'+index+'"]'), $tableBody.children('tbody').children('tr[data-index="'+index+'"]'))
                         myTable.rowDoubleEvent.call(this, obj);
