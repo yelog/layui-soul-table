@@ -42,6 +42,10 @@
           "name": "前台分页"
         },
         {
+          "path": "/filter/back-page",
+          "name": "后台分页"
+        },
+        {
           "path": "/filter/reload",
           "name": "表格重载"
         },
