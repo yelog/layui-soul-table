@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui-soul-table</title>
+    <meta name="keywords" content="layui,table,表头筛选,tablefilter,tableChild,子表,表格筛选"/>
+    <meta name="description" content="layui表头筛选,tablefilter,tableChild,子表,表格筛选"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="//layui.hcwl520.com.cn/layui-v2.4.5/css/layui.css?v=201811010202" media="all"/>
+    <link rel="stylesheet" href="animate.min.css" media="all"/>
+    <link rel="stylesheet" href="soulTable.css" media="all"/>
+</head>
+<body>
+<div class="layui-row">
+    <div class="layui-col-lg3 layui-col-md4 layui-col-sm6">
+        <div class="layui-inline">
+            <label class="layui-form-label">诗词</label>
+            <div class="layui-input-inline" >
+                <input type="text" name="title"
+                       class="layui-input" placeholder="请输入诗词关键字">
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-lg3 layui-col-md4 layui-col-sm6">
+        <div class="layui-inline">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-inline">
+                <input type="text" name="content"
+                       class="layui-input" placeholder="请选择内容关键词">
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-lg1 layui-col-md1 layui-col-sm2 layui-col-xs3">
+        <button class="layui-btn mgl-20" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>查询</button>
+    </div>
+    <div class="layui-col-lg1 layui-col-md1 layui-col-sm2 layui-col-xs3">
+        <button class="layui-btn mgl-20" lay-submit="" lay-filter="export"><i class="layui-icon">&#xe615;</i>导出</button>
+    </div>
+</div>
+<table id="myTable" ></table>
+<script type="text/html" id="bar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/javascript" src="//layui.hcwl520.com.cn/layui-v2.4.5/layui.js?v=201811010202"></script>
+<script>
+    // 自定义模块
+    layui.config({
+        base: 'ext/',   // 模块目录
+        version: 'v1.2.8'
+    }).extend({                         // 模块别名
+        soulTable: 'soulTable'
+    });
+
+    layui.use(['form', 'table','soulTable'], function () {
+        var table = layui.table,
+            soulTable = layui.soulTable,
+            form = layui.form,
+            $ = layui.$;
+
+        var myTable = table.render({
+            elem: '#myTable'
+            ,url: 'data.json'
+            ,height: $(document).height() - $('#myTable').offset().top - 20
+            ,page: false
+            ,cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+                {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true, excel:function (d) {
+                        var colors = {'清代':'01AAED', '唐代':'FFB800', '宋代':'FF5722','明代':'5FB878'};
+                        return {
+                            color: colors[d.dynasty]?'FFFFFF':'000000',
+                            bgColor: colors[d.dynasty]
+                        }
+                    }},
+                {field: 'author', title: '作者', width: 165 , filter: true},
+                {field: 'content', title: '内容', width: 123, filter: true},
+                {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
+                {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true, excel:{cellType: 'n'}},
+                {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true, excel:{cellType: 'd'}},
+                {title: '操作', width: 156, templet: '#bar'}
+            ]]
+            ,done: function () {
+                soulTable.render(this)
+            }
+        });
+        form.on('submit(search)', function (data) {
+            myTable.reload({
+                where: data.field
+            })
+        })
+        form.on('submit(export)', function () {
+            soulTable.export(myTable);
+        })
+    })
+</script>
+</body>
+</html>

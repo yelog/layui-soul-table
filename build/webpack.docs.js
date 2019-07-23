@@ -102,10 +102,8 @@ const webpackConfig = {
       { from: 'documents/versions.json' },
       { from: 'animate.min.css' },
       { from: 'soulTable.css' },
-      { from: 'data.json' },
-      { from: 'data-1.json' },
-      { from: 'child.json' },
-      { from: 'merge.json' },
+      { from: '*.json' },
+      { from: '*.html' },
       {
         from: 'layui',
         to: 'layui'
