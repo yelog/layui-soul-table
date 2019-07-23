@@ -212,7 +212,7 @@ layui.use(['form', 'table','soulTable'], function () {
     
     layui.$('#export').on('click', function() {
       soulTable.export(myTable, {
-          filename: '手动导出' 
+          filename: '手动导出.xlsx' 
       });
     })
 })
