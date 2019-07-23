@@ -2532,7 +2532,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
 
             // 制定显示列和顺序
-            var index = 0;
+            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'};
             for (var i = 0; i < columns.length; i++) {
                 if ((columns[i].field || columns[i].type === 'numbers') && !columns[i].hide) {
                     columnsMap[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i];
@@ -2589,7 +2589,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 : line[field] || '',// v 代表单元格的值
                             s: {// s 代表样式
                                 alignment: {
-                                    horizontal: 'center',
+                                    horizontal: columnsMap[field].align ? alignTrans[columnsMap[field].align] : 'top',
                                     vertical: 'center'
                                 },
                                 font: {name: family, sz: size, color: {rgb: color}},
