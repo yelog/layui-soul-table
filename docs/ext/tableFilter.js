@@ -2465,7 +2465,19 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 ,anim: -1
                 ,fixed: false
             });
-            var columns = [].concat.apply([], myTable.cols),
+            var cols = this.deepParse(this.deepStringify(myTable.cols))
+                ,style = myTable.elem.next().find('style')[0]
+                ,sheet = style.sheet || style.styleSheet || {}
+                ,rules = sheet.cssRules || sheet.rules;
+
+            layui.each(rules, function (i, item) {
+                if (item.style.width) {
+                    var keys = item.selectorText.split('-');
+                    cols[keys[3]][keys[4]]['width'] = parseInt(item.style.width)
+                }
+            })
+
+            var columns = [].concat.apply([], cols),
                 data = JSON.parse(JSON.stringify(myTable.data || layui.table.cache[myTable.id])),
                 title = {},
                 showField = {},
@@ -2520,7 +2532,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
 
             // 制定显示列和顺序
-            var index = 0;
+            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'};
             for (var i = 0; i < columns.length; i++) {
                 if ((columns[i].field || columns[i].type === 'numbers') && !columns[i].hide) {
                     columnsMap[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i];
@@ -2577,7 +2589,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 : line[field] || '',// v 代表单元格的值
                             s: {// s 代表样式
                                 alignment: {
-                                    horizontal: 'center',
+                                    horizontal: columnsMap[field].align ? alignTrans[columnsMap[field].align] : 'top',
                                     vertical: 'center'
                                 },
                                 font: {name: family, sz: size, color: {rgb: color}},
@@ -2632,9 +2644,22 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 }
                 return value;
             });
-        }
+        },
+        deepParse: function (str) {
+            var JSON_SERIALIZE_FIX = {
+                PREFIX : "[[JSON_FUN_PREFIX_",
+                SUFFIX : "_JSON_FUN_SUFFIX]]"
+            };
+            return JSON.parse(str,function(key, value){
+                if(typeof value === 'string' &&
+                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)==0){
+                    return eval("("+value.replace(JSON_SERIALIZE_FIX.PREFIX,"").replace(JSON_SERIALIZE_FIX.SUFFIX,"")+")");
+                }
+                return value;
+            })||{};
+        },
         /* layui table 中原生的方法 */
-        ,getScrollWidth(elem) {
+        getScrollWidth: function (elem) {
             var width = 0;
             if (elem) {
                 width = elem.offsetWidth - elem.clientWidth;
