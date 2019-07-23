@@ -122,9 +122,27 @@ layui.use(['form', 'table','soulTable'], function () {
     <tr>
         <td rowspan="4">border</td>
         <td>top</td>
-        <td>{ style: BORDER_STYLE, color: COLOR_SPEC }</td>
+        <td>{ style: <a href='javascript:void(0)' @click='goAnchor("border_style")'>BORDER_STYLE</a>, color: <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> }</td>
         <td>上边框样式</td>
-        <td>'c7c7c7'</td>
+        <td>{ style: 'thin', color: 'FF5722' }</td>
+    </tr>
+    <tr>
+        <td>bottom</td>
+        <td>{ style: <a href='javascript:void(0)' @click='goAnchor("border_style")'>BORDER_STYLE</a>, color: <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> }</td>
+        <td>下边框样式</td>
+        <td>{ style: 'thin', color: 'FF5722' }</td>
+    </tr>
+    <tr>
+        <td>left</td>
+        <td>{ style: <a href='javascript:void(0)' @click='goAnchor("border_style")'>BORDER_STYLE</a>, color: <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> }</td>
+        <td>左边框样式</td>
+        <td>{ style: 'thin', color: 'FF5722' }</td>
+    </tr>
+    <tr>
+        <td>right</td>
+        <td>{ style: <a href='javascript:void(0)' @click='goAnchor("border_style")'>BORDER_STYLE</a>, color: <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> }</td>
+        <td>右边框样式</td>
+        <td>{ style: 'thin', color: 'FF5722' }</td>
     </tr>
     </tbody>
 </table>
@@ -167,6 +185,24 @@ layui.use(['form', 'table','soulTable'], function () {
                 size: 12, // 字号
                 color: '000000', // 字体颜色
                 bgColor: 'FFFFFF' //背景颜色
+            },
+            border: {
+                top: {
+                    style: 'dotted',
+                    color: 'FF5722'
+                },
+                bottom: {
+                    style: 'dotted',
+                    color: 'FF5722'
+                },
+                left: {
+                    style: 'dotted',
+                    color: 'FF5722'
+                },
+                right: {
+                    style: 'dotted',
+                    color: 'FF5722'
+                }
             }
         }
         ,done: function () {
@@ -192,7 +228,69 @@ excel: function(row) {
 }
 ```
 #### API
-<table class='el-table el-table--border'><thead><tr><th>参数</th><th>类型</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td>family</td><td>string</td><td>表头字体（默认：calibri）</td><td>'helvetica'</td></tr><tr><td>size</td><td>number</td><td>表头字号（默认：12）</td><td>15</td></tr><tr><td>color</td><td>string</td><td>表头颜色（默认：'000000'） 注意：这里只能用hex（十六进制颜色码），且不能加 `#` 如红色：'ff0000'</td><td>'ff0000'</td></tr><tr><td>bgcolor</td><td>string</td><td>表头背景色（默认：'c7c7c7'）注意事项参考 head-&gt;color</td><td>'c7c7c7'</td></tr><tr><td>cellType</td><td>String</td><td>单元格格式 `b` 布尔值, `n` 数字, `e` 错误, `s` 字符, `d` 日期</td><td>'s'</td></tr></tbody></table>
+<table class='el-table el-table--border'>
+        <thead>
+        <tr>
+            <th>参数</th>
+            <th>类型</th>
+            <th>说明</th>
+            <th>示例</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>family</td>
+            <td>string</td>
+            <td>表头字体（默认：calibri）</td>
+            <td>'helvetica'</td>
+        </tr>
+        <tr>
+            <td>size</td>
+            <td>number</td>
+            <td>表头字号（默认：12）</td>
+            <td>15</td>
+        </tr>
+        <tr>
+            <td>color</td>
+            <td>string</td>
+            <td>表头颜色（默认：'000000'） 注意：这里只能用hex（十六进制颜色码），且不能加 `#` 如红色：'ff0000'</td>
+            <td>'ff0000'</td>
+        </tr>
+        <tr>
+            <td>bgcolor</td>
+            <td>string</td>
+            <td>表头背景色（默认：'c7c7c7'）注意事项参考 head-&gt;color</td>
+            <td>'c7c7c7'</td>
+        </tr>
+        <tr>
+            <td>cellType</td>
+            <td>String</td>
+            <td>单元格格式 `b` 布尔值, `n` 数字, `e` 错误, `s` 字符, `d` 日期</td>
+            <td>'s'</td>
+        </tr>
+        <tr>
+            <td rowspan="4">border</td>
+            <td>top</td>
+            <td>上边框样式{ style: <a href='javascript:void(0)' @click='goAnchor("border_style")'>BORDER_STYLE</a>, color: <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> }</td>
+            <td>{ style: 'thin', color: 'FF5722' }</td>
+        </tr>
+        <tr>
+            <td>bottom</td>
+            <td>下边框样式{ style: <a href='javascript:void(0)' @click='goAnchor("border_style")'>BORDER_STYLE</a>, color: <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> }</td>
+            <td>{ style: 'thin', color: 'FF5722' }</td>
+        </tr>
+        <tr>
+            <td>left</td>
+            <td>左边框样式{ style: <a href='javascript:void(0)' @click='goAnchor("border_style")'>BORDER_STYLE</a>, color: <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> }</td>
+            <td>{ style: 'thin', color: 'FF5722' }</td>
+        </tr>
+        <tr>
+            <td>right</td>
+            <td>右边框样式{ style: <a href='javascript:void(0)' @click='goAnchor("border_style")'>BORDER_STYLE</a>, color: <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> }</td>
+            <td>{ style: 'thin', color: 'FF5722' }</td>
+        </tr>
+        </tbody>
+    </table>
 
 
 下面例子设置了朝代一列的样式为**绿底白字**，并设置录入时间一列为**日期格式**
@@ -309,3 +407,42 @@ layui.use(['form', 'table','soulTable'], function () {
 </script>
 ```
 :::
+
+
+### COLOR_SPEC
+**COLOR_SPEC**: 可以设置在 fill, font, 和 border 属性中，是一个对象:
+
+`{ auto: 1}` 指定自动值（楼主认为，应该是默认为白色的意思）
+
+`{ rgb: "FFFFAA00" }` 指定16进制 ARGB 的值
+
+`{ theme: "1", tint: "-0.25"}` 指定主题颜色和色调值的整数索引（默认值为0）（PS：楼主也明白嘛意思）
+
+`{ indexed: 64}` 是 fill.bgColor属性的默认值，看着应该像索引之类的
+
+### BORDER_STYLE
+**BORDER_STYLE**: 边框支持以下几种样式:
+
+`thin`(细边框)
+
+`medium`(中等)
+
+`thick`(厚)
+
+`dotted`(点线)
+
+`hair`(毛)
+
+`dashed`(虚线)
+
+`mediumDashed`(中等宽度虚线)
+
+`dashDot`(点)
+
+`mediumDashDot`(中等宽度点)
+
+`dashDotDot`(虚线带点)
+
+`mediumDashDotDot`(中等虚线带点)
+
+`slantDashDot`(倾斜虚线点--楼主也没明白啥意思╮(╯▽╰)╭)

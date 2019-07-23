@@ -2532,7 +2532,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
 
             // 制定显示列和顺序
-            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'};
+            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'}, borderTypes=['top','bottom', 'left', 'right'];
             for (var i = 0; i < columns.length; i++) {
                 if ((columns[i].field || columns[i].type === 'numbers') && !columns[i].hide) {
                     columnsMap[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i];
@@ -2541,7 +2541,25 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                     title[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i].title;
                     showField[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = function (field, line, data, curIndex) {
-                        var bgColor = 'ffffff', color = '000000', family = 'Calibri', size = 12, cellType = 's';
+                        var bgColor = 'ffffff', color = '000000', family = 'Calibri', size = 12, cellType = 's',
+                            border = {
+                                top: {
+                                    style: 'thin',
+                                    color: {indexed: 64}
+                                },
+                                bottom: {
+                                    style: 'thin',
+                                    color: {indexed: 64}
+                                },
+                                left: {
+                                    style: 'thin',
+                                    color: {indexed: 64}
+                                },
+                                right: {
+                                    style: 'thin',
+                                    color: {indexed: 64}
+                                }
+                            }
                         if (curIndex === 0) {
                             bgColor = 'C7C7C7';
                             if (mainExcel.head) {
@@ -2556,6 +2574,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 family = curExcel.head.family || family;
                                 size = curExcel.head.size || size;
                             }
+                            if (mainExcel.border) {
+                                for (var j = 0; j < borderTypes.length; j++) {
+                                    if (mainExcel.border[borderTypes[j]]) {
+                                        border[borderTypes[j]].style = mainExcel.border[borderTypes[j]].style || border[borderTypes[j]].style
+                                        border[borderTypes[j]].color = mainExcel.border[borderTypes[j]].color || border[borderTypes[j]].color
+                                    }
+                                }
+                            }
                         } else {
                             if (mainExcel.font) {
                                 bgColor = mainExcel.font.bgColor || bgColor;
@@ -2569,6 +2595,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 family = curExcel.font.family || family;
                                 size = curExcel.head.size || size;
                             }
+                            if (curExcel.border) {
+                                for (var j = 0; j < borderTypes.length; j++) {
+                                    if (curExcel.border[borderTypes[j]]) {
+                                        border[borderTypes[j]].style = curExcel.border[borderTypes[j]].style || border[borderTypes[j]].style
+                                        border[borderTypes[j]].color = curExcel.border[borderTypes[j]].color || border[borderTypes[j]].color
+                                    }
+                                }
+                            }
                             if (columnsMap[field].excel) {
                                 var colExcel = typeof columnsMap[field].excel == 'function' ? columnsMap[field].excel.call(this, line) : columnsMap[field].excel
                                 if (colExcel) {
@@ -2577,6 +2611,15 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                     family = colExcel.family || family;
                                     size = colExcel.size || size;
                                     cellType = colExcel.cellType || cellType;
+
+                                    if (colExcel.border) {
+                                        for (var j = 0; j < borderTypes.length; j++) {
+                                            if (colExcel.border[borderTypes[j]]) {
+                                                border[borderTypes[j]].style = colExcel.border[borderTypes[j]].style || border[borderTypes[j]].style
+                                                border[borderTypes[j]].color = colExcel.border[borderTypes[j]].color || border[borderTypes[j]].color
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -2596,24 +2639,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 fill: {
                                     fgColor: {rgb: bgColor, bgColor: {indexed: 64}}
                                 },
-                                border: {
-                                    top: {
-                                        style: 'thin',
-                                        color: {indexed: 64}
-                                    },
-                                    bottom: {
-                                        style: 'thin',
-                                        color: {indexed: 64}
-                                    },
-                                    left: {
-                                        style: 'thin',
-                                        color: {indexed: 64}
-                                    },
-                                    right: {
-                                        style: 'thin',
-                                        color: {indexed: 64}
-                                    },
-                                }
+                                border: border
                             },
                             t: cellType
                         };

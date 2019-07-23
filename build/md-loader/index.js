@@ -47,6 +47,14 @@ module.exports = function(source) {
         name: 'component-doc',
         components: {
           ${componenetsString}
+        },
+        methods: {
+            goAnchor: function(selector) {
+              const anchorEle = document.querySelector("#" + selector);
+              if (!!anchorEle ) {
+                anchorEle .scrollIntoView(true);
+              }
+            }
         }
       }
     </script>`
