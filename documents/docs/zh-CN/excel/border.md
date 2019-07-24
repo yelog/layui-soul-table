@@ -112,7 +112,7 @@ layui.use(['form', 'table','soulTable'], function () {
         <td rowspan="6">border</td>
         <td>color</td>
         <td>上下左右边框颜色 <a href='javascript:void(0)' @click='goAnchor("color_spec")'>COLOR_SPEC</a> </td>
-        <td>{'FF5722'</td>
+        <td>'FF5722'</td>
     </tr>
     <tr>
         <td>style</td>

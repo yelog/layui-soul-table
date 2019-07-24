@@ -516,9 +516,6 @@ LAY_EXCEL = {
             exportData[i][new_field_name] = '';
           }
         }
-        if (i!==0 && new_field_name === 'LAY_TABLE_INDEX') {
-          exportData[i][new_field_name].v = i
-        }
       }
     }
     return exportData;

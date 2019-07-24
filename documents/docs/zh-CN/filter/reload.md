@@ -52,7 +52,7 @@ myTable.reload({
             ,limit: 20
             ,page: true
             ,cols: [[
-                {type: 'checkbox', fixed: 'left'},
+                {type: 'numbers', title: '序号', fixed: 'left'},
                 {field: 'title', title: '诗词', fixed:'left', width: 200, sort: true, filter: true},
                 {field: 'dynasty', title: '朝代',fixed: 'left', width: 100, sort: true, filter: true},
                 {field: 'author', title: '作者', width: 165 , filter: true},

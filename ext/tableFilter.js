@@ -2477,12 +2477,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 }
             })
 
-            var columns = [].concat.apply([], cols),
-                data = JSON.parse(JSON.stringify(myTable.data || layui.table.cache[myTable.id])),
-                title = {},
+            var data = JSON.parse(JSON.stringify(myTable.data || layui.table.cache[myTable.id])),
                 showField = {},
                 widths = {},
-                columnsMap = {},
+                mergeArrays = [], // 合并配置
                 $table = $(myTable.elem),
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
                 mainExcel = typeof myTable.excel == 'undefined' || ((myTable.excel && (typeof myTable.excel.on == 'undefined' || myTable.excel.on)) ? myTable.excel : false),
@@ -2527,21 +2525,59 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         default:
                             break;
                     }
-
                 }
             }
 
             // 制定显示列和顺序
-            var j, index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'}, borderTypes=['top','bottom', 'left', 'right'];
-            for (var i = 0; i < columns.length; i++) {
+            var i,j,k, tempArray, cloneCol, columnsMap = [];
+            for (i = 0; i < cols.length; i++) {
+                for (j = 0; j < cols[i].length; j++) {
+                    if (!cols[i][j].exportHandled) {
+                        if (cols[i][j].rowspan > 1) {
+                            mergeArrays.push([numberToLetter(j+1)+(i+1), numberToLetter(j+1)+(i+parseInt(cols[i][j].rowspan))])
+                            cloneCol = this.deepClone(cols[i][j])
+                            cloneCol.exportHandled = true;
+                            k = i+1;
+                            while (k < cols.length) {
+                                cols[k].splice(j, 0, cloneCol)
+                                k++
+                            }
+                        }
+                        if (cols[i][j].colspan > 1) {
+                            mergeArrays.push([numberToLetter(j+1)+(i+1), numberToLetter(j+parseInt(cols[i][j].colspan))+(i+1)])
+                            cloneCol = this.deepClone(cols[i][j])
+                            cloneCol.exportHandled = true;
+                            for (k = 1; k < cols[i][j].colspan; k++) {
+                                cols[i].splice(j, 0, cloneCol)
+                            }
+                            j = j + cols[i][j].colspan - 1
+                        }
+                    }
+                }
+            }
+            // 拼接表头数据
+            for (i = 0; i < cols.length; i++) {
+                columnsMap[i] = {}
+                tempArray = {}
+                for (j = 0; j < cols[i].length; j++) {
+                    columnsMap[i][cols[i][j].type === 'numbers' ? 'LAY_TABLE_INDEX' : cols[cols.length-1][j].field] = cols[i][j];
+                    tempArray[cols[i][j].type === 'numbers' ? 'LAY_TABLE_INDEX' : cols[cols.length-1][j].field] = cols[i][j].title
+                }
+                data.splice(i, 0, tempArray)
+            }
+            // layer.close(loading)
+            // return;
+
+            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'}, borderTypes=['top','bottom', 'left', 'right'],
+                columns = cols[cols.length-1];
+            for (i = 0; i < columns.length; i++) {
                 if ((columns[i].field || columns[i].type === 'numbers') && !columns[i].hide) {
-                    columnsMap[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i];
                     if (columns[i].width) {
                         widths[String.fromCharCode(64 + parseInt(++index))] = columns[i].width
                     }
-                    title[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i].title;
                     showField[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = function (field, line, data, curIndex) {
                         var bgColor = 'ffffff', color = '000000', family = 'Calibri', size = 12, cellType = 's',
+                            bodyIndex = curIndex - cols.length,
                             border = {
                                 top: {
                                     style: 'thin',
@@ -2571,7 +2607,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 }
                             }
                         }
-                        if (curIndex === 0) {
+                        if (bodyIndex < 0) {
                             bgColor = 'C7C7C7';
                             if (mainExcel.head) {
                                 bgColor = mainExcel.head.bgColor || bgColor;
@@ -2609,8 +2645,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                     }
                                 }
                             }
-                            if (columnsMap[field].excel) {
-                                var colExcel = typeof columnsMap[field].excel == 'function' ? columnsMap[field].excel.call(this, line) : columnsMap[field].excel
+                            if (columnsMap[columnsMap.length - 1][field].excel) {
+                                var colExcel = typeof columnsMap[columnsMap.length - 1][field].excel == 'function' ? columnsMap[columnsMap.length - 1][field].excel.call(this, line) : columnsMap[columnsMap.length - 1][field].excel
                                 if (colExcel) {
                                     bgColor = colExcel.bgColor || bgColor;
                                     color = colExcel.color || color;
@@ -2634,14 +2670,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
 
                         return {
-                            v: curIndex !== 0 && columnsMap[field].templet ?
-                                typeof columnsMap[field].templet == 'function' ?
-                                    $('<div>' + columnsMap[field].templet(line) + '</div>').find(':input').length===0?$('<div>' + columnsMap[field].templet(line) + '</div>').text():$tableBody.children('tbody').children('tr[data-index='+(curIndex-1)+']').children('td[data-field="'+field+'"]').find(':input').val() || line[field] || ''
-                                    : $('<div>'+$(columnsMap[field].templet).html()+'</div>').find(':input').length===0?$('<div>'+$(columnsMap[field].templet).html()+'</div>').text():$tableBody.children('tbody').children('tr[data-index='+(curIndex-1)+']').children('td[data-field="'+field+'"]').find(':input').val() || line[field] || ''
-                                : line[field] || '',// v 代表单元格的值
+                            v: bodyIndex >= 0 && columnsMap[columnsMap.length - 1][field].templet ?
+                                typeof columnsMap[columnsMap.length - 1][field].templet == 'function' ?
+                                    $('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').find(':input').length===0?$('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').text():$tableBody.children('tbody').children('tr[data-index='+bodyIndex+']').children('td[data-field="'+field+'"]').find(':input').val() || line[field] || ''
+                                    : $('<div>'+$(columnsMap[columnsMap.length - 1][field].templet).html()+'</div>').find(':input').length===0?$('<div>'+$(columnsMap[columnsMap.length - 1][field].templet).html()+'</div>').text():$tableBody.children('tbody').children('tr[data-index='+bodyIndex+']').children('td[data-field="'+field+'"]').find(':input').val() || line[field] || ''
+                                : bodyIndex >=0 && field === 'LAY_TABLE_INDEX' ? bodyIndex+1 : line[field] || '',// v 代表单元格的值
                             s: {// s 代表样式
                                 alignment: {
-                                    horizontal: columnsMap[field].align ? alignTrans[columnsMap[field].align] : 'top',
+                                    horizontal: columnsMap[bodyIndex<-1 ? curIndex : columnsMap.length - 1][field].align ? alignTrans[columnsMap[bodyIndex<-1 ? curIndex : columnsMap.length - 1][field].align] : 'top',
                                     vertical: 'center'
                                 },
                                 font: {name: family, sz: size, color: {rgb: color}},
@@ -2655,22 +2691,41 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                 }
             }
-            data.unshift(title);
             data = excel.filterExportData(data, showField);
 
             var colConf = excel.makeColConfig(widths, 80);
+            var mergeConf = excel.makeMergeConfig(mergeArrays)
             excel.exportExcel({
                 sheet1: data
             }, filename, type, {
                 extend: {
-                    '!cols': colConf
+                    '!cols': colConf,
+                    '!merges': mergeConf
                 }
             });
             layer.close(loading);
 
+            // 合成 excel.js 识别的 rgb
             function handleRgb(rgb) {
                 return rgb ? {rgb: rgb} : rgb
             }
+            function numberToLetter(num){
+                var result = [];
+                while(num){
+                    var t = num % 26;
+                    if(!t){
+                        t = 26;
+                        -- num;
+                    }
+                    result.push(String.fromCodePoint(t + 64));
+                    num = ~~(num / 26);
+                }
+                return result.reverse().join('');
+            }
+        },
+        // 深度克隆
+        deepClone: function (obj) {
+          return this.deepParse(this.deepStringify(obj))
         },
         deepStringify: function (obj) {
             var JSON_SERIALIZE_FIX = {
