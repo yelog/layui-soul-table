@@ -61,19 +61,40 @@ layui.use(['form', 'table','soulTable'], function () {
             {field: 'title', title: '诗词', width: 200, sort: true, filter: true, excel: {
                 border: {
                     style: 'thick',
-                    color: '00FF00'
+                    color: '5FB878'
                 }
             }},
             {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true, excel: function(row) {
                 return {
                     border: {
                         style: row.dynasty === '唐代' ? 'thick' : '',
-                        color: row.dynasty === '唐代' ? '0000FF' : ''
+                        color: row.dynasty === '唐代' ? '1E9FFF' : ''
                     }
                 }
             }},
             {field: 'author', title: '作者', width: 165 , filter: true},
-            {field: 'content', title: '内容', width: 123, filter: true},
+            {field: 'content', title: '内容', width: 123, filter: true, excel: function(row, index, length) {
+              return {
+                  border: {
+                      top: {
+                          style: index === 0 ? 'thick' : '',
+                          color: index === 0 ? '0000FF' : '',
+                      },
+                      bottom: {
+                          style: index+1 === length ? 'thick' : '',
+                          color: index+1 === length ? '0000FF' : '',
+                      },
+                      left: {
+                          style: 'thick',
+                          color: '0000FF',
+                      },
+                      right: {
+                        style: 'thick',
+                        color: '0000FF',
+                      }
+                  }
+              }
+            }},
             {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
             {field: 'heat', title: '点赞数', width: 112,  filter: true, fixed: 'right', sort:true, excel: function(row) {
                 return {

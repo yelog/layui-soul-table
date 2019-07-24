@@ -2646,7 +2646,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 }
                             }
                             if (columnsMap[columnsMap.length - 1][field].excel) {
-                                var colExcel = typeof columnsMap[columnsMap.length - 1][field].excel == 'function' ? columnsMap[columnsMap.length - 1][field].excel.call(this, line) : columnsMap[columnsMap.length - 1][field].excel
+                                var colExcel = typeof columnsMap[columnsMap.length - 1][field].excel == 'function' ? columnsMap[columnsMap.length - 1][field].excel.call(this, line, bodyIndex, data.length - cols.length) : columnsMap[columnsMap.length - 1][field].excel
                                 if (colExcel) {
                                     bgColor = colExcel.bgColor || bgColor;
                                     color = colExcel.color || color;
