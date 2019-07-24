@@ -52,10 +52,31 @@
         {
           "path": "/filter/menu",
           "name": "下拉菜单/底栏定制"
+        }
+      ]
+    },
+    {
+      "name": "excel导出",
+      "children": [
+        {
+          "path": "/excel/basic",
+          "name": "基本效果"
         },
         {
-          "path": "/filter/excel",
-          "name": "excel导出"
+          "path": "/excel/global-style",
+          "name": "全局样式设置"
+        },
+        {
+          "path": "/excel/style",
+          "name": "精确样式设置"
+        },
+        {
+          "path": "/excel/border",
+          "name": "边框样式设置"
+        },
+        {
+          "path": "/excel/func",
+          "name": "调用方法导出"
         }
       ]
     },

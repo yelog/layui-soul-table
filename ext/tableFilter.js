@@ -2532,7 +2532,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
 
             // 制定显示列和顺序
-            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'}, borderTypes=['top','bottom', 'left', 'right'];
+            var j, index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'}, borderTypes=['top','bottom', 'left', 'right'];
             for (var i = 0; i < columns.length; i++) {
                 if ((columns[i].field || columns[i].type === 'numbers') && !columns[i].hide) {
                     columnsMap[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i];
@@ -2560,6 +2560,17 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                     color: {indexed: 64}
                                 }
                             }
+                        if (mainExcel.border) {
+                            for (j = 0; j < borderTypes.length; j++) {
+                                if (mainExcel.border[borderTypes[j]]) {
+                                    border[borderTypes[j]].style = mainExcel.border[borderTypes[j]].style || border[borderTypes[j]].style
+                                    border[borderTypes[j]].color = handleRgb(mainExcel.border[borderTypes[j]].color) || border[borderTypes[j]].color
+                                } else if (mainExcel.border['color'] || mainExcel.border['style']) {
+                                    border[borderTypes[j]].style = mainExcel.border['style'] || border[borderTypes[j]].style
+                                    border[borderTypes[j]].color = handleRgb(mainExcel.border['color']) || border[borderTypes[j]].color
+                                }
+                            }
+                        }
                         if (curIndex === 0) {
                             bgColor = 'C7C7C7';
                             if (mainExcel.head) {
@@ -2573,14 +2584,6 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 color = curExcel.head.color || color;
                                 family = curExcel.head.family || family;
                                 size = curExcel.head.size || size;
-                            }
-                            if (mainExcel.border) {
-                                for (var j = 0; j < borderTypes.length; j++) {
-                                    if (mainExcel.border[borderTypes[j]]) {
-                                        border[borderTypes[j]].style = mainExcel.border[borderTypes[j]].style || border[borderTypes[j]].style
-                                        border[borderTypes[j]].color = mainExcel.border[borderTypes[j]].color || border[borderTypes[j]].color
-                                    }
-                                }
                             }
                         } else {
                             if (mainExcel.font) {
@@ -2596,10 +2599,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 size = curExcel.head.size || size;
                             }
                             if (curExcel.border) {
-                                for (var j = 0; j < borderTypes.length; j++) {
+                                for (j = 0; j < borderTypes.length; j++) {
                                     if (curExcel.border[borderTypes[j]]) {
                                         border[borderTypes[j]].style = curExcel.border[borderTypes[j]].style || border[borderTypes[j]].style
-                                        border[borderTypes[j]].color = curExcel.border[borderTypes[j]].color || border[borderTypes[j]].color
+                                        border[borderTypes[j]].color = handleRgb(curExcel.border[borderTypes[j]].color) || border[borderTypes[j]].color
+                                    } else if (curExcel.border['color'] || curExcel.border['style']) {
+                                        border[borderTypes[j]].style = curExcel.border['style'] || border[borderTypes[j]].style
+                                        border[borderTypes[j]].color = handleRgb(curExcel.border['color']) || border[borderTypes[j]].color
                                     }
                                 }
                             }
@@ -2613,10 +2619,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                     cellType = colExcel.cellType || cellType;
 
                                     if (colExcel.border) {
-                                        for (var j = 0; j < borderTypes.length; j++) {
+                                        for (j = 0; j < borderTypes.length; j++) {
                                             if (colExcel.border[borderTypes[j]]) {
                                                 border[borderTypes[j]].style = colExcel.border[borderTypes[j]].style || border[borderTypes[j]].style
-                                                border[borderTypes[j]].color = colExcel.border[borderTypes[j]].color || border[borderTypes[j]].color
+                                                border[borderTypes[j]].color = handleRgb(colExcel.border[borderTypes[j]].color) || border[borderTypes[j]].color
+                                            } else if (colExcel.border['color'] || colExcel.border['style']) {
+                                                border[borderTypes[j]].style = colExcel.border['style'] || border[borderTypes[j]].style
+                                                border[borderTypes[j]].color = handleRgb(colExcel.border['color']) || border[borderTypes[j]].color
                                             }
                                         }
                                     }
@@ -2658,6 +2667,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 }
             });
             layer.close(loading);
+
+            function handleRgb(rgb) {
+                return rgb ? {rgb: rgb} : rgb
+            }
         },
         deepStringify: function (obj) {
             var JSON_SERIALIZE_FIX = {
