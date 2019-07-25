@@ -1,15 +1,20 @@
+require('babel-polyfill');
 const path = require('path');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const config = require('./config');
 
 const webpackConfig = {
   mode: 'development',
-  entry: './documents/entry.js',
+  // entry: './documents/entry.js',
+  entry: {
+    app: ["babel-polyfill", "./documents/entry.js"]
+  },
   output: {
     path: path.resolve(process.cwd(), './docs/'),
     publicPath: process.env.CI_ENV || '',
@@ -42,9 +47,11 @@ const webpackConfig = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(jsx?|babel|es6)$/,
-        include: process.cwd(),
-        exclude: config.jsexclude,
+        test: /\.(js|jsx?|babel|es6)$/,
+        include: [path.join(__dirname, '..', 'documents'),  path.join(__dirname, '..', 'node-modules')],
+        options: {
+          presets: ['@babel/preset-env']
+        },
         loader: 'babel-loader'
       },
       {
@@ -123,6 +130,16 @@ const webpackConfig = {
         compilerOptions: {
           preserveWhitespace: false
         }
+      }
+    }),
+    new UglifyJSPlugin({
+      uglifyOptions: {
+        ie8: true,
+        output: {
+          comments: false,
+          beautify: false
+        },
+        warnings: false
       }
     })
   ],
