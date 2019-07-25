@@ -85,6 +85,10 @@
         {
           "path": "/excel/header",
           "name": "复杂表头导出"
+        },
+        {
+          "path": "/excel/add",
+          "name": "添加自定义内容"
         }
       ]
     },

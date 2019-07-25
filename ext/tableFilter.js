@@ -2481,6 +2481,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 showField = {},
                 widths = {},
                 mergeArrays = [], // 合并配置
+                heightConfig = {},
                 $table = $(myTable.elem),
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
                 mainExcel = typeof myTable.excel == 'undefined' || ((myTable.excel && (typeof myTable.excel.on == 'undefined' || myTable.excel.on)) ? myTable.excel : false),
@@ -2489,7 +2490,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 filename = curExcel.filename?(typeof curExcel.filename === 'function'?curExcel.filename.call(this):curExcel.filename)
                     : mainExcel.filename?(typeof mainExcel.filename === 'function'?mainExcel.filename.call(this):mainExcel.filename)
                         : '表格数据.xlsx',
-                type = filename.substring(filename.lastIndexOf('.') + 1, filename.length)
+                type = filename.substring(filename.lastIndexOf('.') + 1, filename.length),
+                tableStartIndex = mainExcel.add && mainExcel.add.top && Array.isArray(mainExcel.add.top.data) ? mainExcel.add.top.data.length + 1 : 1,  //表格内容从哪一行开始
+                bottomLength = mainExcel.add && mainExcel.add.bottom && Array.isArray(mainExcel.add.bottom.data) ? mainExcel.add.bottom.data.length : 0;// 底部自定义行数
 
             if (myTable.url && myTable.page) {
                 var ajaxStatus = true;
@@ -2534,7 +2537,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 for (j = 0; j < cols[i].length; j++) {
                     if (!cols[i][j].exportHandled) {
                         if (cols[i][j].rowspan > 1) {
-                            mergeArrays.push([numberToLetter(j+1)+(i+1), numberToLetter(j+1)+(i+parseInt(cols[i][j].rowspan))])
+                            mergeArrays.push([numberToLetter(j+1)+(i+tableStartIndex), numberToLetter(j+1)+(i+parseInt(cols[i][j].rowspan) + tableStartIndex - 1)])
                             cloneCol = this.deepClone(cols[i][j])
                             cloneCol.exportHandled = true;
                             k = i+1;
@@ -2544,7 +2547,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             }
                         }
                         if (cols[i][j].colspan > 1) {
-                            mergeArrays.push([numberToLetter(j+1)+(i+1), numberToLetter(j+parseInt(cols[i][j].colspan))+(i+1)])
+                            mergeArrays.push([numberToLetter(j+1)+(i+tableStartIndex), numberToLetter(j+parseInt(cols[i][j].colspan))+(i+tableStartIndex)])
                             cloneCol = this.deepClone(cols[i][j])
                             cloneCol.exportHandled = true;
                             for (k = 1; k < cols[i][j].colspan; k++) {
@@ -2568,8 +2571,76 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             // layer.close(loading)
             // return;
 
-            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'}, borderTypes=['top','bottom', 'left', 'right'],
-                columns = cols[cols.length-1];
+            var columns = cols[cols.length-1];
+            //添加自定义内容
+            if (mainExcel.add) {
+                var addTop = mainExcel.add.top,
+                    addBottom = mainExcel.add.bottom,
+                    startPos, endPos, jumpColsNum;
+
+                if (addTop && Array.isArray(addTop.data) && addTop.data.length>0) {
+
+                    for (i = 0; i < addTop.data.length; i++) {
+                        tempArray = {}, jumpColsNum = 0;
+                        for (j = 0; j < (addTop.data[i].length>columns.length?addTop.data[i].length:columns.length); j++) {
+                            if ((columns[j].field || columns[j].type === 'numbers') && !columns[j].hide) {
+                                tempArray[columns[j] ? columns[j].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[j].field : j+''] = addTop.data[i][j - jumpColsNum] || ''
+                            } else {
+                                jumpColsNum++
+                            }
+                        }
+                        data.splice(i, 0, tempArray);
+                    }
+
+                    if (Array.isArray(addTop.heights) && addTop.heights.length>0) {
+                        for (i = 0; i < addTop.heights.length; i++) {
+                            heightConfig[i] = addTop.heights[i]
+                        }
+                    }
+
+                    if (Array.isArray(addTop.merge) && addTop.merge.length>0) {
+                        for (i = 0; i < addTop.merge.length; i++) {
+                            if (addTop.merge[i].length === 2) {
+                                startPos = addTop.merge[i][0].split(',');
+                                endPos = addTop.merge[i][1].split(',');
+                                mergeArrays.push([numberToLetter(startPos[1])+startPos[0], numberToLetter(endPos[1])+endPos[0]])
+                            }
+
+                        }
+                    }
+                }
+                if (addBottom && Array.isArray(addBottom.data) && addBottom.data.length>0) {
+                    for (i = 0; i < addBottom.data.length; i++) {
+                        tempArray = {}, jumpColsNum = 0;
+                        for (j = 0; j < (addBottom.data[i].length>columns.length?addBottom.data[i].length:columns.length); j++) {
+                            if ((columns[j].field || columns[j].type === 'numbers') && !columns[j].hide) {
+                                tempArray[columns[j] ? columns[j].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[j].field : j+''] = addBottom.data[i][j - jumpColsNum] || ''
+                            } else {
+                                jumpColsNum++
+                            }
+                        }
+                        data.push(tempArray);
+                    }
+
+                    if (Array.isArray(addBottom.heights) && addBottom.heights.length>0) {
+                        for (i = 0; i < addBottom.heights.length; i++) {
+                            heightConfig[data.length - addBottom.data.length + i] = addBottom.heights[i]
+                        }
+                    }
+
+                    if (Array.isArray(addBottom.merge) && addBottom.merge.length>0) {
+                        for (i = 0; i < addBottom.merge.length; i++) {
+                            if (addBottom.merge[i].length === 2) {
+                                startPos = addBottom.merge[i][0].split(',');
+                                endPos = addBottom.merge[i][1].split(',');
+                                mergeArrays.push([numberToLetter(startPos[1])+(data.length - addBottom.data.length + parseInt(startPos[0])), numberToLetter(endPos[1])+(data.length - addBottom.data.length + parseInt(endPos[0]))])
+                            }
+                        }
+                    }
+                }
+            }
+
+            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'}, borderTypes=['top','bottom', 'left', 'right'];
             for (i = 0; i < columns.length; i++) {
                 if ((columns[i].field || columns[i].type === 'numbers') && !columns[i].hide) {
                     if (columns[i].width) {
@@ -2577,7 +2648,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                     showField[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = function (field, line, data, curIndex) {
                         var bgColor = 'ffffff', color = '000000', family = 'Calibri', size = 12, cellType = 's',
-                            bodyIndex = curIndex - cols.length,
+                            bodyIndex = curIndex - cols.length - tableStartIndex + 1,
                             border = {
                                 top: {
                                     style: 'thin',
@@ -2607,7 +2678,23 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 }
                             }
                         }
-                        if (bodyIndex < 0) {
+                        if (curIndex < tableStartIndex -1 || curIndex >= data.length - bottomLength) {
+                            return {
+                                v: line[field] || '',
+                                s: {// s 代表样式
+                                    alignment: {
+                                        horizontal: 'center',
+                                        vertical: 'center'
+                                    },
+                                    font: {name: family, sz: size, color: {rgb: color}},
+                                    fill: {
+                                        fgColor: {rgb: bgColor, bgColor: {indexed: 64}}
+                                    },
+                                    border: border
+                                },
+                                t: cellType
+                            }
+                        } else if (bodyIndex < 0) {
                             bgColor = 'C7C7C7';
                             if (mainExcel.head) {
                                 bgColor = mainExcel.head.bgColor || bgColor;
@@ -2646,7 +2733,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 }
                             }
                             if (columnsMap[columnsMap.length - 1][field].excel) {
-                                var colExcel = typeof columnsMap[columnsMap.length - 1][field].excel == 'function' ? columnsMap[columnsMap.length - 1][field].excel.call(this, line, bodyIndex, data.length - cols.length) : columnsMap[columnsMap.length - 1][field].excel
+                                var colExcel = typeof columnsMap[columnsMap.length - 1][field].excel == 'function' ? columnsMap[columnsMap.length - 1][field].excel.call(this, line, bodyIndex, data.length - cols.length - tableStartIndex + 1 - bottomLength ) : columnsMap[columnsMap.length - 1][field].excel
                                 if (colExcel) {
                                     bgColor = colExcel.bgColor || bgColor;
                                     color = colExcel.color || color;
@@ -2677,7 +2764,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 : bodyIndex >=0 && field === 'LAY_TABLE_INDEX' ? bodyIndex+1 : line[field] || '',// v 代表单元格的值
                             s: {// s 代表样式
                                 alignment: {
-                                    horizontal: columnsMap[bodyIndex<-1 ? curIndex : columnsMap.length - 1][field].align ? alignTrans[columnsMap[bodyIndex<-1 ? curIndex : columnsMap.length - 1][field].align] : 'top',
+                                    horizontal: columnsMap[bodyIndex<-1 ? curIndex - tableStartIndex + 1 : columnsMap.length - 1][field].align ? alignTrans[columnsMap[bodyIndex<-1 ? curIndex - tableStartIndex + 1 : columnsMap.length - 1][field].align] : 'top',
                                     vertical: 'center'
                                 },
                                 font: {name: family, sz: size, color: {rgb: color}},
@@ -2691,16 +2778,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                 }
             }
-            data = excel.filterExportData(data, showField);
 
-            var colConf = excel.makeColConfig(widths, 80);
-            var mergeConf = excel.makeMergeConfig(mergeArrays)
             excel.exportExcel({
-                sheet1: data
+                sheet1: excel.filterExportData(data, showField)
             }, filename, type, {
                 extend: {
-                    '!cols': colConf,
-                    '!merges': mergeConf
+                    '!cols': excel.makeColConfig(widths, 80),
+                    '!merges': excel.makeMergeConfig(mergeArrays),
+                    '!rows': excel.makeRowConfig(heightConfig, 16)
                 }
             });
             layer.close(loading);

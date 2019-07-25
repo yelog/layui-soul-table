@@ -1,6 +1,7 @@
 ## 给 layui-table 注入点灵魂
 当前layui版本 `v2.4.5` 
 在线demo及文档： [https://yelog.org/layui-soul-table/](https://yelog.org/layui-soul-table/)
+国内下载地址: [https://gitee.com/saodiyang/layui-soul-table](https://gitee.com/saodiyang/layui-soul-table)
 
 ## 扩展功能
 1. 表头筛选、自定义条件（支持前端筛选、后台筛选介绍请看 <a href='#user-content-三后台筛选'>三、后台筛选</a>）
