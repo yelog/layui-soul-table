@@ -1,6 +1,6 @@
 ## 给 layui-table 注入点灵魂
 当前layui版本 `v2.4.5` 
-在线demo： [https://yelog.org/layui-soul-table/](https://yelog.org/layui-soul-table/)
+在线demo及文档： [https://yelog.org/layui-soul-table/](https://yelog.org/layui-soul-table/)
 
 ## 扩展功能
 1. 表头筛选、自定义条件（支持前端筛选、后台筛选介绍请看 <a href='#user-content-三后台筛选'>三、后台筛选</a>）
@@ -26,9 +26,8 @@
 >soulTable.js     总入口  
   tableFilter.js  表头筛选   
   tableChild.js   子表    
+  tableMerge.js   单元格合并 
   excel.js        excel导出    
-  FileSaver.js    excel导出   
-  xlsx.js         excel导出   
 
 2.定义入口模块`soulTable`  
 ```js
