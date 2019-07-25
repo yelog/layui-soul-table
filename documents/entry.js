@@ -70,6 +70,14 @@ router.afterEach(route => {
   document.title = 'Element'
   ga('send', 'event', 'PageView', route.name)
 })
+router.onError((error) => {
+  const pattern = /Loading chunk (\d)+ failed/g;
+  const isChunkLoadFailed = error.message.match(pattern);
+  const targetPath = router.history.pending.fullPath;
+  if (isChunkLoadFailed) {
+    router.replace(targetPath);
+  }
+});
 
 new Vue({ // eslint-disable-line
   ...entry,
