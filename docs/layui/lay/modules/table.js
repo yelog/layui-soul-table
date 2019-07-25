@@ -1371,6 +1371,7 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
     //拖拽中
     _DOC.on('mousemove', function(e){
       if(dict.resizeStart){
+        if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict)}
         e.preventDefault();
         if(dict.rule){
           var setWidth = dict.ruleWidth + e.clientX - dict.offset[0];
