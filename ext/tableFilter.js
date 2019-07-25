@@ -84,7 +84,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 $fixedLeftTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-l').children('.layui-table-header').children('table'),
                 $fixedRigthTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
                 tableId = myTable.id,
-                columns = [].concat.apply([], myTable.cols),
+                columns = _this.getCompleteCols(myTable.cols),
                 filterItems = myTable.filter?myTable.filter.items||['column','data','condition','editCondition','excel']:['column','data','condition','editCondition','excel'],
                 needFilter = false, // 是否存在筛选列需要进行初始化
                 initFilter = false, // 是否为第一次筛选
@@ -892,7 +892,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 tableFilterTypes = where.tableFilterType ? JSON.parse(where.tableFilterType) : {},
                 filterSos = where.filterSos ? JSON.parse(where.filterSos) : [],
                 filterBoard = [], fieldMap = {}, firstColumn,
-                columns = [].concat.apply([], myTable.cols);
+                columns = _this.getCompleteCols(myTable.cols);
             for (var i = 0; i < columns.length; i++) {
                 if (columns[i].field && columns[i].filter) {
                     if (!firstColumn) {
@@ -2066,7 +2066,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 $bottomCondition = $table.next().children('.soul-bottom-contion'),
                 fieldMap = {}, bcHtml = [],
                 filterItems = myTable.filter?myTable.filter.items||['column','data','condition','editCondition','excel']:['column','data','condition','editCondition','excel'],
-                columns = [].concat.apply([], myTable.cols);
+                columns = _this.getCompleteCols(myTable.cols);
             for (var i = 0; i < columns.length; i++) {
                 if (columns[i].field && columns[i].filter) {
                     fieldMap[columns[i]['field']] = columns[i]['title']
@@ -2768,6 +2768,34 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 document.body.removeChild(elem);
             }
             return width;
+        }
+        ,getCompleteCols: function (origin) {
+            var cols = this.deepParse(this.deepStringify(origin));
+            var i,j,k, cloneCol;
+            for (i = 0; i < cols.length; i++) {
+                for (j = 0; j < cols[i].length; j++) {
+                    if (!cols[i][j].exportHandled) {
+                        if (cols[i][j].rowspan > 1) {
+                            cloneCol = this.deepClone(cols[i][j])
+                            cloneCol.exportHandled = true;
+                            k = i+1;
+                            while (k < cols.length) {
+                                cols[k].splice(j, 0, cloneCol)
+                                k++
+                            }
+                        }
+                        if (cols[i][j].colspan > 1) {
+                            cloneCol = this.deepClone(cols[i][j])
+                            cloneCol.exportHandled = true;
+                            for (k = 1; k < cols[i][j].colspan; k++) {
+                                cols[i].splice(j, 0, cloneCol)
+                            }
+                            j = j + cols[i][j].colspan - 1
+                        }
+                    }
+                }
+            }
+            return cols[cols.length-1];
         }
         ,cache: cache
     };

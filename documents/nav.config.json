@@ -52,6 +52,10 @@
         {
           "path": "/filter/menu",
           "name": "下拉菜单/底栏定制"
+        },
+        {
+          "path": "/filter/header",
+          "name": "复杂表头筛选"
         }
       ]
     },

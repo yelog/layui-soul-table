@@ -107,6 +107,10 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
          * @param myTable
          */
         , drag: function (myTable) {
+            if (myTable.cols.length>1) {
+                // 如果是复杂表头，则自动禁用拖动效果
+                return;
+            }
             var _this = this,
                 $table = $(myTable.elem),
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
