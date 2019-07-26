@@ -131,16 +131,6 @@ const webpackConfig = {
           preserveWhitespace: false
         }
       }
-    }),
-    new UglifyJSPlugin({
-      uglifyOptions: {
-        ie8: true,
-        output: {
-          comments: false,
-          beautify: false
-        },
-        warnings: false
-      }
     })
   ],
   optimization: {
@@ -148,5 +138,17 @@ const webpackConfig = {
   },
   devtool: '#eval-source-map'
 };
+if (process.env.NODE_ENV === 'product') {
+  webpackConfig.plugins.push(new UglifyJSPlugin({
+    uglifyOptions: {
+      ie8: true,
+      output: {
+        comments: false,
+        beautify: false
+      },
+      warnings: false
+    }
+  }))
+}
 
 module.exports = webpackConfig;

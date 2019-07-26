@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "docs": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.docs.js",
-    "build": "cross-env NODE_ENV=development webpack --config build/webpack.docs.js"
+    "build": "cross-env NODE_ENV=product webpack --config build/webpack.docs.js"
   },
   "dependencies": {
     "@babel/core": "^7.5.4",
