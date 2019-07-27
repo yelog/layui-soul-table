@@ -93,7 +93,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                             }
                             _this.renderTable(this, data, child, tableId);
                             // 阻止事件冒泡
-                            $('.childTr').off('click').on('click', function (e) {
+                            $(this).parents('tr:eq(0)').next().children('td').children('.layui-tab').children('.layui-tab-content').on('click', function (e) {
                                 e.stopPropagation()
                             }).off('dblclick').on('dblclick', function (e) {
                                 e.stopPropagation()

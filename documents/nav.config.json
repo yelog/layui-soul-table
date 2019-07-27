@@ -38,12 +38,8 @@
           "name": "基本筛选"
         },
         {
-          "path": "/filter/font-page",
-          "name": "前台分页"
-        },
-        {
-          "path": "/filter/back-page",
-          "name": "后台分页"
+          "path": "/filter/page",
+          "name": "分页"
         },
         {
           "path": "/filter/reload",
