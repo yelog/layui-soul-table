@@ -2485,16 +2485,19 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 $table = $(myTable.elem),
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
                 mainExcel = typeof myTable.excel == 'undefined' || ((myTable.excel && (typeof myTable.excel.on == 'undefined' || myTable.excel.on)) ? myTable.excel : false),
-                mainExcel = mainExcel == true ? {} : mainExcel || {},
+                mainExcel = mainExcel === true ? {} : mainExcel || {},
                 curExcel = curExcel || {},
                 filename = curExcel.filename?(typeof curExcel.filename === 'function'?curExcel.filename.call(this):curExcel.filename)
                     : mainExcel.filename?(typeof mainExcel.filename === 'function'?mainExcel.filename.call(this):mainExcel.filename)
                         : '表格数据.xlsx',
+                checked = curExcel.checked === true ? true : mainExcel.checked === true,
                 type = filename.substring(filename.lastIndexOf('.') + 1, filename.length),
                 tableStartIndex = mainExcel.add && mainExcel.add.top && Array.isArray(mainExcel.add.top.data) ? mainExcel.add.top.data.length + 1 : 1,  //表格内容从哪一行开始
                 bottomLength = mainExcel.add && mainExcel.add.bottom && Array.isArray(mainExcel.add.bottom.data) ? mainExcel.add.bottom.data.length : 0;// 底部自定义行数
 
-            if (myTable.url && myTable.page) {
+            if (checked) { // 获取选中行数据
+                data = table.checkStatus(myTable.id).data;
+            } else if (myTable.url && myTable.page) {
                 var ajaxStatus = true;
                 $.ajax({
                     url: myTable.url,

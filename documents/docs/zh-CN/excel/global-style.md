@@ -1,4 +1,4 @@
-## 全局样式设置
+## 全局参数设置
 
 ### 设置字体/背景色/文件名
 
@@ -66,6 +66,12 @@ layui.use(['form', 'table','soulTable'], function () {
         <td colspan="2">on</td>
         <td>boolean</td>
         <td>表头下拉中开启excel导出功能（默认：true）</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td colspan="2">checked</td>
+        <td>boolean</td>
+        <td>仅导出勾选的数据（默认：false）</td>
         <td>true</td>
     </tr>
     <tr>

@@ -2,9 +2,13 @@
 
 
 ### 1. 只显示表格列和导出excel两个菜单项
-> 通过 `filter.items` 控制，
->默认为 `['column','data','condition','editCondition','excel']`
+通过 `filter.items` 控制，
+
+默认为 `['column','data','condition','editCondition','excel']`
+
 分别对应：表格列、筛选数据、筛选条件、编辑筛选条件、导出excel
+
+**注意：** 去掉 'data'(筛选数据) 时，后台筛选将不会发送第二条请求（表头数据请求）
 
 :::demo 配置  `items:['column', 'excel']`
 ```html

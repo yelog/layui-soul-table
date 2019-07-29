@@ -64,11 +64,11 @@
         },
         {
           "path": "/excel/global-style",
-          "name": "全局样式设置"
+          "name": "全局参数设置"
         },
         {
           "path": "/excel/style",
-          "name": "精确样式设置"
+          "name": "精确参数设置"
         },
         {
           "path": "/excel/border",
