@@ -295,28 +295,28 @@
           </li>
 
           <!-- 版本选择器 -->
-          <li class="nav-item nav-versions" v-show="isComponentPage">
-            <el-dropdown
-              trigger="click"
-              class="nav-dropdown"
-              :class="{ 'is-active': verDropdownVisible }">
-              <span>
-                {{ version }}
-                <i class="el-icon-arrow-down el-icon--right"></i>
-              </span>
-              <el-dropdown-menu
-                slot="dropdown"
-                class="nav-dropdown-list"
-                @input="handleVerDropdownToggle">
-                <el-dropdown-item
-                  v-for="item in Object.keys(versions)"
-                  :key="item"
-                  @click.native="switchVersion(item)">
-                  {{ item }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </li>
+          <!--<li class="nav-item nav-versions" v-show="isComponentPage">-->
+            <!--<el-dropdown-->
+              <!--trigger="click"-->
+              <!--class="nav-dropdown"-->
+              <!--:class="{ 'is-active': verDropdownVisible }">-->
+              <!--<span>-->
+                <!--{{ version }}-->
+                <!--<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
+              <!--</span>-->
+              <!--<el-dropdown-menu-->
+                <!--slot="dropdown"-->
+                <!--class="nav-dropdown-list"-->
+                <!--@input="handleVerDropdownToggle">-->
+                <!--<el-dropdown-item-->
+                  <!--v-for="item in Object.keys(versions)"-->
+                  <!--:key="item"-->
+                  <!--@click.native="switchVersion(item)">-->
+                  <!--{{ item }}-->
+                <!--</el-dropdown-item>-->
+              <!--</el-dropdown-menu>-->
+            <!--</el-dropdown>-->
+          <!--</li>-->
 
           <!-- 语言选择器 -->
           <li class="nav-item lang-item">
@@ -359,8 +359,8 @@ export default {
   data () {
     return {
       active: '',
-      versions: [],
-      version: '1.2.9',
+      // versions: [],
+      // version: '1.2.9',
       verDropdownVisible: true,
       langDropdownVisible: true,
       langs: {
@@ -387,10 +387,10 @@ export default {
   mounted () {
   },
   methods: {
-    switchVersion (version) {
-      if (version === this.version) return
-      location.href = `${location.origin}/${this.versions[version]}/${location.hash} `
-    },
+    // switchVersion (version) {
+    //   if (version === this.version) return
+    //   location.href = `${location.origin}/${this.versions[version]}/${location.hash} `
+    // },
 
     switchLang (targetLang) {
       if (this.lang === targetLang) return
@@ -408,18 +408,18 @@ export default {
   },
 
   created () {
-    const xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = _ => {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        const versions = JSON.parse(xhr.responseText)
-        this.versions = Object.keys(versions).reduce((prev, next) => {
-          prev[next] = versions[next]
-          return prev
-        }, {})
-      }
-    }
-    xhr.open('GET', '/versions.json')
-    xhr.send()
+    // const xhr = new XMLHttpRequest()
+    // xhr.onreadystatechange = _ => {
+    //   if (xhr.readyState === 4 && xhr.status === 200) {
+    //     const versions = JSON.parse(xhr.responseText)
+    //     this.versions = Object.keys(versions).reduce((prev, next) => {
+    //       prev[next] = versions[next]
+    //       return prev
+    //     }, {})
+    //   }
+    // }
+    // xhr.open('GET', '/versions.json')
+    // xhr.send()
   }
 }
 </script>
