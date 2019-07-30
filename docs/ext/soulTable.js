@@ -216,6 +216,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         return;
                                     }
                                     $this.css('left', left);
+                                    var curKey = $this.data('key').split('-')[1] + '-' + $this.data('key').split('-')[2]
                                     if (leftMove) {
                                         if ($cloneHead.prev().prev().length != 0) {
                                             $cloneHead.after($cloneHead.prev().prev());
@@ -227,7 +228,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             var x, y;
                                             for (var i = 0; i < myTable.cols.length; i++) {
                                                 for (var j = 0; j < myTable.cols[i].length; j++) {
-                                                    if (myTable.cols[i][j].key == $this.data('key').substring(2)) {
+                                                    if (myTable.cols[i][j].key === curKey) {
                                                         x = i;
                                                         y = j;
                                                         break;
@@ -255,7 +256,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             var x, y;
                                             for (var i = 0; i < myTable.cols.length; i++) {
                                                 for (var j = 0; j < myTable.cols[i].length; j++) {
-                                                    if (myTable.cols[i][j].key == $this.data('key').substring(2)) {
+                                                    if (myTable.cols[i][j].key == curKey) {
                                                         x = i;
                                                         y = j;
                                                         break;
