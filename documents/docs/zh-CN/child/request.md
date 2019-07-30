@@ -15,15 +15,26 @@
     </thead>
     <tbody>
         <tr>
+            <td rowspan="2">url</td>
+            <td>string</td>
+            <td>请求地址</td>
+            <td><code class="language-js hljs javascript" style='margin: 0;'>url: 'user/list.action'</code></td>
+        </tr>
+        <tr>
+            <td>function</td>
+            <td>方法返回请求地址 <small>（多用于路径参数）</small></td>
+            <td><code class="language-js hljs javascript" style='margin: 0;'>url: function(row){<br><span class='hljs-comment'>//row 为当前行数据</span><br>console.log(row);<br>return 'user/list/'+row.id <br>}</code></td>
+        </tr>
+        <tr>
             <td rowspan="2">where</td>
             <td>object</td>
             <td>请求的参数</td>
-            <td>where: {<br>name:'小明'<br>}</td>
+            <td><code class="language-js hljs javascript" style='margin: 0;'>where: {<br>name:'小明'<br>}</code></td>
         </tr>
         <tr>
             <td>function</td>
             <td>方法返回请求参数</td>
-            <td>where: function(row){<br>//row 为当前行数据<br>console.log(row);<br>return {name: row.name}<br>}</td>
+            <td><code class="language-js hljs javascript" style='margin: 0;'>where: function(row){<br><span class='hljs-comment'>//row 为当前行数据</span><br>console.log(row);<br>return {name: row.name}<br>}</code></td>
         </tr>
     </tbody>
 </table>
@@ -104,12 +115,12 @@ layui.use(['form', 'table','soulTable'], function () {
             <td rowspan="2">data</td>
             <td>object</td>
             <td>赋值子表格数据</td>
-            <td>data: []</td>
+            <td><code class="language-js hljs javascript" style='margin: 0;'>data: []</code></td>
         </tr>
         <tr>
             <td>function</td>
             <td>方法返回表格数据，参数为父表当前行数据</td>
-            <td>data: function(row){<br>//row 为当前行数据<br>console.log(row);<br>return row.children<br>}</td>
+            <td><code class="language-js hljs javascript" style='margin: 0;'>data: function(row){<br><span class='hljs-comment'>//row 为当前行数据</span><br>console.log(row);<br>return row.children<br>}</code></td>
         </tr>
     </tbody>
 </table>
