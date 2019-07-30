@@ -23,7 +23,8 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
                 $tableFixed = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').children('table'),
                 columns = myTable.cols[0],
-                child, childIndex ;
+                child, childIndex,
+                soulSort = typeof myTable.soulSort === 'undefined' || myTable.soulSort;
 
 
             // 获取子表配置信息
@@ -53,6 +54,12 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             }
 
             if (child) {
+                if (soulSort && !(myTable.url && myTable.page)) {
+                    // 前台排序
+                    table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
+                        _this.render(myTable)
+                    });
+                }
                 var width = child.width? child.width : 50;
                 $tableHead.find('th:eq('+childIndex+')>div').css('width', width);
                 if (child.isChild && typeof child.isChild === 'function') {

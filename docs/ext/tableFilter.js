@@ -167,11 +167,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
 
             // 第一次渲染时，追加数据
-            if ($('#soul-filter-list' + tableId).length == 0) {
+            if ($('#soul-filter-list' + tableId).length === 0) {
 
-                if (myTable.sort == 'back') {
+                if ((typeof myTable.soulSort === 'undefined' || myTable.soulSort) && myTable.url && myTable.page) {
                     // 后台排序
-                    table.on('sort(' + myTable.id + ')', function (obj) {
+                    table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
                         where_cache[myTable.id].field = obj.field;
                         where_cache[myTable.id].order = obj.type;
                         isFilterReload[myTable.id] = true

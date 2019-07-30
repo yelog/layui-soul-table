@@ -44,8 +44,8 @@ layui.use(['form', 'table','tableChild'], function () {
                     }
                 }
             ]},
-            {field: 'title', title: '诗词', width: 200},
-            {field: 'dynasty', title: '朝代', width: 100},
+            {field: 'title', title: '诗词', width: 200, sort: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true},
             {field: 'author', title: '作者', width: 165},
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},

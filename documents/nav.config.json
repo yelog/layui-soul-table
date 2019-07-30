@@ -27,6 +27,10 @@
         {
           "path": "/basic/cache",
           "name": "记忆功能"
+        },
+        {
+          "path": "/basic/sort",
+          "name": "排序监听"
         }
       ]
     },

@@ -83,7 +83,8 @@ layui.use(['form', 'table','soulTable'], function () {
         soulTable = layui.soulTable;
 
     var myTable2 = table.render({
-        elem: '#myTable2'
+        id: 'myTable2'
+        ,elem: '#myTable2'
         ,url: 'data-1.json'
         ,height: 500
         ,page: false
@@ -111,7 +112,7 @@ layui.use(['form', 'table','soulTable'], function () {
     });
     
     layui.$('#export2').on('click', function() {
-      if (table.checkStatus(myTable2.id).data.length > 0) {
+      if (table.checkStatus('myTable2').data.length > 0) {
         soulTable.export(myTable2, {
             filename: '手动导出.xlsx',
             checked: true // 只导出勾选数据

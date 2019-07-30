@@ -51,6 +51,7 @@ myTable.reload({
             ,height: 400 
             ,limit: 20
             ,page: true
+            ,soulSort: true
             ,cols: [[
                 {type: 'numbers', title: '序号', fixed: 'left'},
                 {field: 'title', title: '诗词', fixed:'left', width: 200, sort: true, filter: true},
@@ -106,7 +107,7 @@ myTable.reload({
         <button class="layui-btn mgl-20" lay-submit="" lay-filter="search2"><i class="layui-icon">&#xe615;</i>查询</button>
     </div>
 </div>
-<table id="myTable2" ></table>
+<table id="myTable2" lay-filter="myTable2" ></table>
 <script>
     layui.use(['form', 'table','soulTable'], function () {
         var table = layui.table,
@@ -120,6 +121,7 @@ myTable.reload({
             ,height: 400 
             ,limit: 20
             ,page: true
+            ,soulSort: true
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'title', title: '诗词', fixed:'left', width: 200, sort: true, filter: true},

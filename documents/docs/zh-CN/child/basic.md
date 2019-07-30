@@ -1,10 +1,10 @@
 ## 基础子表
 通过设置 `children` 字段，将子表配置读取进来
-### 展开方式 （默认方式）
+### 1.展开方式 （默认方式）
 通过设置 `show: 1` 或 不设置 
 :::demo
 ```html
-<table id="myTable" ></table>
+<table id="myTable" lay-filter="myTable"></table>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
@@ -80,11 +80,11 @@ layui.use(['form', 'table','soulTable'], function () {
 ```
 :::
 
-### 弹窗方式
+### 2.弹窗方式
 通过设置 `show: 2`
 :::demo 设置 `show: 2`
 ```html
-<table id="myTable2" ></table>
+<table id="myTable2" lay-filter="myTable2"></table>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
