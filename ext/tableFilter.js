@@ -427,7 +427,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
 
                     var filterType = $(this).parent().data('type');
-                    if (filterType && filterType.startsWith('date')) {
+                    if (_this.startsWith(filterType, 'date')) {
                         _this.showDate(myTable, field, filterSo, animate, $(this).offset().top, $(this).parent().offset().left + $(this).parent().width(), 'down', true);
                     } else {
                         /**
@@ -2354,7 +2354,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         $.extend(filterSo, {
                             values: []
                         })
-                    } else if (mode === 'date' && !(tableFilterTypes[newField] && tableFilterTypes[newField].startsWith('date'))) {
+                    } else if (mode === 'date' && !(_this.startsWith(tableFilterTypes[newField], 'date'))) {
                         $.extend(filterSo, {
                             mode: 'in',
                             values: []
@@ -2810,6 +2810,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 }
                 return result.reverse().join('');
             }
+        },
+        startsWith: function(content, str) {
+            var reg = new RegExp("^" + str);
+            return content && reg.test(content);
         },
         // 深度克隆
         deepClone: function (obj) {
