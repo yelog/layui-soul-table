@@ -16,6 +16,9 @@ layui.config({
     soulTable: 'soulTable'  // 模块别名
 });
 ```
+### 引入 CSS 
+将 `animate.min.css` 和 `soulTable.css` 引入项目
+
 ### 使用
 ```js
 table.render({
