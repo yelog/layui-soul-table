@@ -24,6 +24,9 @@
 
 
 ## 更新日志
+### **1.2.16** <small>`2019-07-31`</small>
+[修复] 筛选 表头请求/excel请求 添加 header/contentType 支持
+
 ### **1.2.15** <small>`2019-07-30`</small>
 [修复] 子表 添加排序默认事件，解决 layui table 默认排序不执行done造成的子表入口不渲染的问题
 [修复] 筛选 修复 IE 不支持 startsWith 的问题 

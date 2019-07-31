@@ -765,6 +765,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             url: url,
                             data: datas,
                             dataType: 'json',
+                            headers: myTable.headers || {},
+                            contentType: myTable.contentType,
                             success: function (result) {
 
                                 var uls = [];
@@ -2505,6 +2507,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     dataType: 'json',
                     async: false,
                     cache: false,
+                    headers: myTable.headers || {},
+                    contentType: myTable.contentType,
                     success: function (res) {
                         data = res.data
                     },
