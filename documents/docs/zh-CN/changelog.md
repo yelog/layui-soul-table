@@ -3,7 +3,7 @@
 
 为 `layui table` 扩展的插件， 计划和目标（有好的想法/建议/BUG反馈，可以加入QQ群：<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3cbfbd2169afc3f4d11732101388941b0db5330a64755e68f27740b604409629"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="layui-使用交流" title="layui-使用交流"></a>）
 
-当前layui版本 `v2.4.5`, 新版稳定后，将会做兼容性工作
+当前layui版本 `v2.5.4`
 
 </el-card>
 
@@ -24,12 +24,16 @@
 
 
 ## 更新日志
-### **1.2.16** <small>`2019-07-31`</small>
+### **1.3.0** <small>`2019-07-31`</small>
 [修复] 筛选 表头请求/excel请求 添加 header/contentType 支持
+
+[升级] layui 升级layui版本为 2.5.4
 
 ### **1.2.15** <small>`2019-07-30`</small>
 [修复] 子表 添加排序默认事件，解决 layui table 默认排序不执行done造成的子表入口不渲染的问题
-[修复] 筛选 修复 IE 不支持 startsWith 的问题 
+
+[修复] 筛选 修复 IE 不支持 startsWith 的问题
+ 
 [修复] 拖拽 修复拖拽列顺序时，同页面表格树超过10个以上出现拖拽异常的问题
 
 [文档] excel导出 添加分页示例
