@@ -31,6 +31,8 @@
 
 [新增] excel导出 支持直接传 tableId 如 soulTable.export('tableId')
 
+[新增] 子表 新增手风琴展开方式 [2.手风琴方式（一次只能展开一个子表）](/#/zh-CN/component/child/basic)
+
 ### **1.3.0** <small>`2019-07-31`</small>
 [修复] 筛选 表头请求/excel请求 添加 header/contentType 支持
 

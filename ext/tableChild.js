@@ -75,12 +75,22 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
                 $tableBody.children('tbody').children('tr').children('td').children('.childTable').on('click', function () {
                     var data = table.cache[myTable.id][$(this).parents('tr:eq(0)').data('index')];
-                    if (child.show == 2) { // 弹窗模式
+                    if (child.show === 2) { // 弹窗模式
 
                         layer.open({type: 1, title: '子表', maxmin: true ,content: _this.getTables(this, data, child, myTable), area: '1000px', offset: '100px'});
                         _this.renderTable(this, data, child, tableId);
 
                     } else { // 展开模式
+
+                        // 开启手风琴模式
+                        if (!$(this).find('i').hasClass('layui-icon-down') && child.collapse) {
+                            $tableBody.children('tbody').children('tr').children('td').children('.childTable').each(function () {
+                                if ($(this).find('i').hasClass('layui-icon-down')) {
+                                    $(this).find('i').toggleClass('layui-icon-down');
+                                    _this.destroyChildren($(this), tableId)
+                                }
+                            })
+                        }
 
                         $(this).find('i').toggleClass('layui-icon-down');
                         var rowspanIndex=$(this).parents('td:eq(0)').attr("rowspan");
@@ -106,17 +116,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                 e.stopPropagation()
                             })
                         } else {
-                            if(rowspanIndex){
-                                var index=$(this).parents('tr:eq(0)').index()+parseInt(rowspanIndex);
-                                $(this).parents('table:eq(0)').children().children('tr:eq('+index+')').remove()
-                            }else{
-                                $(this).parents('tr:eq(0)').next().remove();
-                            }
-                            var tables = tableChildren[tableId + $(this).parents('tr:eq(0)').data('index')];
-                            if (layui.tableFilter) { //如果使用了筛选功能，怎同时清理筛选渲染的数据
-                                layui.tableFilter.destroy(tables);
-                            }
-                            delete tableChildren[tableId + $(this).parents('tr:eq(0)').data('index')]
+                            _this.destroyChildren($(this), tableId)
                         }
 
                     }
@@ -177,7 +177,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                     typeof param.data === 'function' && (param.data = param.data(data));
                     typeof param.url === 'function' && (param.url = param.url(data));
                     tables.push(table.render(param));
-                    if (i!=0) {
+                    if (i!==0) {
                         $('#'+childTableId).parents('.layui-tab-item:eq(0)').removeClass('layui-show'); //解决隐藏时计算表格高度有问题
                     }
                     if (typeof param.toolEvent == 'function') {
@@ -200,6 +200,20 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 }());
             }
             tableChildren[tableId + $(_this).parents('tr:eq(0)').data('index')]=tables
+        },
+        destroyChildren: function ($this, tableId) {
+            var rowspanIndex = $this.parents('td:eq(0)').attr("rowspan");
+            if(rowspanIndex){
+                var index=$this.parents('tr:eq(0)').index()+parseInt(rowspanIndex);
+                $this.parents('table:eq(0)').children().children('tr:eq('+index+')').remove()
+            }else{
+                $this.parents('tr:eq(0)').next().remove();
+            }
+            var tables = tableChildren[tableId + $this.parents('tr:eq(0)').data('index')];
+            if (layui.tableFilter) { //如果使用了筛选功能，怎同时清理筛选渲染的数据
+                layui.tableFilter.destroy(tables);
+            }
+            delete tableChildren[tableId + $this.parents('tr:eq(0)').data('index')]
         },
         cloneJSON: function (obj) {
             var JSON_SERIALIZE_FIX = {
