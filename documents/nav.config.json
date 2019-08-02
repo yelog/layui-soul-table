@@ -89,6 +89,10 @@
         {
           "path": "/excel/add",
           "name": "添加自定义内容"
+        },
+        {
+          "path": "/excel/form",
+          "name": "包含表单元素的导出"
         }
       ]
     },
