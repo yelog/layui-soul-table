@@ -1,39 +1,8 @@
 import navConfig from './nav.config'
 import langs from './i18n/route'
 
-const LOAD_MAP = {
-  'zh-CN': name => {
-    return r => require.ensure([], () =>
-      r(require(`./pages/zh-CN/${name}.vue`)),
-    'zh-CN')
-  },
-  'en-US': name => {
-    return r => require.ensure([], () =>
-      r(require(`./pages/en-US/${name}.vue`)),
-    'en-US')
-  }
-}
-
-const load = function (lang, path) {
-  return LOAD_MAP[lang](path)
-}
-
-const LOAD_DOCS_MAP = {
-  'zh-CN': path => {
-    return r => require.ensure([], () =>
-      r(require(`./docs/zh-CN${path}.md`)),
-    'zh-CN')
-  },
-  'en-US': path => {
-    return r => require.ensure([], () =>
-      r(require(`./docs/en-US${path}.md`)),
-    'en-US')
-  }
-}
-
-const loadDocs = function (lang, path) {
-  return LOAD_DOCS_MAP[lang](path)
-}
+const importMap = (lang, name) => () => import(`./pages/${lang}/${name}.vue`)
+const importDocs = (lang, path) => () => import(`./docs/${lang}${path}.md`)
 
 const registerRoute = (navConfig) => {
   let route = []
@@ -42,7 +11,7 @@ const registerRoute = (navConfig) => {
     route.push({
       path: `/${lang}/component`,
       redirect: `/${lang}/component/installation`,
-      component: load(lang, 'component'),
+      component: importMap(lang, 'component'),
       children: []
     })
     navs.forEach(nav => {
@@ -63,7 +32,7 @@ const registerRoute = (navConfig) => {
     })
   })
   function addRoute (page, lang, index) {
-    const component = loadDocs(lang, page.path)
+    const component = importDocs(lang, page.path)
     let child = {
       path: page.path.slice(1),
       meta: {
@@ -87,17 +56,17 @@ const generateMiscRoutes = function (lang) {
   let guideRoute = {
     path: `/${lang}/guide`, // 指南
     redirect: `/${lang}/guide/design`,
-    component: load(lang, 'guide'),
+    component: importMap(lang, 'guide'),
     children: [{
       path: 'design', // 设计原则
       name: 'guide-design' + lang,
       meta: { lang },
-      component: load(lang, 'design')
+      component: importMap(lang, 'design')
     }, {
       path: 'nav', // 导航
       name: 'guide-nav' + lang,
       meta: { lang },
-      component: load(lang, 'nav')
+      component: importMap(lang, 'nav')
     }]
   }
 
@@ -105,7 +74,7 @@ const generateMiscRoutes = function (lang) {
     path: `/${lang}/resource`, // 资源
     meta: { lang },
     name: 'resource' + lang,
-    component: load(lang, 'resource')
+    component: importMap(lang, 'resource')
   }
 
   let indexRoute = {
@@ -113,7 +82,7 @@ const generateMiscRoutes = function (lang) {
     meta: { lang },
     name: 'home' + lang,
     redirect: `/${lang}/component/changelog`,
-    component: load(lang, 'index')
+    component: importMap(lang, 'index')
   }
 
   return [guideRoute, resourceRoute, indexRoute]
