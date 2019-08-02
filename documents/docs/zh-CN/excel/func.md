@@ -3,10 +3,12 @@
 ### 效果
 除了可以通过框架导出之外，你也可以通过调用 `export` 方法进行自定义导出。
 ```js
-var myTable = table.render({}); // 渲染表格
+var myTable = table.render({id:'myTable'}); // 渲染表格
 
 // 导出 excel
 soulTable.export(myTable)
+// 或者tableId也行
+soulTable.export('myTable')
 
 // 或者你也可以自定义文件名及样式
 soulTable.export(myTable, {

@@ -41,7 +41,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
          * @param curExcel
          */
         , export: function (myTable, curExcel) {
-            tableFilter.export(myTable.config, curExcel);
+            tableFilter.export(myTable.config||myTable, curExcel);
         }
         , autoColumnWidth: function (myTable) {
             var $table = $(myTable.elem),

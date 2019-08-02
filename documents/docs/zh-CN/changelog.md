@@ -26,7 +26,10 @@
 ## 更新日志
 ### **1.3.1** <small>`2019-08-03`</small>
 [文档] 路由懒加载，解决文档系统第一次访问较慢的问题
+
 [文档] excel导出 添加了包含表单的示例
+
+[新增] excel导出 支持直接传 tableId 如 soulTable.export('tableId')
 
 ### **1.3.0** <small>`2019-07-31`</small>
 [修复] 筛选 表头请求/excel请求 添加 header/contentType 支持

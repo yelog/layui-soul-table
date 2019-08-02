@@ -116,8 +116,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                 }
             }
-            if (!needFilter) {return} //如果没筛选列，直接退出
             table_cache[myTable.id] = myTable // 缓存table配置
+            if (!needFilter) {return} //如果没筛选列，直接退出
 
             // 渲染底部筛选条件
             if (!(myTable.filter && typeof myTable.filter.bottom != 'undefined' && !myTable.filter.bottom) && $table.next().children('.soul-bottom-contion').length === 0) {
@@ -2461,6 +2461,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
          * @param curExcel
          */
         , export: function (myTable, curExcel) {
+            if (typeof myTable === 'string') {
+                myTable = table_cache[myTable] // tableId 转 myTable
+            }
             var loading = layer.msg('文件下载中', {
                 icon: 16
                 ,time: -1
