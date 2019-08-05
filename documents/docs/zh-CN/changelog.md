@@ -27,6 +27,10 @@
 ### **1.3.2** <small>`2019-08-05`</small>
 [新增] 子表 子表标题可以通过参数隐藏 [子表title设置](/#/zh-CN/component/child/title)
 
+[新增] 子表 支持tab切换懒加载 [懒加载](/#/zh-CN/component/child/lazy)
+
+
+
 ### **1.3.1** <small>`2019-08-03`</small>
 [文档] 路由懒加载，解决文档系统第一次访问较慢的问题
 

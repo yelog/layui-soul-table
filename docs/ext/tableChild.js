@@ -29,7 +29,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
             // 获取子表配置信息
             for (var i=0;i<columns.length;i++) {
-                if (columns[i].children) {
+                if (columns[i].children && columns[i].children.length>0) {
                     child = columns[i];
                     childIndex=i;
                     break;
@@ -138,9 +138,10 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             var tables = [],
                 $table = $(myTable.elem),
                 tableId = myTable.id,
+                rowTableId = tableId + $(_this).parents('tr:eq(0)').data('index'),
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
                 i;
-            tables.push('<div class="layui-tab layui-tab-card" style="margin: 0;border: 0;">');
+            tables.push('<div class="layui-tab layui-tab-card" lay-filter="table-child-'+rowTableId+'" style="margin: 0;border: 0;">');
             if (typeof child.childTitle === 'undefined' || child.childTitle) {
                 tables.push('<ul class="layui-tab-title">')
                 for (i=0;i<child.children.length;i++) {
@@ -151,7 +152,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
             tables.push('<div class="layui-tab-content" style="padding-bottom: 10px;max-width: '+($tableBody.width()-2)+'px">');
             for (i=0;i<child.children.length;i++) {
-                var childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
+                var childTableId = rowTableId + i;
                 tables.push('<div class="layui-tab-item layui-show"><form action="" class="layui-form" ><table id="'+childTableId+'" lay-filter="'+childTableId+'"></table></form></div>');
             }
             tables.push('</div></div>');
@@ -165,46 +166,73 @@ layui.define(['table' ,'element', 'form'], function (exports) {
          * @param tableId
          */
         renderTable: function (_this, data, child, tableId) {
-            var tables = [],_that = this;
-            for (var i=0; i<child.children.length; i++) {
-                (function () {
-                    var param = _that.cloneJSON(child.children[i]),
-                        childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
-                    param.where = child.children[i].where;
-                    param.data = child.children[i].data;
-                    param.url = child.children[i].url;
-                    param.toolEvent = child.children[i].toolEvent;
-                    param.rowEvent = child.children[i].rowEvent;
-                    param.rowDoubleEvent = child.children[i].rowDoubleEvent;
-                    param.id = childTableId;
-                    param.elem = '#'+childTableId;
-                    typeof param.where === 'function' && (param.where = param.where(data));
-                    typeof param.data === 'function' && (param.data = param.data(data));
-                    typeof param.url === 'function' && (param.url = param.url(data));
-                    tables.push(table.render(param));
-                    if (i!==0) {
-                        $('#'+childTableId).parents('.layui-tab-item:eq(0)').removeClass('layui-show'); //解决隐藏时计算表格高度有问题
-                    }
-                    if (typeof param.toolEvent == 'function') {
-                        table.on('tool('+childTableId+')', function (obj) {
-                            param.toolEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
-                        })
-                    }
-                    // 绑定单击行事件
-                    if (typeof param.rowEvent === 'function') {
-                        table.on('row('+childTableId+')', function (obj) {
-                            param.rowEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
-                        })
-                    }
-                    // 绑定双击行事件
-                    if (typeof param.rowDoubleEvent === 'function') {
-                        table.on('rowDouble('+childTableId+')', function (obj) {
-                            param.rowDoubleEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
-                        })
-                    }
-                }());
+            var tables = []
+                ,_that = this
+                ,rowTableId = tableId + $(_this).parents('tr:eq(0)').data('index');
+
+            if (child.lazy) {
+                tables.push(renderChildTable(_that, _this, data, child, tableId, 0));
+            } else {
+                for (var i=0; i<child.children.length; i++) {
+                    tables.push(renderChildTable(_that, _this, data, child, tableId, i));
+                }
             }
-            tableChildren[tableId + $(_this).parents('tr:eq(0)').data('index')]=tables
+            tableChildren[rowTableId]=tables;
+
+            if (child.lazy) {
+                layui.element.on('tab(table-child-'+rowTableId+')', function(tabData){
+                    var isRender = false; // 是否已经渲染
+                    for(i=0; i<tableChildren[rowTableId].length; i++) {
+                        if (tableChildren[rowTableId][i].config.id === (rowTableId + tabData.index)) {
+                            isRender = true;
+                            break;
+                        }
+                    }
+                    if (!isRender) {
+                        tableChildren[rowTableId].push(renderChildTable(_that, _this, data, child, tableId, tabData.index))
+                    }
+                });
+            }
+
+
+
+            function renderChildTable(_that, _this, data, child, tableId, i) {
+                var param = _that.cloneJSON(child.children[i]), thisTableChild,
+                    childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
+                param.where = child.children[i].where;
+                param.data = child.children[i].data;
+                param.url = child.children[i].url;
+                param.toolEvent = child.children[i].toolEvent;
+                param.rowEvent = child.children[i].rowEvent;
+                param.rowDoubleEvent = child.children[i].rowDoubleEvent;
+                param.id = childTableId;
+                param.elem = '#'+childTableId;
+                typeof param.where === 'function' && (param.where = param.where(data));
+                typeof param.data === 'function' && (param.data = param.data(data));
+                typeof param.url === 'function' && (param.url = param.url(data));
+                thisTableChild = table.render(param);
+                if (!child.lazy && i!==0) {
+                    $('#'+childTableId).parents('.layui-tab-item:eq(0)').removeClass('layui-show'); //解决隐藏时计算表格高度有问题
+                }
+                if (typeof param.toolEvent == 'function') {
+                    table.on('tool('+childTableId+')', function (obj) {
+                        param.toolEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                    })
+                }
+                // 绑定单击行事件
+                if (typeof param.rowEvent === 'function') {
+                    table.on('row('+childTableId+')', function (obj) {
+                        param.rowEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                    })
+                }
+                // 绑定双击行事件
+                if (typeof param.rowDoubleEvent === 'function') {
+                    table.on('rowDouble('+childTableId+')', function (obj) {
+                        param.rowDoubleEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                    })
+                }
+                return thisTableChild;
+            }
         },
         destroyChildren: function ($this, tableId) {
             var rowspanIndex = $this.parents('td:eq(0)').attr("rowspan");

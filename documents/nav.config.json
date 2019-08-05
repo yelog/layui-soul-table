@@ -124,6 +124,10 @@
           "name": "事件监听"
         },
         {
+          "path": "/child/lazy",
+          "name": "懒加载"
+        },
+        {
           "path": "/child/alone",
           "name": "独立使用"
         }
