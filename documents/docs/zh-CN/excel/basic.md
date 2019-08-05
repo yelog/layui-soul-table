@@ -30,7 +30,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,height: 500
         ,page: false
         ,cols: [[
-            {type: 'checkbox', fixed: 'left'},
+            {type: 'numbers', title: '序号', fixed: 'left'},
             {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
             {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
             {field: 'author', title: '作者', width: 165 , filter: true},
@@ -66,9 +66,9 @@ layui.use(['form', 'table','soulTable'], function () {
             ,limit: 20
             ,page: true
             ,cols: [[
-                {type: 'checkbox', fixed: 'left'},
+                {type: 'numbers', title: '序号', fixed: 'left'},
                 {field: 'title', title: '诗词', fixed:'left', width: 200, sort: true, filter: true},
-                {field: 'dynasty', title: '朝代',fixed: 'left', width: 100, sort: true, filter: true},
+                {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
                 {field: 'author', title: '作者', width: 165 , filter: true},
                 {field: 'content', title: '内容', width: 123, filter: true},
                 {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
@@ -103,13 +103,13 @@ layui.use(['form', 'table','soulTable'], function () {
         ,limit: 20
         ,page: true
         ,cols: [[
-            {type: 'checkbox', fixed: 'left'},
-            {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+            {type: 'numbers', title: '序号', fixed: 'left'},
+            {field: 'title', title: '诗词', width: 200, fixed:'left', sort: true, filter: true},
             {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
             {field: 'author', title: '作者', width: 165 , filter: true},
             {field: 'content', title: '内容', width: 123, filter: true},
             {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
-            {field: 'heat', title: '点赞数', width: 112,  filter: true, fixed: 'right', sort:true},
+            {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
             {field: 'createTime', title: '录入时间', width: 165, fixed: 'right', sort:true},
         ]]
         ,done: function () {
