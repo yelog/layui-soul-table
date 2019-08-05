@@ -31,6 +31,7 @@
 
 [文档] 子表 新增**子表重载**示例
 
+[优化] 子表 重写了layui table 的行hover样式，子表使用时，注意子表也要在 done 中写入 `soulTable.redner`
 
 
 ### **1.3.1** <small>`2019-08-03`</small>

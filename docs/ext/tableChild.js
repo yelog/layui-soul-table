@@ -7,7 +7,8 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
     var $ = layui.jquery,
         table = layui.table,
-        tableChildren={};
+        tableChildren={},
+        ELEM_HOVER='soul-table-hover';
 
     // 封装方法
     var mod = {
@@ -26,7 +27,8 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 child, childIndex,
                 soulSort = typeof myTable.soulSort === 'undefined' || myTable.soulSort;
 
-
+            // 修复hover样式
+            _this.fixHoverStyle(myTable)
             // 获取子表配置信息
             for (var i=0;i<columns.length;i++) {
                 if (columns[i].children && columns[i].children.length>0) {
@@ -266,6 +268,37 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 }
                 return value;
             })||{};
+        },
+        fixHoverStyle(myTable) {
+            var $table = $(myTable.elem)
+                ,$tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table')
+                ,$tableFixed = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').children('table')
+                ,style = $table.next().find('style')[0],
+                sheet = style.sheet || style.styleSheet || {};
+            // 屏蔽掉layui原生 hover 样式
+            this.addCSSRule(sheet, '.layui-table-hover', 'background-color: inherit');
+            this.addCSSRule(sheet, '.soul-table-hover', 'background-color: #F2F2F2');
+            $.merge($tableFixed.children('tbody').children('tr'), $tableBody.children('tbody').children('tr'))
+                .on('mouseenter', function () {
+                    var othis = $(this)
+                        ,index = $(this).data('index');
+                    if(othis.data('off')) return;
+                    $tableFixed.children('tbody').children('tr[data-index='+index+']').addClass(ELEM_HOVER);
+                    $tableBody.children('tbody').children('tr[data-index='+index+']').addClass(ELEM_HOVER);
+                }).on('mouseleave', function () {
+                var othis = $(this)
+                    ,index = $(this).data('index');
+                if(othis.data('off')) return;
+                $tableFixed.children('tbody').children('tr[data-index='+index+']').removeClass(ELEM_HOVER);
+                $tableBody.children('tbody').children('tr[data-index='+index+']').removeClass(ELEM_HOVER);
+            })
+        },
+        addCSSRule: function(sheet, selector, rules, index) {
+            if ('inserRule' in sheet) {
+                sheet.insertRule(selector + '{' + rules + '}', index)
+            } else if ('addRule' in sheet) {
+                sheet.addRule(selector, rules, index)
+            }
         }
     };
 
