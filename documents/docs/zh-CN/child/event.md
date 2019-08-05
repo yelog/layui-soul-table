@@ -179,18 +179,29 @@ layui.use(['form', 'table','soulTable'], function () {
                         {type: 'checkbox', fixed: 'left'},
                         {field: 'title', title: '诗词', width: 200, sort: true},
                         {field: 'dynasty', title: '朝代', width: 100, sort: true},
-                        {field: 'author', title: '作者', width: 165 },
-                        {title: '操作', width: 156, templet: function(row) {
-                           return '<a class="layui-btn layui-btn-xs" lay-event="childEdit">编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="childDel">删除</a>'
+                        {title: '操作', width: 300, templet: function(row) {
+                           return '<a class="layui-btn layui-btn-xs" lay-event="childEdit">编辑并更新当前行数据</a>' +
+                            '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="childDel">删除并重载子表</a>'
                         }}
                     ]]
                     ,toolEvent: function (obj, pdata) {
                         // obj 子表当前行对象
                         // pdata 父表当前行数据
+                        
+                        var childId = this.id; // 通过 this 对象获取当前子表的id
+                        
                         if (obj.event === 'childEdit') {
-                            layer.msg('子表-编辑事件')
+                            layer.confirm('修改成功！调用<span style="color: #FF5722">行对象</span>修改当前行数据', {icon: 3}, function(index) {
+                               layer.close(index)
+                               obj.update({
+                                  title: '我被修改了！'
+                               })
+                           })
                         } else if (obj.event === 'childDel') {
-                            layer.msg('子表-删除事件')
+                            layer.confirm('删除成功! 调用<span style="color: #FF5722">table.reload(childId)</span>来重载子表', {icon: 3}, function(index) {
+                               layer.close(index)
+                               table.reload(childId)
+                            })
                         }
 
                     }
@@ -215,3 +226,87 @@ layui.use(['form', 'table','soulTable'], function () {
 
 ```
 :::
+
+### 4.子表重载 reload
+
+我们只需要获取到子表的id，就可以通过 `table.realod(id)` 来重载表格。 
+
+<br>
+
+获取 **子表id** 有以下两种方式
+
+1.(**推荐使用，如果外部使用，可以这些方法传出tableId**)通过 `url/data/where/done/toolEvent/rowEvent/rowDoubleEvent` ，都可以在其 `function` 中 通过 `this.id` 获取，具体可参考上个示例: **3.子表的tool事件**
+
+2.直接通过命名方式获取，子表的Id命名方式为 **父表id+父表展开行+同级第几个(children的下表)** 
+
+<br>
+
+如下重载第二行，第一个子表，重载前，请打开第二行子表
+
+:::demo
+```html
+<a class="layui-btn" id="updateChild">更新第二行，第一个子表</a>
+<table id="myTable4" lay-filter="myTable4"></table>
+<script>
+layui.use(['form', 'table','soulTable'], function () {
+    var table = layui.table,
+        soulTable = layui.soulTable;
+
+    table.render({
+        elem: '#myTable4'
+        ,url: 'data-1.json'
+        ,height: 500
+        ,page: false
+        ,cols: [[
+            {title: '#', width: 50, children:[
+                {
+                    title: '表格一'
+                    ,url: 'data-1.json'
+                    ,height: 400
+                    ,page: false
+                    ,cols: [[
+                        {type: 'checkbox', fixed: 'left'},
+                        {field: 'title', title: '诗词', width: 200, sort: true},
+                        {field: 'dynasty', title: '朝代', width: 100, sort: true},
+                        {field: 'author', title: '作者', width: 165 },
+                        {field: 'content', title: '内容', width: 123},
+                        {field: 'type', title: '类型', width: 112, sort:true},
+                        {field: 'heat', title: '点赞数', width: 112, sort:true},
+                        {field: 'createTime', title: '录入时间', width: 165, sort:true}
+                    ]]
+                    ,done: function() {
+                        layer.msg('子表加载完成')
+                    }
+                }
+            ]},
+            {field: 'title', title: '诗词', width: 200, sort: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true},
+            {field: 'author', title: '作者', width: 165 },
+            {field: 'content', title: '内容', width: 123},
+            {field: 'type', title: '类型', width: 112, sort:true},
+            {field: 'heat', title: '点赞数', width: 112, sort:true},
+            {field: 'createTime', title: '录入时间', width: 165, sort:true}
+        ]]
+        ,done: function () {
+            soulTable.render(this)
+        }
+    });
+    
+    layui.$('#updateChild').on('click', function() {
+        // 父表ID: myTable4
+        // 第2行下标: 1
+        // 第一个子表下标(children下标): 0
+        var childId = 'myTable4'+'1'+'0';
+        if (layui.table.cache[childId]) {
+            table.reload(childId)
+        } else {
+            layer.msg('请先展开第二行的子表')
+        }
+        
+    })
+})
+</script>
+```
+:::
+
+
