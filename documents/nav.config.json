@@ -112,6 +112,10 @@
           "name": "是否显示入口"
         },
         {
+          "path": "/child/title",
+          "name": "title设置"
+        },
+        {
           "path": "/child/deep",
           "name": "无限层级"
         },

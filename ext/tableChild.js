@@ -140,11 +140,16 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 tableId = myTable.id,
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
                 i;
-            tables.push('<div class="layui-tab layui-tab-card" style="margin: 0;border: 0;"><ul class="layui-tab-title">');
-            for (i=0;i<child.children.length;i++) {
-                tables.push('<li class="'+(i===0?'layui-this':'')+'">'+(typeof child.children[i].title === 'function' ? child.children[i].title(data) :child.children[i].title)+'</li>');
+            tables.push('<div class="layui-tab layui-tab-card" style="margin: 0;border: 0;">');
+            if (typeof child.childTitle === 'undefined' || child.childTitle) {
+                tables.push('<ul class="layui-tab-title">')
+                for (i=0;i<child.children.length;i++) {
+                    tables.push('<li class="'+(i===0?'layui-this':'')+'">'+(typeof child.children[i].title === 'function' ? child.children[i].title(data) :child.children[i].title)+'</li>');
+                }
+                tables.push('</ul>')
             }
-            tables.push('</ul><div class="layui-tab-content" style="padding-bottom: 10px;max-width: '+($tableBody.width()-2)+'px">');
+
+            tables.push('<div class="layui-tab-content" style="padding-bottom: 10px;max-width: '+($tableBody.width()-2)+'px">');
             for (i=0;i<child.children.length;i++) {
                 var childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
                 tables.push('<div class="layui-tab-item layui-show"><form action="" class="layui-form" ><table id="'+childTableId+'" lay-filter="'+childTableId+'"></table></form></div>');
