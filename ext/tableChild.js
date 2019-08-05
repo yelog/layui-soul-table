@@ -39,15 +39,15 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             if (!tableChildren[tableId]) {
                 if (typeof myTable.rowEvent === 'function') {
                     table.on('row('+$table.attr('lay-filter')+')', function (obj) {
-                        var index = $(this).data('index')
-                        obj.tr = $.merge($tableFixed.children('tbody').children('tr[data-index="'+index+'"]'), $tableBody.children('tbody').children('tr[data-index="'+index+'"]'))
+                        var index = $(this).data('index');
+                        obj.tr = $.merge($tableFixed.children('tbody').children('tr[data-index="'+index+'"]'), $tableBody.children('tbody').children('tr[data-index="'+index+'"]'));
                         myTable.rowEvent.call(this, obj);
                     })
                 }
                 if (typeof myTable.rowDoubleEvent === 'function') {
                     table.on('rowDouble('+$table.attr('lay-filter')+')', function (obj) {
-                        var index = $(this).data('index')
-                        obj.tr = $.merge($tableFixed.children('tbody').children('tr[data-index="'+index+'"]'), $tableBody.children('tbody').children('tr[data-index="'+index+'"]'))
+                        var index = $(this).data('index');
+                        obj.tr = $.merge($tableFixed.children('tbody').children('tr[data-index="'+index+'"]'), $tableBody.children('tbody').children('tr[data-index="'+index+'"]'));
                         myTable.rowDoubleEvent.call(this, obj);
                     })
                 }
@@ -56,7 +56,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             if (child) {
                 if (soulSort && !(myTable.url && myTable.page)) {
                     // 前台排序
-                    table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
+                    table.on('sort(' + $table.attr('lay-filter') + ')', function () {
                         _this.render(myTable)
                     });
                 }
@@ -71,7 +71,6 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 } else {
                     $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').addClass('childTable').css({'width': width,'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
                 }
-                // $tableBody.find('tr').find('td:eq('+childIndex+'):not([child])>div').css({'width':'50px'});
 
                 $tableBody.children('tbody').children('tr').children('td').children('.childTable').on('click', function () {
                     var data = table.cache[myTable.id][$(this).parents('tr:eq(0)').data('index')];
@@ -121,7 +120,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
                     }
                 })
-                if (child.spread && child.show!=2) {
+                if (child.spread && child.show !== 2) {
                     $tableBody.children('tbody').children('tr').children('td').children('.childTable').trigger('click');
                 }
 
@@ -139,13 +138,14 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             var tables = [],
                 $table = $(myTable.elem),
                 tableId = myTable.id,
-                $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table');
+                $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
+                i;
             tables.push('<div class="layui-tab layui-tab-card" style="margin: 0;border: 0;"><ul class="layui-tab-title">');
-            for (var i=0;i<child.children.length;i++) {
-                tables.push('<li class="'+(i==0?'layui-this':'')+'">'+(typeof child.children[i].title === 'function' ? child.children[i].title(data) :child.children[i].title)+'</li>');
+            for (i=0;i<child.children.length;i++) {
+                tables.push('<li class="'+(i===0?'layui-this':'')+'">'+(typeof child.children[i].title === 'function' ? child.children[i].title(data) :child.children[i].title)+'</li>');
             }
             tables.push('</ul><div class="layui-tab-content" style="padding-bottom: 10px;max-width: '+($tableBody.width()-2)+'px">');
-            for (var i=0;i<child.children.length;i++) {
+            for (i=0;i<child.children.length;i++) {
                 var childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
                 tables.push('<div class="layui-tab-item layui-show"><form action="" class="layui-form" ><table id="'+childTableId+'" lay-filter="'+childTableId+'"></table></form></div>');
             }
@@ -161,7 +161,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
          */
         renderTable: function (_this, data, child, tableId) {
             var tables = [],_that = this;
-            for (var i=0;i<child.children.length;i++) {
+            for (var i=0; i<child.children.length; i++) {
                 (function () {
                     var param = _that.cloneJSON(child.children[i]),
                         childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
@@ -228,7 +228,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             });
             return JSON.parse(sobj,function(key, value){
                 if(typeof value === 'string' &&
-                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)==0){
+                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)===0){
                     return eval("("+value.replace(JSON_SERIALIZE_FIX.PREFIX,"").replace(JSON_SERIALIZE_FIX.SUFFIX,"")+")");
                 }
                 return value;
