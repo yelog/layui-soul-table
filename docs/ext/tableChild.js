@@ -269,7 +269,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 return value;
             })||{};
         },
-        fixHoverStyle(myTable) {
+        fixHoverStyle: function(myTable) {
             var $table = $(myTable.elem)
                 ,$tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table')
                 ,$tableFixed = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').children('table')
