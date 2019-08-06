@@ -61,6 +61,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         //obj.update(fields) //修改当前行数据
                     }
                     ,done: function () {
+                        layui.soulTable.render(this)
                     }
                 }
             ]},
@@ -116,6 +117,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'createTime', title: '录入时间', width: 165, sort:true}
                     ]]
                     ,done: function () {
+                        layui.soulTable.render(this)
                     }
                 }
             ]},
@@ -206,6 +208,7 @@ layui.use(['form', 'table','soulTable'], function () {
 
                     }
                     ,done: function () {
+                        layui.soulTable.render(this)
                     }
                 }
             ]},
@@ -229,7 +232,7 @@ layui.use(['form', 'table','soulTable'], function () {
 
 ### 4.子表重载 reload
 
-我们只需要获取到子表的id，就可以通过 `table.realod(id)` 来重载表格。 
+我们只需要获取到子表的id，就可以通过 `table.reload(id)` 来重载表格。 
 
 <br>
 
@@ -275,6 +278,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'createTime', title: '录入时间', width: 165, sort:true}
                     ]]
                     ,done: function() {
+                        layui.soulTable.render(this)
                         layer.msg('子表加载完成')
                     }
                 }

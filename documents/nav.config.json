@@ -124,6 +124,10 @@
           "name": "事件监听"
         },
         {
+          "path": "/child/header",
+          "name": "多入口/复杂表头"
+        },
+        {
           "path": "/child/lazy",
           "name": "懒加载"
         },

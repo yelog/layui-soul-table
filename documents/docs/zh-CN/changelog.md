@@ -24,6 +24,9 @@
 
 
 ## 更新日志
+### **1.3.3** <small>`2019-08-06`</small>
+[升级] 子表 子表兼容复杂表头、多入口 [多入口/复杂表头](/#/zh-CN/component/child/header)
+
 ### **1.3.2** <small>`2019-08-05`</small>
 [新增] 子表 子表标题可以通过参数隐藏 [子表title设置](/#/zh-CN/component/child/title)
 
@@ -31,7 +34,7 @@
 
 [文档] 子表 新增**子表重载**示例
 
-[优化] 子表 重写了layui table 的行hover样式，子表使用时，注意子表也要在 done 中写入 `soulTable.redner`
+[优化] 子表 重写了layui table 的行hover样式，子表使用时，注意子表也要在 done 中写入 `soulTable.render`
 
 
 ### **1.3.1** <small>`2019-08-03`</small>
