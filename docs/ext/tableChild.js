@@ -277,7 +277,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 sheet = style.sheet || style.styleSheet || {};
             // 屏蔽掉layui原生 hover 样式
             this.addCSSRule(sheet, '.layui-table-hover', 'background-color: inherit');
-            this.addCSSRule(sheet, '.soul-table-hover', 'background-color: #F2F2F2');
+            this.addCSSRule(sheet, '.soul-table-hover', 'background-color: #F2F2F2!important');
             $.merge($tableFixed.children('tbody').children('tr'), $tableBody.children('tbody').children('tr'))
                 .on('mouseenter', function () {
                     var othis = $(this)
