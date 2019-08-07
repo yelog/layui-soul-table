@@ -66,16 +66,15 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                 _this.render(myTable)
                             });
                         }
-                        var width = child.width? child.width : 50;
-                        $tableHead.find('th:eq('+curIndex+')>div').css('width', width);
+
                         if (child.isChild && typeof child.isChild === 'function') {
                             $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').each(function (index) {
                                 if (child.isChild(layui.table.cache[tableId][index])) {
-                                    $(this).addClass('childTable').css({'width': width,'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
+                                    $(this).addClass('childTable').css({'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
                                 }
                             })
                         } else {
-                            $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').addClass('childTable').css({'width': width,'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
+                            $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').addClass('childTable').css({'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
                         }
 
                         $tableBody.children('tbody').children('tr').each(function () {
