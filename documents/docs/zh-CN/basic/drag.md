@@ -37,7 +37,7 @@ layui.use(['form', 'table','soulTable'], function () {
 ```
 :::
 
-### 2. 固定列禁止拖动，且不允许被交换
+### 2. 固定列禁止拖动，且不允许被交换（但可以向上拖动快速隐藏）
 :::demo
 ```html
 <table id="myTable2" ></table>
