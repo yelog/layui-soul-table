@@ -208,7 +208,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 var types = {}; //存储过滤数据的类型
                 // 根据表格列显示
                 for (var i = 0; i < columns.length; i++) {
-                    if (columns[i].type == 'checkbox' || !columns[i].field) {
+                    if (columns[i].type === 'checkbox' || !columns[i].field) {
                         soulFilterList.push('<li class="layui-hide"><input type="checkbox" title="' + columns[i].title + '" /></li>')
                         continue;
                     }
@@ -223,7 +223,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
                     }
                 }
-                if (JSON.stringify(types).length != 2) {
+                if (JSON.stringify(types).length !== 2) {
                     myTable.where['tableFilterType'] = JSON.stringify(types);
                 }
 
@@ -253,11 +253,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
                     }
                     // 同步配置
-                    for (var i = 0; i < columns.length; i++) {
-                        if (columns[i].field && columns[i].field === data.value) {
-                            columns[i]['hide'] = !data.elem.checked;
+                    var tempColumns = [].concat.apply([], myTable.cols)
+                    for (var i = 0; i < tempColumns.length; i++) {
+                        if (tempColumns[i].field && tempColumns[i].field === data.value) {
+                            tempColumns[i]['hide'] = !data.elem.checked;
                         }
                     }
+                    table.resize(tableId)
                     if (myTable.filter && myTable.filter.cache) {
                         localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                     }
@@ -727,7 +729,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 var types = {}; //存储过滤数据的类型
                 // 根据表格列显示
                 for (var i = 0; i < columns.length; i++) {
-                    if (columns[i].type == 'checkbox' || !columns[i].field) {
+                    if (columns[i].type === 'checkbox' || !columns[i].field) {
                         continue;
                     }
                     //存储过滤数据的类型
@@ -739,14 +741,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
                     }
                 }
-                if (JSON.stringify(types).length != 2) {
+                if (JSON.stringify(types).length !== 2) {
                     myTable.where['tableFilterType'] = JSON.stringify(types);
                 }
 
             }
 
             // 初始化下拉数据
-            if ($('#soulDropList' + tableId).length == 0) {
+            if ($('#soulDropList' + tableId).length === 0) {
                 $('body').append('<div id="soulDropList' + tableId + '" style="display: none"></div>');
             }
 

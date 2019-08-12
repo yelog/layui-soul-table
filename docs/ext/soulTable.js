@@ -394,7 +394,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
         fixTableRemember: function(myTable, dict) {
             if (myTable.filter && myTable.filter.cache) {
-                myTable.cols[dict.rule.selectorText.split('-')[3]][dict.rule.selectorText.split('-')[4]].width = dict.rule.style.width.replace('px','');
+                if (dict && dict.rule) {
+                    myTable.cols[dict.rule.selectorText.split('-')[3]][dict.rule.selectorText.split('-')[4]].width = dict.rule.style.width.replace('px','');
+                }
                 localStorage.setItem(location.pathname + location.hash + myTable.id, this.deepStringify(myTable.cols))
             }
         },
