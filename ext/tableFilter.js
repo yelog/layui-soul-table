@@ -253,9 +253,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
                     }
                     // 同步配置
-                    for (var i = 0; i < columns.length; i++) {
-                        if (columns[i].field && columns[i].field === data.value) {
-                            columns[i]['hide'] = !data.elem.checked;
+                    var tempColumns = [].concat.apply([], myTable.cols)
+                    for (var i = 0; i < tempColumns.length; i++) {
+                        if (tempColumns[i].field && tempColumns[i].field === data.value) {
+                            tempColumns[i]['hide'] = !data.elem.checked;
                         }
                     }
                     table.resize(tableId)
