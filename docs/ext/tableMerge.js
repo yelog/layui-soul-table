@@ -19,35 +19,36 @@ layui.define(['table'], function (exports) {
                 $main = $(tableBox.children('.layui-table-body').children('table').children('tbody').children('tr').toArray().reverse()),
                 $fixLeft = $(tableBox.children('.layui-table-fixed-l').children('.layui-table-body').children('table').children('tbody').children('tr').toArray().reverse()),
                 $fixRight = $(tableBox.children('.layui-table-fixed-r').children('.layui-table-body').children('table').children('tbody').children('tr').toArray().reverse()),
-                cols = myTable.cols[0], mergeRecord = {};
+                mergeRecord = {};
 
-            for (let i = 0; i < cols.length; i++) {
-                var item3 = cols[i], field=item3.field;
-                if (item3.merge) {
-                    var mergeField = [field];
-                    if (item3.merge !== true) {
-                        if (typeof item3.merge == 'string') {
-                            mergeField = [item3.merge]
-                        } else {
-                            mergeField = item3.merge
+            layui.each(myTable.cols, function(i1, item1){
+                layui.each(item1, function(i2, item2){
+                    if (item2.merge && item2.field) {
+                        var mergeField = [item2.field];
+                        if (item2.merge !== true) {
+                            if (typeof item2.merge == 'string') {
+                                mergeField = [item2.merge]
+                            } else {
+                                mergeField = item2.merge
+                            }
                         }
+                        mergeRecord[myTable.index + '-' + i1 + '-' + i2] = {mergeField: mergeField, rowspan:1}
                     }
-                    mergeRecord[i] = {mergeField: mergeField, rowspan:1}
-                }
-            }
+                })
+            })
 
             $main.each(function (i) {
 
                 for (var item in mergeRecord) {
-                    if (i==$main.length-1 || isMaster(i, item)) {
-                        $(this).children('[data-key$="-'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
-                        $fixLeft.eq(i).children('[data-key$="-'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
-                        $fixRight.eq(i).children('[data-key$="-'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
+                    if (i===$main.length-1 || isMaster(i, item)) {
+                        $(this).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
+                        $fixLeft.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
+                        $fixRight.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
                         mergeRecord[item].rowspan = 1;
                     } else {
-                        $(this).children('[data-key$="-'+item+'"]').remove();
-                        $fixLeft.eq(i).children('[data-key$="-'+item+'"]').remove();
-                        $fixRight.eq(i).children('[data-key$="-'+item+'"]').remove();
+                        $(this).children('[data-key="'+item+'"]').remove();
+                        $fixLeft.eq(i).children('[data-key="'+item+'"]').remove();
+                        $fixRight.eq(i).children('[data-key="'+item+'"]').remove();
                         mergeRecord[item].rowspan +=1;
                     }
                 }

@@ -145,6 +145,10 @@
           "name": "列自动合并"
         },
         {
+          "path": "/merge/header",
+          "name": "复杂表头"
+        },
+        {
           "path": "/merge/alone",
           "name": "独立使用"
         }
