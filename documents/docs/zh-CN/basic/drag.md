@@ -16,6 +16,7 @@ layui.use(['form', 'table','soulTable'], function () {
     table.render({
         elem: '#myTable'
         ,url: 'data-1.json'
+        ,toolbar: true
         ,height: 500
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
@@ -43,12 +44,12 @@ layui.use(['form', 'table','soulTable'], function () {
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
-        soulTable = layui.soulTable,
-        $ = layui.$;
+        soulTable = layui.soulTable;
 
     table.render({
         elem: '#myTable2'
         ,url: 'data-1.json'
+        ,toolbar: true
         ,height: 500
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
@@ -77,14 +78,14 @@ layui.use(['form', 'table','soulTable'], function () {
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
-        soulTable = layui.soulTable,
-        $ = layui.$;
+        soulTable = layui.soulTable;
 
     table.render({
         elem: '#myTable3'
         ,url: 'data-1.json'
         ,height: 500
         ,drag: false // 关闭拖拽列功能
+        ,toolbar: true
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
             {field: 'title', title: '诗词', width: 200, sort: true, filter: true},

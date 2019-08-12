@@ -218,7 +218,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                     $this.css('left', left);
                                     var curKey = $this.data('key').split('-')[1] + '-' + $this.data('key').split('-')[2]
                                     if (leftMove) {
-                                        if ($cloneHead.prev().prev().length != 0) {
+                                        if ($cloneHead.prev().prev().length !== 0) {
                                             $cloneHead.after($cloneHead.prev().prev());
 
                                             // 更新隐藏列顺序
@@ -246,7 +246,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             }
                                         }
                                     } else if (!$cloneHead.next().hasClass('layui-table-patch') && rightMove) {
-                                        if ($cloneHead.next().length != 0) {
+                                        if ($cloneHead.next().length !== 0) {
                                             $cloneHead.prev().before($cloneHead.next());
 
                                             // 更新隐藏列顺序
@@ -256,7 +256,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             var x, y;
                                             for (var i = 0; i < myTable.cols.length; i++) {
                                                 for (var j = 0; j < myTable.cols[i].length; j++) {
-                                                    if (myTable.cols[i][j].key == curKey) {
+                                                    if (myTable.cols[i][j].key === curKey) {
                                                         x = i;
                                                         y = j;
                                                         break;
@@ -279,11 +279,11 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         $(this).prev().css('left', left);
 
                                         if (leftMove) {
-                                            if ($(this).prev().prev().length != 0) {
+                                            if ($(this).prev().prev().length !== 0) {
                                                 $(this).after($(this).prev().prev());
                                             }
                                         } else if (rightMove) {
-                                            if ($(this).next().length != 0) {
+                                            if ($(this).next().length !== 0) {
                                                 $(this).prev().before($(this).next());
                                             }
                                         }
@@ -293,11 +293,11 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             $(this).prev().css('left', left);
 
                                             if (leftMove) {
-                                                if ($(this).prev().prev().length != 0) {
+                                                if ($(this).prev().prev().length !== 0) {
                                                     $(this).after($(this).prev().prev());
                                                 }
                                             } else if (rightMove) {
-                                                if ($(this).next().length != 0) {
+                                                if ($(this).next().length !== 0) {
                                                     $(this).prev().before($(this).next());
                                                 }
                                             }
@@ -306,7 +306,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
                                     /* 拖动隐藏列 */
                                     if (e.clientY - originTop < -15) {
-                                        if ($('#column-remove').length == 0) {
+                                        if ($('#column-remove').length === 0) {
                                             $('body').append('<i id="column-remove" class="layui-red layui-icon layui-icon-delete"></i>')
                                         }
                                         $('#column-remove').css({
@@ -382,6 +382,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         }
                                         // 更新下拉隐藏
                                         $('#soul-columns' + tableId).find('li[data-value="' + $this.data('field') + '"]>input').prop('checked', false);
+                                        table.resize(tableId)
                                     }
                                     $('#column-remove').hide();
                                 }
