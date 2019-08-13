@@ -2515,6 +2515,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     headers: myTable.headers || {},
                     contentType: myTable.contentType,
                     success: function (res) {
+                        if(typeof myTable.parseData === 'function'){
+                            res = myTable.parseData(res) || res;
+                        }
                         data = res.data
                     },
                     error: function (res) {
@@ -2847,7 +2850,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             };
             return JSON.parse(str,function(key, value){
                 if(typeof value === 'string' &&
-                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)==0){
+                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)===0){
                     return eval("("+value.replace(JSON_SERIALIZE_FIX.PREFIX,"").replace(JSON_SERIALIZE_FIX.SUFFIX,"")+")");
                 }
                 return value;
