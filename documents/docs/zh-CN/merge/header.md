@@ -19,7 +19,7 @@ layui.use(['form', 'table','soulTable'], function () {
             {field: 'dynasty', merge: true, title: '朝代1', fixed:'left', width: 112, rowspan: 3, sort:true},
             {title: '1-1', colspan: 3, align: 'center'},
             {title: '1-2', colspan: 2},
-            {field: 'dynasty', title: '朝代3', merge: 'name', rowspan: 3, width: 165}
+            {field: 'dynasty', title: '朝代3', merge: ['name','type'], fixed: 'right', rowspan: 3, width: 165}
         ],[
             {title: '2-1', colspan: 2},
             {field: 'type', merge: true, title: '类型1', rowspan: 2, width: 165 },

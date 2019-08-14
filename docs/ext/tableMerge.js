@@ -41,9 +41,11 @@ layui.define(['table'], function (exports) {
 
                 for (var item in mergeRecord) {
                     if (i===$main.length-1 || isMaster(i, item)) {
-                        $(this).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
-                        $fixLeft.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
-                        $fixRight.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css('position','static');
+                        var tdHeight = $(this).children('[data-key="'+item+'"]').outerHeight(), patchHeight = 0; // 获取td高度
+                        if ($main.eq(i).data('index') === 0) {patchHeight = 1}
+                        $(this).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight});
+                        $fixLeft.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight});
+                        $fixRight.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight});
                         mergeRecord[item].rowspan = 1;
                     } else {
                         $(this).children('[data-key="'+item+'"]').remove();
