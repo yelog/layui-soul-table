@@ -1853,10 +1853,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             status = d >= 0 && (item[field]+'').lastIndexOf(value) === d;
                             break;
                         case "null":
-                            status = typeof item[field] === 'undefined' || $.isEmpty(item[field]);
+                            status = typeof item[field] === 'undefined' || $.isEmptyObject(item[field]);
                             break;
                         case "notNull":
-                            status = typeof item[field] !== 'undefined' && !$.isEmpty(item[field]);
+                            status = typeof item[field] !== 'undefined' && !$.isEmptyObject(item[field]);
                             break;
                     }
                     break;
