@@ -142,6 +142,12 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 this.bindFilterClick(myTable);
                 return;
             } else {
+                if (!myTable.url && myTable.page && myTable.data && myTable.data.length > myTable.limit) {
+                    // 前端分页大于一页，修复 index （用于排序恢复时需要通过这个排序）
+                    layui.each(myTable.data, function(index, item){
+                        item[myTable.indexName] = index;
+                    })
+                }
                 /**
                  * 缓存所有数据
                  */
@@ -169,20 +175,36 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             // 第一次渲染时，追加数据
             if ($('#soul-filter-list' + tableId).length === 0) {
 
-                if ((typeof myTable.soulSort === 'undefined' || myTable.soulSort) && myTable.url && myTable.page) {
+                if (typeof myTable.soulSort === 'undefined' || myTable.soulSort) {
                     // 后台排序
-                    table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
-                        where_cache[myTable.id].field = obj.field;
-                        where_cache[myTable.id].order = obj.type;
-                        isFilterReload[myTable.id] = true
-                        table.render($.extend(myTable,{
-                            initSort: obj
-                            , where: where_cache[myTable.id]
-                            , page: {
-                                curr: 1 //重新从第 1 页开始
+                    if (myTable.url && myTable.page) {
+                        table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
+                            where_cache[myTable.id].field = obj.field;
+                            where_cache[myTable.id].order = obj.type;
+                            isFilterReload[myTable.id] = true
+                            table.render($.extend(myTable,{
+                                initSort: obj
+                                , where: where_cache[myTable.id]
+                                , page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }
+                            }));
+                        });
+                    } else if (!myTable.url && myTable.page) {
+                        table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
+                            if(obj.type === 'asc'){ //升序
+                                cache[myTable.id] = layui.sort(cache[myTable.id], obj.field)
+                            } else if(obj.type === 'desc'){ //降序
+                                cache[myTable.id] = layui.sort(cache[myTable.id], obj.field, true)
+                            } else { //清除排序
+                                cache[myTable.id] = layui.sort(cache[myTable.id], myTable.indexName)
                             }
-                        }));
-                    });
+                            myTable.initSort = obj
+                            myTable.page = { curr: 1}
+                            _this.soulReload(myTable, false)
+                        });
+                    }
+
                 }
 
                 var soulFilterList = [],
@@ -1700,8 +1722,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     filterSos = JSON.parse(where.filterSos ? where.filterSos : '[]'),
                     tableFilterTypes = where.tableFilterType ? JSON.parse(where.tableFilterType) : {},
                     loading = layer.load(2);
-                // 修复前端不分页时，layui table bug 导致的只显示10条数据的问题
-                myTable.limit = 100000000
+                if (!myTable.page) {
+                    // 修复前端不分页时，layui table bug 导致的只显示10条数据的问题
+                    myTable.limit = 100000000
+                }
                 if (filterSos.length > 0) {
                     var newData = [];
                     layui.each(cache[myTable.id], function (index, item) {
@@ -1718,6 +1742,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     if (myTable.page) {
                         table.reload(myTable.id, {
                             data: newData
+                            , initSort: myTable.initSort
                             , isSoulFrontFilter: true
                             , page: {
                                 curr: 1 //重新从第 1 页开始
@@ -1727,6 +1752,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         var url = myTable.url;
                         table.reload(myTable.id, {
                             url: ''
+                            , initSort: myTable.initSort
                             , isSoulFrontFilter: true
                             , data: newData
                         })
@@ -1738,6 +1764,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     if (myTable.page) {
                         table.reload(myTable.id, {
                             data: cache[myTable.id]
+                            , initSort: myTable.initSort
                             , isSoulFrontFilter: true
                             , page: {
                                 curr: 1 //重新从第 1 页开始
@@ -1746,6 +1773,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     } else {
                         table.reload(myTable.id, {
                             data: cache[myTable.id]
+                            , initSort: myTable.initSort
                             , isSoulFrontFilter: true
                         })
                     }

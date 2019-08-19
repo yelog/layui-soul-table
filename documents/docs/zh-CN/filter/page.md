@@ -5,7 +5,7 @@
 在前台分页的情况下，仍然可以直接使用筛选功能
 :::demo
 ```html
-<table id="myTable" ></table>
+<table id="myTable" lay-filter="myTable"></table>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
@@ -89,7 +89,7 @@ layui.use(['form', 'table','soulTable'], function () {
         <button class="layui-btn mgl-20" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>查询</button>
     </div>
 </div>
-<table id="myTable2" ></table>
+<table id="myTable2" lay-filter="myTable2"></table>
 <script>
     layui.use(['form', 'table','soulTable'], function () {
         var table = layui.table,
