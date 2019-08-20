@@ -852,7 +852,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             for (var j = 0; j < columnField.length; j++) {
                                 var value = typeof tableDatas[i][columnField[j]] == 'undefined' ? '' : tableDatas[i][columnField[j]];
                                 if (dropDatas[columnField[j]]) {
-                                    if (dropDatas[columnField[j]].indexOf(value) == -1) {
+                                    if (dropDatas[columnField[j]].indexOf(value) === -1) {
                                         dropDatas[columnField[j]].push(value);
                                     }
                                 } else {
@@ -866,11 +866,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         for (var j = 0; j < columnsConfigs.length; j++) {
                             var key = columnsConfigs[j].field;
                             var list = dropDatas[key];
-                            if (list && !(list.length === 1 && list[0] == '')) {
+                            if (list && !(list.length === 1 && list[0] === '')) {
                                 if (columnsConfigs[j].filter && columnsConfigs[j].filter.split) {
                                     var tempList = []
                                     for (var i = 0; i < list.length; i++) {
-                                        var tempList2 = list[i].split(columnsConfigs[j].filter.split);
+                                        var tempList2 = String(list[i]).split(columnsConfigs[j].filter.split);
                                         for (var k = 0; k < tempList2.length; k++) {
                                             if (tempList.indexOf(tempList2[k])===-1) {
                                                 tempList.push(tempList2[k])
