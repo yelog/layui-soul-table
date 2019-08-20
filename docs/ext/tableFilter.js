@@ -1784,7 +1784,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
         }
         , handleFilterSo: function (filterSo, item, tableFilterTypes, show, first) {
-            var isOr = first ? false : filterSo.prefix == 'or',
+            var isOr = first ? false : filterSo.prefix === 'or',
                 field = filterSo.field,
                 value = filterSo.value,
                 status = true;
@@ -1853,10 +1853,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             status = d >= 0 && (item[field]+'').lastIndexOf(value) === d;
                             break;
                         case "null":
-                            status = typeof item[field] === 'undefined' || $.isEmptyObject(item[field]);
+                            status = typeof item[field] === 'undefined' || item[field] === '' || item[field] === null;
                             break;
                         case "notNull":
-                            status = typeof item[field] !== 'undefined' && !$.isEmptyObject(item[field]);
+                            status = typeof item[field] !== 'undefined' && item[field] !== '' && item[field] !== null;
                             break;
                     }
                     break;
