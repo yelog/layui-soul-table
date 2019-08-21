@@ -148,7 +148,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                             var $cloneHead = $this.clone().css('visibility', 'hidden'),
                                 originLeft = $this.position().left,
                                 originTop = $this.offset().top,
-                                disX = e.clientX - originLeft,
+                                disX = e.clientX - originLeft, // 鼠标距离被移动元素左侧的距离
                                 color = $this.parents('tr').css("background-color"),
                                 width = $this.width(), moveDistince = 0,
                                 $that = $(this);
@@ -199,13 +199,21 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             }
                                         }
                                         isDraging = true;
-                                        var left = e.clientX - disX,
-                                            leftMove = $cloneHead.position().left - left > $cloneHead.prev().prev().width() / 2.0,
-                                            rightMove = left - $cloneHead.position().left > $cloneHead.next().width() / 2.0;
+                                        var x, y, i, j, tempCols,
+                                            left = e.clientX - disX, // 计算当前被移动列左侧位置应该哪里
+                                            $leftTh = $cloneHead.prev().prev(),
+                                            hasLeftTh = $leftTh.length > 0,
+                                            leftKey = hasLeftTh ? $leftTh.data('key').split('-') : [],
+                                            $rightTh = $cloneHead.next().hasClass('layui-table-patch') ? [] : $cloneHead.next(),
+                                            hasRightTh = $rightTh.length > 0,
+                                            rightKey = hasRightTh ? $rightTh.data('key').split('-') : [],
+                                            leftMove = hasLeftTh && ($cloneHead.position().left - left > $leftTh.width() / 2.0),
+                                            rightMove = hasRightTh && (left - $cloneHead.position().left > $rightTh.width() / 2.0);
                                         moveDistince = Math.abs($cloneHead.position().left - left); //记录移动距离
+                                        // 移动到左右两端、checbox/radio 固定列等停止移动
                                         if ($cloneHead.position().left - left > 0
-                                            ? myTable.cols[$cloneHead.prev().prev().data('key').split('-')[1]][$cloneHead.prev().prev().data('key').split('-')[2]].fixed ||['checkbox','radio'].indexOf(myTable.cols[$cloneHead.prev().prev().data('key').split('-')[1]][$cloneHead.prev().prev().data('key').split('-')[2]].type)!==-1
-                                            : myTable.cols[$cloneHead.prev().prev().data('key').split('-')[1]][$cloneHead.next().data('key').split('-')[2]].fixed || ['checkbox','radio'].indexOf(myTable.cols[$cloneHead.prev().prev().data('key').split('-')[1]][$cloneHead.next().data('key').split('-')[2]].type)!==-1) {
+                                            ? !hasLeftTh || myTable.cols[leftKey[1]][leftKey[2]].fixed || ['checkbox','radio'].indexOf(myTable.cols[leftKey[1]][leftKey[2]].type) > -1
+                                            : !hasRightTh || myTable.cols[rightKey[1]][rightKey[2]].fixed || ['checkbox','radio'].indexOf(myTable.cols[rightKey[1]][rightKey[2]].type) > -1) {
                                             $this.css('left',$cloneHead.position().left);
                                             $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
                                                 $(this).prev().css('left', $cloneHead.position().left);
@@ -220,60 +228,54 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         $this.css('left', left);
                                         var curKey = $this.data('key').split('-')[1] + '-' + $this.data('key').split('-')[2]
                                         if (leftMove) {
-                                            if ($cloneHead.prev().prev().length !== 0) {
-                                                $cloneHead.after($cloneHead.prev().prev());
+                                            $cloneHead.after($leftTh);
 
-                                                // 更新隐藏列顺序
-                                                $('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').after($('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').prev())
+                                            // 更新隐藏列顺序
+                                            $('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').after($('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').prev())
 
-                                                // 更新配置信息
-                                                var x, y;
-                                                for (var i = 0; i < myTable.cols.length; i++) {
-                                                    for (var j = 0; j < myTable.cols[i].length; j++) {
-                                                        if (myTable.cols[i][j].key === curKey) {
-                                                            x = i;
-                                                            y = j;
-                                                            break;
-                                                        }
-                                                    }
-                                                    if (typeof x != 'undefined' && typeof y != 'undefined') {
+                                            // 更新配置信息
+                                            for (i = 0; i < myTable.cols.length; i++) {
+                                                for (j = 0; j < myTable.cols[i].length; j++) {
+                                                    if (myTable.cols[i][j].key === curKey) {
+                                                        x = i;
+                                                        y = j;
                                                         break;
                                                     }
                                                 }
-                                                var tempCols = myTable.cols[x][y - 1];
-                                                myTable.cols[x][y - 1] = myTable.cols[x][y];
-                                                myTable.cols[x][y] = tempCols;
-                                                if (myTable.filter && myTable.filter.cache) {
-                                                    localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
+                                                if (typeof x != 'undefined' && typeof y != 'undefined') {
+                                                    break;
                                                 }
                                             }
-                                        } else if (!$cloneHead.next().hasClass('layui-table-patch') && rightMove) {
-                                            if ($cloneHead.next().length !== 0) {
-                                                $cloneHead.prev().before($cloneHead.next());
+                                            tempCols = myTable.cols[x][y - 1];
+                                            myTable.cols[x][y - 1] = myTable.cols[x][y];
+                                            myTable.cols[x][y] = tempCols;
+                                            if (myTable.filter && myTable.filter.cache) {
+                                                localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
+                                            }
+                                        } else if (rightMove) {
+                                            $cloneHead.prev().before($rightTh);
 
-                                                // 更新隐藏列顺序
-                                                $('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').before($('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').next())
+                                            // 更新隐藏列顺序
+                                            $('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').before($('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').next())
 
-                                                // 更新配置信息
-                                                var x, y;
-                                                for (var i = 0; i < myTable.cols.length; i++) {
-                                                    for (var j = 0; j < myTable.cols[i].length; j++) {
-                                                        if (myTable.cols[i][j].key === curKey) {
-                                                            x = i;
-                                                            y = j;
-                                                            break;
-                                                        }
-                                                    }
-                                                    if (typeof x != 'undefined' && typeof y != 'undefined') {
+                                            // 更新配置信息
+                                            for (i = 0; i < myTable.cols.length; i++) {
+                                                for (j = 0; j < myTable.cols[i].length; j++) {
+                                                    if (myTable.cols[i][j].key === curKey) {
+                                                        x = i;
+                                                        y = j;
                                                         break;
                                                     }
                                                 }
-                                                var tempCols = myTable.cols[x][y + 1];
-                                                myTable.cols[x][y + 1] = myTable.cols[x][y];
-                                                myTable.cols[x][y] = tempCols;
-                                                if (myTable.filter && myTable.filter.cache) {
-                                                    localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
+                                                if (typeof x != 'undefined' && typeof y != 'undefined') {
+                                                    break;
                                                 }
+                                            }
+                                            tempCols = myTable.cols[x][y + 1];
+                                            myTable.cols[x][y + 1] = myTable.cols[x][y];
+                                            myTable.cols[x][y] = tempCols;
+                                            if (myTable.filter && myTable.filter.cache) {
+                                                localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                                             }
                                         }
 
