@@ -113,30 +113,24 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             }
             var _this = this,
                 $table = $(myTable.elem),
-                $tableHead = $.merge($table.next().children('.layui-table-box').children('.layui-table-header').children('table'),$table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-header').children('table')),
-                $tableBody = $.merge($table.next().children('.layui-table-box').children('.layui-table-body').children('table'),$table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').children('table')),
+                $tableBox = $table.next().children('.layui-table-box'),
+                $tableHead = $.merge($tableBox.children('.layui-table-header').children('table'),$tableBox.children('.layui-table-fixed').children('.layui-table-header').children('table')),
+                $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'),$tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table')),
                 $totalTable = $table.next().children('.layui-table-total').children('table'),
-                columns = [].concat.apply([], myTable.cols),
                 tableId = myTable.id,
                 isDraging = false, isStart = false;
-
-            var fieldMap = {};
-            for (var i = 0; i < columns.length; i++) {
-                if (columns[i].field) {
-                    fieldMap[columns[i]['field']] = columns[i]
-                } else if (columns[i].type==='numbers') {
-                    fieldMap[i] = columns[i]
-                }
-            }
 
             if (!$tableHead.attr('drag')) {
                 $tableHead.attr('drag', true);
                 $tableHead.find('th').each(function () {
-                    var $this = $(this);
-                    if (!fieldMap[$this.data('field')]) {
+                    var $this = $(this),
+                        key = $this.data('key').split('-'),
+                        curColumn = myTable.cols[key[1]][key[2]],
+                        curKey = key[1] + '-' + key[2];
+                    if (['checkbox','radio'].indexOf(curColumn.type) > -1) {
                         return true;
                     }
-                    var isFixed = fieldMap[$this.data('field')].fixed
+                    var isFixed = curColumn.fixed
                     // 绑定鼠标按下事件
                     $(this).find('span:first')
                         .css('cursor', 'move')
@@ -165,9 +159,10 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                             $('body').on('mousemove', function (e) {
                                 if (isStart && $cloneHead) {
                                     if (!isFixed) {
+                                        $tableBox.removeClass('no-left-border');
                                         if (!isDraging) {
                                             $this.after($cloneHead);
-                                            $this.css({
+                                            $this.addClass('isDrag').css({
                                                 'position': 'absolute',
                                                 'z-index': 1,
                                                 'border-left': '1px solid #e6e6e6',
@@ -175,25 +170,25 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                 'width': width + 1
                                             });
 
-                                            $tableBody.find('td[data-field=' + $this.data('field') + ']').each(function (e) {
+                                            $tableBody.find('td[data-field=' + $this.data('field') + ']').each(function () {
                                                 $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
-                                                $(this).css({
+                                                $(this).addClass('isDrag').css({
                                                     'position': 'absolute',
                                                     'z-index': 1,
                                                     'border-left': '1px solid #e6e6e6',
                                                     'background-color': $(this).css('background-color'),
-                                                    'width': width
+                                                    'width': width + 1
                                                 });
                                             })
                                             if ($totalTable.length>0) {
-                                                $totalTable.find('td[data-field=' + $this.data('field') + ']').each(function (e) {
+                                                $totalTable.find('td[data-field=' + $this.data('field') + ']').each(function () {
                                                     $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
-                                                    $(this).css({
+                                                    $(this).addClass('isDrag').css({
                                                         'position': 'absolute',
                                                         'z-index': 1,
                                                         'border-left': '1px solid #e6e6e6',
                                                         'background-color': $(this).css('background-color'),
-                                                        'width': width
+                                                        'width': width + 1
                                                     });
                                                 })
                                             }
@@ -223,10 +218,11 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     $(this).prev().css('left', $cloneHead.position().left);
                                                 })
                                             }
+                                            $tableBox.addClass('no-left-border');
                                             return;
                                         }
                                         $this.css('left', left);
-                                        var curKey = $this.data('key').split('-')[1] + '-' + $this.data('key').split('-')[2]
+
                                         if (leftMove) {
                                             $cloneHead.after($leftTh);
 
@@ -279,7 +275,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             }
                                         }
 
-                                        $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
+                                        $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function () {
                                             $(this).prev().css('left', left);
 
                                             if (leftMove) {
@@ -293,7 +289,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             }
                                         })
                                         if ($totalTable.length>0) {
-                                            $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
+                                            $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function () {
                                                 $(this).prev().css('left', left);
 
                                                 if (leftMove) {
@@ -335,7 +331,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                 e.stopPropagation();
                                             });
                                             isDraging = false;
-                                            $this.css({
+                                            $tableBox.removeClass('no-left-border')
+                                            $this.removeClass('isDrag').css({
                                                 'position': 'relative',
                                                 'z-index': 'inherit',
                                                 'left': 'inherit',
@@ -343,8 +340,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                 'background-color': 'inherit'
                                             });
                                             $this.next().remove();
-                                            $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
-                                                $(this).prev().css({
+                                            $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function () {
+                                                $(this).prev().removeClass('isDrag').css({
                                                     'position': 'relative',
                                                     'z-index': 'inherit',
                                                     'left': 'inherit',
@@ -354,8 +351,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                 $(this).remove();
                                             });
                                             if ($totalTable.length>0) {
-                                                $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
-                                                    $(this).prev().css({
+                                                $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function () {
+                                                    $(this).prev().removeClass('isDrag').css({
                                                         'position': 'relative',
                                                         'z-index': 'inherit',
                                                         'left': 'inherit',
@@ -376,11 +373,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         $tableBody.find('tbody>tr>td[data-field=' + $this.data('field') + ']').addClass(HIDE);
                                         $totalTable.find('tbody>tr>td[data-field=' + $this.data('field') + ']').addClass(HIDE);
                                         // 同步配置
-                                        for (var i = 0; i < columns.length; i++) {
-                                            if (columns[i].field && columns[i].field === $this.data('field')) {
-                                                columns[i]['hide'] = true;
-                                            }
-                                        }
+                                        curColumn['hide'] = true
                                         if (myTable.filter && myTable.filter.cache) {
                                             localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                                         }
@@ -423,7 +416,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             };
             return JSON.parse(str,function(key, value){
                 if(typeof value === 'string' &&
-                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)==0){
+                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)===0){
                     return eval("("+value.replace(JSON_SERIALIZE_FIX.PREFIX,"").replace(JSON_SERIALIZE_FIX.SUFFIX,"")+")");
                 }
                 return value;

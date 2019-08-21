@@ -409,7 +409,12 @@
 .soul-edit-out li:hover>.delete-item {
     display: inline-block;
 }
+
+/* 拖拽相关 */
 #column-remove {
     position: absolute;
     z-index: 2147483647;
+}
+.layui-table-box.no-left-border td.isDrag, .layui-table-box.no-left-border th.isDrag {
+    border-left: inherit!important;
 }
