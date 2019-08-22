@@ -41,7 +41,7 @@ layui.use(['form', 'table','soulTable'], function () {
 :::
 
 ### 2. 简易拖拽
-如果行数过多，拖拽会出现卡顿，可以设置 `drag: 'simple'` 为简易拖拽
+如果行数过多，拖拽会出现卡顿，可以设置 `drag: 'simple'` 为简易拖拽，拖拽过程中只有头部移动，结束时 body 才会同步
 :::demo
 ```html
 <table id="myTable2" ></table>
@@ -56,15 +56,16 @@ layui.use(['form', 'table','soulTable'], function () {
         ,toolbar: true
         ,drag: 'simple'
         ,height: 500
+        ,totalRow: true
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
-            {field: 'title', title: '诗词', fixed: 'left', width: 200, sort: true, filter: true},
+            {field: 'title', title: '诗词', width: 200, fixed: 'left', sort: true, totalRowText: '合计'},
             {field: 'dynasty', title: '朝代', width: 100, sort: true},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112, sort:true},
-            {field: 'heat', title: '点赞数', width: 112, sort:true},
-            {field: 'createTime', title: '录入时间', width: 165, fixed: 'right', sort:true},
+            {field: 'heat', title: '点赞数', width: 112, sort:true, totalRow: true},
+            {field: 'createTime', title: '录入时间', width: 165, sort:true},
         ]]
         ,done: function () {
             soulTable.render(this)

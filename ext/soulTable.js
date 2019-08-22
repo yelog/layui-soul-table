@@ -118,15 +118,18 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'),$tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table')),
                 $totalTable = $table.next().children('.layui-table-total').children('table'),
                 tableId = myTable.id,
+                isSimple = myTable.drag === 'simple', // 是否为简易拖拽
                 isDraging = false, isStart = false;
 
             if (!$tableHead.attr('drag')) {
                 $tableHead.attr('drag', true);
                 $tableHead.find('th').each(function () {
                     var $this = $(this),
-                        key = $this.data('key').split('-'),
-                        curColumn = myTable.cols[key[1]][key[2]],
-                        curKey = key[1] + '-' + key[2];
+                        field = $this.data('field'),
+                        key = $this.data('key'),
+                        keyArray = key.split('-'),
+                        curColumn = myTable.cols[keyArray[1]][keyArray[2]],
+                        curKey = keyArray[1] + '-' + keyArray[2];
                     if (['checkbox','radio'].indexOf(curColumn.type) > -1) {
                         return true;
                     }
@@ -170,27 +173,31 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                 'width': width + 1
                                             });
 
-                                            $tableBody.find('td[data-field=' + $this.data('field') + ']').each(function () {
-                                                $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
-                                                $(this).addClass('isDrag').css({
-                                                    'position': 'absolute',
-                                                    'z-index': 1,
-                                                    'border-left': '1px solid #e6e6e6',
-                                                    'background-color': $(this).css('background-color'),
-                                                    'width': width + 1
-                                                });
-                                            })
-                                            if ($totalTable.length>0) {
-                                                $totalTable.find('td[data-field=' + $this.data('field') + ']').each(function () {
+                                            if (isSimple) {
+                                                //设置蒙板
+                                            } else {
+                                                $tableBody.find('td[data-key="' + key + '"]').each(function () {
                                                     $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
                                                     $(this).addClass('isDrag').css({
                                                         'position': 'absolute',
                                                         'z-index': 1,
                                                         'border-left': '1px solid #e6e6e6',
-                                                        'background-color': $(this).parents('tr:eq(0)').css('background-color'),
+                                                        'background-color': $(this).css('background-color'),
                                                         'width': width + 1
                                                     });
                                                 })
+                                                if ($totalTable.length>0) {
+                                                    $totalTable.find('td[data-key="' + key + '"]').each(function () {
+                                                        $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
+                                                        $(this).addClass('isDrag').css({
+                                                            'position': 'absolute',
+                                                            'z-index': 1,
+                                                            'border-left': '1px solid #e6e6e6',
+                                                            'background-color': $(this).parents('tr:eq(0)').css('background-color'),
+                                                            'width': width + 1
+                                                        });
+                                                    })
+                                                }
                                             }
                                         }
                                         isDraging = true;
@@ -210,11 +217,11 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             ? !hasLeftTh || myTable.cols[leftKey[1]][leftKey[2]].fixed || ['checkbox','radio'].indexOf(myTable.cols[leftKey[1]][leftKey[2]].type) > -1
                                             : !hasRightTh || myTable.cols[rightKey[1]][rightKey[2]].fixed || ['checkbox','radio'].indexOf(myTable.cols[rightKey[1]][rightKey[2]].type) > -1) {
                                             $this.css('left',$cloneHead.position().left);
-                                            $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
+                                            $tableBody.find('td[data-key="' + key + '"][data-clone]').each(function (e) {
                                                 $(this).prev().css('left', $cloneHead.position().left);
                                             })
                                             if ($totalTable.length>0) {
-                                                $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function (e) {
+                                                $totalTable.find('td[data-key="' + key + '"][data-clone]').each(function (e) {
                                                     $(this).prev().css('left', $cloneHead.position().left);
                                                 })
                                             }
@@ -227,7 +234,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             $cloneHead.after($leftTh);
 
                                             // 更新隐藏列顺序
-                                            $('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').after($('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').prev())
+                                            $('#soul-columns' + tableId + '>li[data-value=' + field + ']').after($('#soul-columns' + tableId + '>li[data-value=' + field + ']').prev())
 
                                             // 更新配置信息
                                             for (i = 0; i < myTable.cols.length; i++) {
@@ -252,7 +259,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             $cloneHead.prev().before($rightTh);
 
                                             // 更新隐藏列顺序
-                                            $('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').before($('#soul-columns' + tableId + '>li[data-value=' + $this.data('field') + ']').next())
+                                            $('#soul-columns' + tableId + '>li[data-value=' + field + ']').before($('#soul-columns' + tableId + '>li[data-value=' + field + ']').next())
 
                                             // 更新配置信息
                                             for (i = 0; i < myTable.cols.length; i++) {
@@ -275,7 +282,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             }
                                         }
 
-                                        $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function () {
+                                        $tableBody.find('td[data-key="' + key + '"][data-clone]').each(function () {
                                             $(this).prev().css('left', left);
 
                                             if (leftMove) {
@@ -289,7 +296,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             }
                                         })
                                         if ($totalTable.length>0) {
-                                            $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function () {
+                                            $totalTable.find('td[data-key="' + key + '"][data-clone]').each(function () {
                                                 $(this).prev().css('left', left);
 
                                                 if (leftMove) {
@@ -340,18 +347,26 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                 'background-color': 'inherit'
                                             });
                                             $this.next().remove();
-                                            $tableBody.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function () {
-                                                $(this).prev().removeClass('isDrag').css({
-                                                    'position': 'relative',
-                                                    'z-index': 'inherit',
-                                                    'left': 'inherit',
-                                                    'border-left': 'inherit',
-                                                    'background-color': 'inherit'
+                                            var prefKey = $this.prev().data('key');
+                                            if (isSimple) {
+                                                $tableBody.find('td[data-key="' + key + '"]').each(function () {
+                                                    if (prefKey) {
+                                                        $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
+                                                    } else {
+                                                        $(this).parent().children('td:first').prev($(this))
+                                                    }
                                                 });
-                                                $(this).remove();
-                                            });
-                                            if ($totalTable.length>0) {
-                                                $totalTable.find('td[data-field=' + $this.data('field') + '][data-clone]').each(function () {
+                                                if ($totalTable.length>0) {
+                                                    $totalTable.find('td[data-key="' + key + '"]').each(function () {
+                                                        if (prefKey) {
+                                                            $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
+                                                        } else {
+                                                            $(this).parent().children('td:first').prev($(this))
+                                                        }
+                                                    });
+                                                }
+                                            } else {
+                                                $tableBody.find('td[data-key="' + key + '"][data-clone]').each(function () {
                                                     $(this).prev().removeClass('isDrag').css({
                                                         'position': 'relative',
                                                         'z-index': 'inherit',
@@ -361,24 +376,36 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     });
                                                     $(this).remove();
                                                 });
+                                                if ($totalTable.length>0) {
+                                                    $totalTable.find('td[data-key="' + key + '"][data-clone]').each(function () {
+                                                        $(this).prev().removeClass('isDrag').css({
+                                                            'position': 'relative',
+                                                            'z-index': 'inherit',
+                                                            'left': 'inherit',
+                                                            'border-left': 'inherit',
+                                                            'background-color': 'inherit'
+                                                        });
+                                                        $(this).remove();
+                                                    });
+                                                }
                                             }
+
                                             $cloneHead = null;
                                         } else {
                                             $that.unbind('click');
                                         }
                                     }
                                     if ($('#column-remove').is(':visible')) {
-                                        $this.data('field');
-                                        $tableHead.find('thead>tr>th[data-field=' + $this.data('field') + ']').addClass(HIDE);
-                                        $tableBody.find('tbody>tr>td[data-field=' + $this.data('field') + ']').addClass(HIDE);
-                                        $totalTable.find('tbody>tr>td[data-field=' + $this.data('field') + ']').addClass(HIDE);
+                                        $tableHead.find('thead>tr>th[data-key=' + key + ']').addClass(HIDE);
+                                        $tableBody.find('tbody>tr>td[data-key="' + key + '"]').addClass(HIDE);
+                                        $totalTable.find('tbody>tr>td[data-key="' + key + '"]').addClass(HIDE);
                                         // 同步配置
                                         curColumn['hide'] = true
                                         if (myTable.filter && myTable.filter.cache) {
                                             localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                                         }
                                         // 更新下拉隐藏
-                                        $('#soul-columns' + tableId).find('li[data-value="' + $this.data('field') + '"]>input').prop('checked', false);
+                                        $('#soul-columns' + tableId).find('li[data-value="' + field + '"]>input').prop('checked', false);
                                         table.resize(tableId)
                                     }
                                     $('#column-remove').hide();

@@ -29,6 +29,8 @@
 
 [移除] css 项目移除对于 `animate.min.css` 的依赖, 更新 `soulTable.css`
 
+[新增] 拖拽 新增简易拖拽，拖拽过程只有头部移动，结束时，才会同步 body [2. 简易拖拽](/#/zh-CN/component/basic/drag)
+
 ### **1.3.10** <small>`2019-08-21`</small>
 [修复] 拖拽 修复拖拽到左右两边时未判空出现的报错
 
