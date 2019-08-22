@@ -76,6 +76,17 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 delete table_cache[tableId];
             }
         },
+        clearFilter: function (myTable) {
+            if (typeof myTable === 'string') {
+                myTable = table_cache[myTable]
+            }
+            if (!where_cache[myTable.id] || !where_cache[myTable.id].filterSos  || where_cache[myTable.id].filterSos === "{}") {
+                return;
+            }
+            delete where_cache[myTable.id]
+            this.soulReload(myTable, true)
+
+        },
         render: function (myTable) {
             var _this = this,
                 $table = $(myTable.elem),
@@ -1697,6 +1708,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 return isMatch;
             }
         }
+        /**
+         * 根据当前条件重载表格
+         * @param myTable 需要重载的表格对象
+         * @param isr 是否为筛选重载，为 true 时，不进行筛选的初始化动作（包括渲染dom、请求表头数据等）
+         */
         , soulReload: function (myTable, isr) {
             var _this = this,
                 $table = $(myTable.elem),
@@ -1709,7 +1725,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                  * 后台筛选
                  */
                 table.reload(myTable.id, {
-                    where: where_cache[myTable.id],
+                    where: where_cache[myTable.id] || {},
                     page: {
                         curr: 1 //重新从第 1 页开始
                     }
@@ -1718,7 +1734,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 /**
                  * 前端筛选
                  */
-                var where = where_cache[myTable.id],
+                var where = where_cache[myTable.id] || {},
                     filterSos = JSON.parse(where.filterSos ? where.filterSos : '[]'),
                     tableFilterTypes = where.tableFilterType ? JSON.parse(where.tableFilterType) : {},
                     loading = layer.load(2);

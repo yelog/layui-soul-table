@@ -422,6 +422,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 return value;
             })||{};
         },
+        clearFilter: function (myTable) {
+            tableFilter.clearFilter(myTable);
+        },
         cache: tableFilter.cache
 
     }

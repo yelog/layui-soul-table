@@ -3,7 +3,7 @@
 ### 效果
 :::demo 通过 `filter: true` 开启筛选
 ```html
-<table id="myTable" ></table>
+<table id="myTable" lay-filter="myTable"></table>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
@@ -11,8 +11,10 @@ layui.use(['form', 'table','soulTable'], function () {
 
     table.render({
         elem: '#myTable'
+        ,id: 'myTable'
         ,url: 'data.json'
         ,height: 500
+        ,toolbar: '<div><button class="layui-btn layui-btn-xs" lay-event="clearFilter">清除所有筛选条件</button></div>'
         ,page: false
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
@@ -26,6 +28,14 @@ layui.use(['form', 'table','soulTable'], function () {
         ]]
         ,done: function () {
             soulTable.render(this)
+        }
+    });
+    
+    table.on('toolbar(myTable)', function(obj){
+        if (obj.event === 'clearFilter') {
+            // 清除所有筛选条件并重载表格
+            // 参数: tableId
+            soulTable.clearFilter('myTable')
         }
     });
 })
