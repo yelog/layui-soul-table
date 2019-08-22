@@ -107,7 +107,6 @@ const webpackConfig = {
     }),
     new CopyWebpackPlugin([
       { from: 'documents/versions.json' },
-      { from: 'animate.min.css' },
       { from: 'soulTable.css' },
       { from: '*.json' },
       { from: '*.html' },

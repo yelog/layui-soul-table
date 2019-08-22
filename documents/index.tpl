@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_137970_p1tpzmomxp9cnmi.css">
     <link rel="stylesheet" href="layui/css/layui.css">
-    <link rel="stylesheet" href="animate.min.css" media="all"/>
     <link rel="stylesheet" href="soulTable.css" media="all"/>
     <title>示例文档 | layui-soul-table</title>
     <meta name="description" content="layui-soul-table 为layui table 扩展的 表头筛选, 表格筛选, 子表, 父子表, 列拖拽, excel导出" />

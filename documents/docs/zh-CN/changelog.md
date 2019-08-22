@@ -25,7 +25,9 @@
 
 ## 更新日志
 ### **1.3.11** <small>`2019-08-22`</small>
-[新增] 筛选 新增方法 `soulTable.clearFilter(tableId)` 用于清除所有筛选条件
+[新增] 筛选 新增方法 `soulTable.clearFilter(tableId)` 用于清除所有筛选条件 [基本筛选](/#/zh-CN/component/filter/basic)
+
+[移除] css 项目移除对于 `animate.min.css` 的依赖, 更新 `soulTable.css`
 
 ### **1.3.10** <small>`2019-08-21`</small>
 [修复] 拖拽 修复拖拽到左右两边时未判空出现的报错
