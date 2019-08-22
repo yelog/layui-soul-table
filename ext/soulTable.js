@@ -28,7 +28,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 tableChild.render(myTable);
                 tableMerge.render(myTable);
 
-                if (typeof myTable.drag == 'undefined' || myTable.drag) {
+                if (typeof myTable.drag === 'undefined' || myTable.drag) {
                     this.drag(myTable);
                 }
                 this.autoColumnWidth(myTable)
@@ -143,7 +143,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                 originLeft = $this.position().left,
                                 originTop = $this.offset().top,
                                 disX = e.clientX - originLeft, // 鼠标距离被移动元素左侧的距离
-                                color = $this.parents('tr').css("background-color"),
+                                color = $this.parents('tr:eq(0)').css("background-color"),
                                 width = $this.width(), moveDistince = 0,
                                 $that = $(this);
                             isStart = true;
@@ -187,7 +187,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                         'position': 'absolute',
                                                         'z-index': 1,
                                                         'border-left': '1px solid #e6e6e6',
-                                                        'background-color': $(this).css('background-color'),
+                                                        'background-color': $(this).parents('tr:eq(0)').css('background-color'),
                                                         'width': width + 1
                                                     });
                                                 })

@@ -14,7 +14,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,id: 'myTable'
         ,url: 'data.json'
         ,height: 500
-        ,toolbar: '<div><button class="layui-btn layui-btn-xs" lay-event="clearFilter">清除所有筛选条件</button></div>'
+        ,toolbar: '<div><button class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</button></div>'
         ,page: false
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},

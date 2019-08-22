@@ -5,6 +5,8 @@
 -  1.调整列顺序：鼠标左键按住列头文字，左右拖动
 -  2.快速隐藏列：鼠标左键按住列头文字，向上拖出表格区域，出现回收站图标后松开则可隐藏此列
 
+固定列禁止左右拖动，且不允许被交换（但可以向上拖动快速隐藏）
+
 :::demo
 ```html
 <table id="myTable" ></table>
@@ -18,14 +20,15 @@ layui.use(['form', 'table','soulTable'], function () {
         ,url: 'data-1.json'
         ,toolbar: true
         ,height: 500
+        ,totalRow: true
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
-            {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+            {field: 'title', title: '诗词', width: 200, fixed: 'left', sort: true, totalRowText: '合计'},
             {field: 'dynasty', title: '朝代', width: 100, sort: true},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112, sort:true},
-            {field: 'heat', title: '点赞数', width: 112, sort:true},
+            {field: 'heat', title: '点赞数', width: 112, sort:true, totalRow: true},
             {field: 'createTime', title: '录入时间', width: 165, sort:true},
         ]]
         ,done: function () {
@@ -37,7 +40,8 @@ layui.use(['form', 'table','soulTable'], function () {
 ```
 :::
 
-### 2. 固定列禁止拖动，且不允许被交换（但可以向上拖动快速隐藏）
+### 2. 简易拖拽
+如果行数过多，拖拽会出现卡顿，可以设置 `drag: 'simple'` 为简易拖拽
 :::demo
 ```html
 <table id="myTable2" ></table>
@@ -50,6 +54,7 @@ layui.use(['form', 'table','soulTable'], function () {
         elem: '#myTable2'
         ,url: 'data-1.json'
         ,toolbar: true
+        ,drag: 'simple'
         ,height: 500
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
