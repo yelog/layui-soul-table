@@ -27,7 +27,7 @@
 ### **1.3.11** <small>`2019-08-22`</small>
 [新增] 筛选 新增方法 `soulTable.clearFilter(tableId)` 用于清除所有筛选条件 [基本筛选](/#/zh-CN/component/filter/basic)
 
-[移除] css 项目移除对于 `animate.min.css` 的依赖, 更新 `soulTable.css`
+<span class='layui-red'>[移除]</span> css 项目移除对于 `animate.min.css` 的依赖, 更新 `soulTable.css`
 
 [新增] 拖拽 新增简易拖拽，拖拽过程只有头部移动，结束时，才会同步 body [2. 简易拖拽](/#/zh-CN/component/basic/drag)
 

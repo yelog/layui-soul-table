@@ -27,9 +27,9 @@
 1.将下面模块放到自己项目中:
 >soulTable.js     总入口  
   tableFilter.js  表头筛选   
-  tableChild.js   子表    
-  tableMerge.js   单元格合并 
   excel.js        excel导出    
+  tableChild.js   子表 [可单独使用](http://soultable.yelog.org/#/zh-CN/component/child/alone)   
+  tableMerge.js   单元格合并 [可单独使用](http://soultable.yelog.org/#/zh-CN/component/merge/alone)     
 
 2.定义入口模块`soulTable`  
 ```js

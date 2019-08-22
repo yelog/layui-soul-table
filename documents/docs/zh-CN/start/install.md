@@ -3,9 +3,9 @@
 
 >soulTable.js     总入口  
   tableFilter.js  表头筛选   
-  tableChild.js   子表    
-  tableMerge.js   单元格合并    
   excel.js        excel导出    
+  tableChild.js   子表 [可单独使用](/#/zh-CN/component/child/alone)   
+  tableMerge.js   单元格合并 [可单独使用](/#/zh-CN/component/merge/alone)   
 
 ### 将模块引入项目中
 ```js
