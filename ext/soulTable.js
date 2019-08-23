@@ -341,16 +341,29 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             'z-index': 'inherit',
                                             'left': 'inherit',
                                             'border-left': 'inherit',
+                                            'width': 'inherit',
                                             'background-color': 'inherit'
                                         });
                                         $this.next().remove();
                                         var prefKey = $this.prev().data('key');
+                                        if (isFixed) {
+                                            var $noFixedTh = $tableBox.children('.layui-table-header').children('table').find('th[data-key="' + key + '"]');
+                                            if (prefKey) {
+                                                $noFixedTh.parent().children('th[data-key="' + prefKey + '"]').after($noFixedTh)
+                                            } else {
+                                                $noFixedTh.parent().prepend('<th class="layui-hide"></th>');
+                                                $noFixedTh.parent().children('th:first').after($noFixedTh);
+                                                $noFixedTh.parent().children('th:first').remove();
+                                            }
+                                        }
                                         if (isSimple) {
                                             $tableBody.find('td[data-key="' + key + '"]').each(function () {
                                                 if (prefKey) {
                                                     $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
                                                 } else {
-                                                    $(this).parent().children('td:first').prev($(this))
+                                                    $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                    $(this).parent().children('td:first').after($(this));
+                                                    $(this).parent().children('td:first').remove();
                                                 }
                                             });
                                             if ($totalTable.length>0) {
@@ -358,7 +371,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     if (prefKey) {
                                                         $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
                                                     } else {
-                                                        $(this).parent().children('td:first').prev($(this))
+                                                        $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                        $(this).parent().children('td:first').after($(this));
+                                                        $(this).parent().children('td:first').remove();
                                                     }
                                                 });
                                             }
@@ -369,6 +384,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     'z-index': 'inherit',
                                                     'left': 'inherit',
                                                     'border-left': 'inherit',
+                                                    'width': 'inherit',
                                                     'background-color': 'inherit'
                                                 });
                                                 $(this).remove();
@@ -380,6 +396,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                         'z-index': 'inherit',
                                                         'left': 'inherit',
                                                         'border-left': 'inherit',
+                                                        'width': 'inherit',
                                                         'background-color': 'inherit'
                                                     });
                                                     $(this).remove();

@@ -60,7 +60,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,totalRow: true
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
-            {field: 'title', title: '诗词', width: 200, fixed: 'left', sort: true, totalRowText: '合计'},
+            {field: 'title', title: '诗词', width: 200, fixed: 'left', totalRowText: '合计'},
             {field: 'dynasty', title: '朝代', width: 100, sort: true},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
