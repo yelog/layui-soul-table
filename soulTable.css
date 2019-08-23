@@ -440,7 +440,7 @@
     width: 62px;
     background-color: rgb(0, 150, 136, 0.5);
 }
-.soul-drag-bar > div.active, .soul-drag-bar[data-type='left'] .left, .soul-drag-bar[data-type='right'] .right, .soul-drag-bar[data-type='none'] .none  {
+.soul-drag-bar > div.active, .soul-drag-bar[data-type='left']>div[data-type='left'], .soul-drag-bar[data-type='right']>div[data-type='right'], .soul-drag-bar[data-type='none']>div[data-type='none']  {
     background-color: rgb(0, 150, 136);
 }
 

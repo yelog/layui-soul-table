@@ -115,7 +115,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 $table = $(myTable.elem),
                 $tableBox = $table.next().children('.layui-table-box'),
                 $tableHead = $.merge($tableBox.children('.layui-table-header').children('table'),$tableBox.children('.layui-table-fixed').children('.layui-table-header').children('table')),
-                $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'),$tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table')),
+                $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table'),
+                $noFixedBody = $tableBox.children('.layui-table-body').children('table'),
+                $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
                 $totalTable = $table.next().children('.layui-table-total').children('table'),
                 tableId = myTable.id,
                 isSimple = myTable.drag === 'simple', // 是否为简易拖拽
@@ -123,7 +125,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
             if (!$tableHead.attr('drag')) {
                 $tableHead.attr('drag', true);
-                $tableBox.append('<div class="soul-drag-bar"><div class="left">左固定</div><div class="none">不固定</div><div class="right">右固定</div></div>')
+                $tableBox.append('<div class="soul-drag-bar"><div data-type="left">左固定</div><div data-type="none">不固定</div><div data-type="right">右固定</div></div>')
                 var $dragBar = $tableBox.children('.soul-drag-bar');
                 $dragBar.children('div').on('mouseenter', function () {
                     $(this).addClass('active')
@@ -137,7 +139,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         keyArray = key.split('-'),
                         curColumn = myTable.cols[keyArray[1]][keyArray[2]],
                         curKey = keyArray[1] + '-' + keyArray[2],
-                        isFixed = curColumn.fixed;
+                        isFixed = curColumn.fixed,
+                        isInFixed = $this.parents('.layui-table-fixed').length>0;
                     // 绑定鼠标按下事件
                     $(this).find('span:first,.laytable-cell-checkbox')
                         .css('cursor', 'move')
@@ -181,7 +184,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         if (isSimple) {
                                             //设置蒙板
                                         } else {
-                                            $tableBody.find('td[data-key="' + key + '"]').each(function () {
+                                            (isInFixed ? $fixedBody : $tableBody).find('td[data-key="' + key + '"]').each(function () {
                                                 $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
                                                 $(this).addClass('isDrag').css({
                                                     'position': 'absolute',
@@ -191,7 +194,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     'width': width + 1
                                                 });
                                             })
-                                            if ($totalTable.length>0) {
+                                            if (!isInFixed && $totalTable.length>0) {
                                                 $totalTable.find('td[data-key="' + key + '"]').each(function () {
                                                     $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
                                                     $(this).addClass('isDrag').css({
@@ -417,6 +420,62 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     }
                                                 });
                                             }
+                                        } else if (isInFixed) {
+                                            $noFixedBody.find('td[data-key="' + key + '"]').each(function () {
+                                                if (prefKey) {
+                                                    $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
+                                                } else {
+                                                    if (isFixed === 'right') {
+                                                        if ($this.siblings().length > 0) {
+                                                            var $preTd = $(this).parent().children('td[data-key="' + $this.next().data('key') + '"]').prev();
+                                                            if ($preTd.length>0) {
+                                                                $preTd.after($(this));
+                                                            } else {
+                                                                $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                                $(this).parent().children('td:first').after($(this));
+                                                                $(this).parent().children('td:first').remove();
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                        $(this).parent().children('td:first').after($(this));
+                                                        $(this).parent().children('td:first').remove();
+                                                    }
+                                                }
+                                            });
+                                            $fixedBody.find('td[data-key="' + key + '"][data-clone]').each(function () {
+                                                $(this).prev().removeClass('isDrag').css({
+                                                    'position': 'relative',
+                                                    'z-index': 'inherit',
+                                                    'left': 'inherit',
+                                                    'border-left': 'inherit',
+                                                    'width': 'inherit',
+                                                    'background-color': 'inherit'
+                                                });
+                                                $(this).remove();
+                                            });
+                                            if ($totalTable.length>0) {
+                                                $totalTable.find('td[data-key="' + key + '"]').each(function () {
+                                                    if (prefKey) {
+                                                        $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
+                                                    } else {
+                                                        if (isFixed === 'right') {
+                                                            var $preTd = $(this).parent().children('td[data-key="' + $this.next().data('key') + '"]').prev();
+                                                            if ($preTd.length>0) {
+                                                                $preTd.after($(this));
+                                                            } else {
+                                                                $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                                $(this).parent().children('td:first').after($(this));
+                                                                $(this).parent().children('td:first').remove();
+                                                            }
+                                                        } else {
+                                                            $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                            $(this).parent().children('td:first').after($(this));
+                                                            $(this).parent().children('td:first').remove();
+                                                        }
+                                                    }
+                                                });
+                                            }
                                         } else {
                                             $tableBody.find('td[data-key="' + key + '"][data-clone]').each(function () {
                                                 $(this).prev().removeClass('isDrag').css({
@@ -445,6 +504,12 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         }
 
                                         $cloneHead = null;
+
+                                        // 处理固定列移动问题
+                                        if ($dragBar.children('.active').length > 0 && $dragBar.children('.active').attr('data-type') !== $dragBar.attr('data-type')) {
+                                            console.log('移动到' + $dragBar.children('.active').attr('data-type'))
+                                        }
+
                                         $dragBar.removeClass('active')
                                     } else {
                                         $that.unbind('click');
