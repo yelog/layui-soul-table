@@ -123,14 +123,21 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
             if (!$tableHead.attr('drag')) {
                 $tableHead.attr('drag', true);
+                $tableBox.append('<div class="soul-drag-bar"><div class="left">左固定</div><div class="none">不固定</div><div class="right">右固定</div></div>')
+                var $dragBar = $tableBox.children('.soul-drag-bar');
+                $dragBar.children('div').on('mouseenter', function () {
+                    $(this).addClass('active')
+                }).on('mouseleave', function () {
+                    $(this).removeClass('active')
+                })
                 $tableHead.find('th').each(function () {
                     var $this = $(this),
                         field = $this.data('field'),
                         key = $this.data('key'),
                         keyArray = key.split('-'),
                         curColumn = myTable.cols[keyArray[1]][keyArray[2]],
-                        curKey = keyArray[1] + '-' + keyArray[2];
-                    var isFixed = curColumn.fixed
+                        curKey = keyArray[1] + '-' + keyArray[2],
+                        isFixed = curColumn.fixed;
                     // 绑定鼠标按下事件
                     $(this).find('span:first,.laytable-cell-checkbox')
                         .css('cursor', 'move')
@@ -160,6 +167,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                 if (isStart && $cloneHead) {
                                     $tableBox.removeClass('no-left-border');
                                     if (!isDraging) {
+                                        $dragBar.attr('data-type', isFixed || 'none')
+                                        $dragBar.addClass('active')
                                         $this.after($cloneHead);
                                         $this.addClass('isDrag').css({
                                             'position': 'absolute',
@@ -351,9 +360,16 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             if (prefKey) {
                                                 $noFixedTh.parent().children('th[data-key="' + prefKey + '"]').after($noFixedTh)
                                             } else {
-                                                $noFixedTh.parent().prepend('<th class="layui-hide"></th>');
-                                                $noFixedTh.parent().children('th:first').after($noFixedTh);
-                                                $noFixedTh.parent().children('th:first').remove();
+                                                if (isFixed === 'right') {
+                                                    if ($this.siblings().length > 0) {
+                                                        $tableBox.children('.layui-table-header').children('table').find('th[data-key="' + $this.next().data('key') + '"]').prev().after($noFixedTh);
+                                                    }
+                                                } else {
+                                                    $noFixedTh.parent().prepend('<th class="layui-hide"></th>');
+                                                    $noFixedTh.parent().children('th:first').after($noFixedTh);
+                                                    $noFixedTh.parent().children('th:first').remove();
+                                                }
+
                                             }
                                         }
                                         if (isSimple) {
@@ -361,9 +377,22 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                 if (prefKey) {
                                                     $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
                                                 } else {
-                                                    $(this).parent().prepend('<td class="layui-hide"></td>');
-                                                    $(this).parent().children('td:first').after($(this));
-                                                    $(this).parent().children('td:first').remove();
+                                                    if (isFixed === 'right') {
+                                                        if ($this.siblings().length > 0) {
+                                                            var $preTd = $(this).parent().children('td[data-key="' + $this.next().data('key') + '"]').prev();
+                                                            if ($preTd.length>0) {
+                                                                $preTd.after($(this));
+                                                            } else {
+                                                                $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                                $(this).parent().children('td:first').after($(this));
+                                                                $(this).parent().children('td:first').remove();
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                        $(this).parent().children('td:first').after($(this));
+                                                        $(this).parent().children('td:first').remove();
+                                                    }
                                                 }
                                             });
                                             if ($totalTable.length>0) {
@@ -371,9 +400,20 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     if (prefKey) {
                                                         $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
                                                     } else {
-                                                        $(this).parent().prepend('<td class="layui-hide"></td>');
-                                                        $(this).parent().children('td:first').after($(this));
-                                                        $(this).parent().children('td:first').remove();
+                                                        if (isFixed === 'right') {
+                                                            var $preTd = $(this).parent().children('td[data-key="' + $this.next().data('key') + '"]').prev();
+                                                            if ($preTd.length>0) {
+                                                                $preTd.after($(this));
+                                                            } else {
+                                                                $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                                $(this).parent().children('td:first').after($(this));
+                                                                $(this).parent().children('td:first').remove();
+                                                            }
+                                                        } else {
+                                                            $(this).parent().prepend('<td class="layui-hide"></td>');
+                                                            $(this).parent().children('td:first').after($(this));
+                                                            $(this).parent().children('td:first').remove();
+                                                        }
                                                     }
                                                 });
                                             }
@@ -405,6 +445,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         }
 
                                         $cloneHead = null;
+                                        $dragBar.removeClass('active')
                                     } else {
                                         $that.unbind('click');
                                     }

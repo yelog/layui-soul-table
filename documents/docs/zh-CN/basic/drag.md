@@ -25,11 +25,11 @@ layui.use(['form', 'table','soulTable'], function () {
             {type: 'radio', title: '##', fixed: 'left'},
             {type: 'checkbox', title: '##', fixed: 'left'},
             {field: 'title', title: '诗词', width: 100, fixed: 'left', totalRowText: '合计'},
-            {field: 'dynasty', title: '朝代', width: 100, fixed: 'left'},
+            {field: 'dynasty', title: '朝代', width: 100},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},
-            {field: 'heat', title: '点赞数', width: 112, totalRow: true},
+            {field: 'heat', title: '点赞数', width: 75, fixed: 'right', totalRow: true},
             {field: 'createTime', title: '录入时间', fixed: 'right', width: 165},
         ]]
         ,done: function () {
@@ -65,8 +65,8 @@ layui.use(['form', 'table','soulTable'], function () {
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112, sort:true},
-            {field: 'heat', title: '点赞数', width: 112, sort:true, totalRow: true},
-            {field: 'createTime', title: '录入时间', width: 165, sort:true},
+            {field: 'heat', title: '点赞数', width: 112, fixed: 'right', sort:true, totalRow: true},
+            {field: 'createTime', title: '录入时间', fixed: 'right', width: 165, sort:true},
         ]]
         ,done: function () {
             soulTable.render(this)
