@@ -24,6 +24,9 @@
 
 
 ## 更新日志
+### **1.3.12** <small>`2019-08-23`</small>
+[新增] 拖拽 新增 拖拽工具栏 ，支持动态修改固定列/非固定列
+
 ### **1.3.11** <small>`2019-08-22`</small>
 [新增] 筛选 新增方法 `soulTable.clearFilter(tableId)` 用于清除所有筛选条件 [基本筛选](/#/zh-CN/component/filter/basic)
 

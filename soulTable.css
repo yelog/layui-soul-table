@@ -428,7 +428,7 @@
     box-shadow: 0 1px 20px rgba(0,0,0,.15);
     text-align: center;
     transform: translateX(100vw);
-    transition: transform .3s;
+    /*transition: transform .3s;*/
 }
 .soul-drag-bar.active {
     transform: translateX(-98px);

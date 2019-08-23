@@ -120,18 +120,22 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
                 $totalTable = $table.next().children('.layui-table-total').children('table'),
                 tableId = myTable.id,
-                isSimple = myTable.drag === 'simple', // 是否为简易拖拽
+                isSimple = myTable.drag === 'simple' || (myTable.drag && myTable.drag.type === 'simple'), // 是否为简易拖拽
+                toolbar = myTable.drag && myTable.drag.toolbar, // 是否开启工具栏
                 isDraging = false, isStart = false;
 
             if (!$tableHead.attr('drag')) {
                 $tableHead.attr('drag', true);
-                $tableBox.append('<div class="soul-drag-bar"><div data-type="left">左固定</div><div data-type="none">不固定</div><div data-type="right">右固定</div></div>')
-                var $dragBar = $tableBox.children('.soul-drag-bar');
-                $dragBar.children('div').on('mouseenter', function () {
-                    $(this).addClass('active')
-                }).on('mouseleave', function () {
-                    $(this).removeClass('active')
-                })
+                if (toolbar) {
+                    $tableBox.append('<div class="soul-drag-bar"><div data-type="left">左固定</div><div data-type="none">不固定</div><div data-type="right">右固定</div></div>')
+                    var $dragBar = $tableBox.children('.soul-drag-bar');
+                    $dragBar.children('div').on('mouseenter', function () {
+                        $(this).addClass('active')
+                    }).on('mouseleave', function () {
+                        $(this).removeClass('active')
+                    })
+                }
+
                 $tableHead.find('th').each(function () {
                     var $this = $(this),
                         field = $this.data('field'),
@@ -139,7 +143,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         keyArray = key.split('-'),
                         curColumn = myTable.cols[keyArray[1]][keyArray[2]],
                         curKey = keyArray[1] + '-' + keyArray[2],
-                        isFixed = curColumn.fixed,
                         isInFixed = $this.parents('.layui-table-fixed').length>0;
                     // 绑定鼠标按下事件
                     $(this).find('span:first,.laytable-cell-checkbox')
@@ -155,7 +158,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                 disX = e.clientX - originLeft, // 鼠标距离被移动元素左侧的距离
                                 color = $this.parents('tr:eq(0)').css("background-color"),
                                 width = $this.width(), moveDistince = 0,
-                                $that = $(this);
+                                $that = $(this),
+                                isFixed = curColumn.fixed;
                             isStart = true;
                             //区分click、drag事件
 
@@ -170,8 +174,11 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                 if (isStart && $cloneHead) {
                                     $tableBox.removeClass('no-left-border');
                                     if (!isDraging) {
-                                        $dragBar.attr('data-type', isFixed || 'none')
-                                        $dragBar.addClass('active')
+                                        if (toolbar) {
+                                            $dragBar.attr('data-type', isFixed || 'none')
+                                            $dragBar.addClass('active')
+                                        }
+
                                         $this.after($cloneHead);
                                         $this.addClass('isDrag').css({
                                             'position': 'absolute',
@@ -505,12 +512,53 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
                                         $cloneHead = null;
 
-                                        // 处理固定列移动问题
-                                        if ($dragBar.children('.active').length > 0 && $dragBar.children('.active').attr('data-type') !== $dragBar.attr('data-type')) {
-                                            console.log('移动到' + $dragBar.children('.active').attr('data-type'))
+                                        // 处理 toolbar 事件
+                                        if (toolbar) {
+                                            if ($dragBar.children('.active').length > 0 && $dragBar.children('.active').attr('data-type') !== $dragBar.attr('data-type')) {
+                                                var targetFix = $dragBar.children('.active').attr('data-type'),
+                                                    i, j, curPos, targetPos;
+                                                console.log('移动到' + targetFix)
+                                                for (i = 0; i < myTable.cols.length; i++) {
+                                                    for (j = 0; j < myTable.cols[i].length; j++) {
+                                                        if (targetFix==='right' || (targetFix === 'none' && $dragBar.attr('data-type') === 'right')) {
+                                                            if (typeof  targetPos === 'undefined') {
+                                                                if (myTable.cols[i][j].fixed === 'right') {
+                                                                    targetPos = {x: i, y: j};
+                                                                } else if (j === myTable.cols[i].length-1) {
+                                                                    targetPos = {x: i, y: j+1};
+                                                                }
+
+                                                            }
+                                                        } else {
+                                                            if (typeof targetPos === 'undefined' && (!myTable.cols[i][j].fixed || myTable.cols[i][j].fixed === 'right')) {
+                                                                targetPos = {x: i, y: j};
+                                                            }
+                                                        }
+                                                        if (myTable.cols[i][j].key === curKey) {
+                                                            curPos = {x: i, y: j};
+                                                        }
+                                                    }
+                                                }
+                                                curColumn['fixed'] = targetFix === 'none' ? false : targetFix;
+
+                                                if (curPos.y !== targetPos.y) {
+                                                    myTable.cols[curPos.x].splice(curPos.y, 1);
+
+                                                    if (curPos.y < targetPos.y) {
+                                                        targetPos.y -= 1
+                                                    }
+
+                                                    myTable.cols[targetPos.x].splice(targetPos.y, 0, curColumn)
+
+                                                    if (myTable.filter && myTable.filter.cache) {
+                                                        localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
+                                                    }
+                                                }
+                                                table.reload(tableId)
+                                            }
+                                            $dragBar.removeClass('active')
                                         }
 
-                                        $dragBar.removeClass('active')
                                     } else {
                                         $that.unbind('click');
                                     }
