@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "docs": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.docs.js",
-    "build": "cross-env NODE_ENV=product webpack --config build/webpack.docs.js"
+    "build_js": "gulp build_js",
+    "build_all": "gulp build_js && cross-env NODE_ENV=product webpack --config build/webpack.docs.js"
   },
   "dependencies": {
     "@babel/core": "^7.5.4",
@@ -21,6 +22,8 @@
     "css-loader": "^3.0.0",
     "element-ui": "^2.10.1",
     "file-loader": "^4.0.0",
+    "gulp": "^4.0.2",
+    "gulp-uglify": "^3.0.2",
     "highlight.js": "^9.15.8",
     "html-webpack-plugin": "^3.2.0",
     "layui-src": "^2.5.4",

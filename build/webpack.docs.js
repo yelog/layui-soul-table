@@ -113,10 +113,6 @@ const webpackConfig = {
       {
         from: 'layui',
         to: 'layui'
-      },
-      {
-        from: 'ext',
-        to: 'ext'
       }
     ]),
     new ProgressBarPlugin(),
