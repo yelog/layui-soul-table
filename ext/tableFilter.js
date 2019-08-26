@@ -387,7 +387,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         id = '', prefix = '';
                     if (filterSos) {
                         for (var i = 0; i < filterSos.length; i++) {
-                            if (filterSos[i].head && filterSos[i].mode == "in" && filterSos[i].field == field) {
+                            if (filterSos[i].head && filterSos[i].mode === "in" && filterSos[i].field === field) {
                                 id = filterSos[i].id;
                                 prefix = filterSos[i].prefix;
                                 for (var j = 0; j < filterSos[i].values.length; j++) {
@@ -398,7 +398,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
                     }
                     $('#soul-dropList' + tableId + '>ul').data({
-                        head: 'true',
+                        head: true,
                         'id': id,
                         prefix: prefix,
                         refresh: true,
@@ -518,7 +518,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         }
                         conditionHtml.push('</tbody></table><div style="text-align: center; padding-top: 5px"><button class="layui-btn layui-btn-sm" data-type="add"><i class="layui-icon">&#xe654;</i>添加</button><span style="display: inline-block;width: 50px"></span><button class="layui-btn layui-btn-sm" data-type="search"><i class="layui-icon">&#xe615;</i>查询</button></div>')
 
-                        $('#soul-condition' + tableId).data({head: 'true', id: filterSo ? filterSo.id || '' : ''})
+                        $('#soul-condition' + tableId).data({head: true, id: filterSo ? filterSo.id || '' : ''})
                             .html(conditionHtml.join(''))
                             .css({'top': $(this).offset().top, 'left': left})
                             .show().removeClass().addClass(animate + ' animated');
@@ -534,7 +534,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                              */
                             if ($(this).data('type') === 'add') {
                                 var groupId = $('#soul-condition' + tableId).data('id'),
-                                    head = $('#soul-condition' + tableId).data('head') === 'true',
+                                    head = $('#soul-condition' + tableId).data('head'),
                                     type = 'eq',
                                     filterSo,
                                     $tr1 = $('#soul-condition' + tableId).find('tr:eq(0)');
@@ -621,7 +621,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 prefix = $tr.find('input[lay-filter="soul-coondition-switch"]:checked').prop('checked')?'and':'or',
                                 type = $tr.find('select').val(),
                                 value = $tr.find('.value').val(),
-                                head = $('#soul-condition' + tableId).data('head') == 'true';
+                                head = $('#soul-condition' + tableId).data('head');
 
                             if (groupId) {
                                 filterSo = {
@@ -1607,7 +1607,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 id = $('#soul-dropList' + tableId + '>ul').data('id'),
                 $checkedDom = $('#soul-dropList' + tableId + '>ul input[type=checkbox]:checked'),
                 values = [],
-                head = $('#soul-dropList' + tableId + '>ul').data('head') == 'true',
+                head = $('#soul-dropList' + tableId + '>ul').data('head'),
                 prefix = $('#soul-dropList' + tableId + '>ul').data('prefix'),
                 refresh = $('#soul-dropList' + tableId + '>ul').data('refresh'),
                 split = $('#soul-dropList' + tableId + '>ul').data('split');
@@ -1960,13 +1960,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             $('#soul-condition' + tableId).html(conditionHtml.join(''));
             var filterDate = util.toDateString(new Date(), 'yyyy-MM-dd');
             if (filterSo) {
-                $('#soul-condition' + tableId).data({'id': filterSo.id, 'head': 'true'});
+                $('#soul-condition' + tableId).data({'id': filterSo.id, 'head': true});
                 $('#soul-condition' + tableId + '>.' + field + 'Condition' + ' [name^=datetime][value="' + filterSo.type + '"]').prop('checked', true);
                 if (filterSo.type == 'specific') {
                     filterDate = filterSo.value
                 }
             } else {
-                $('#soul-condition' + tableId).data({'id': '', 'head': 'true'});
+                $('#soul-condition' + tableId).data({'id': '', 'head': true});
                 $('#soul-condition' + tableId + '>.' + field + 'Condition' + ' [name^=datetime][value="all"]').prop('checked', true);
             }
 
@@ -1979,7 +1979,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 , value: filterDate
                 , done: function (value) {
                     var id = $('#soul-condition' + tableId).data('id'),
-                        head = $('#soul-condition' + tableId).data('head') == 'true'
+                        head = $('#soul-condition' + tableId).data('head')
                     $('#soul-condition' + tableId + ' .specific_value').val(value);
                     $('#soul-condition' + tableId + ' [name^=datetime]:checked').prop('checked', false);
                     $('#soul-condition' + tableId + ' [name^=datetime][value=specific]').prop('checked', true);
@@ -2007,7 +2007,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             });
             form.on('radio(datetime' + tableId + ')', function (data) {
                 var id = $('#soul-condition' + tableId).data('id'),
-                    head = $('#soul-condition' + tableId).data('head') == 'true'
+                    head = $('#soul-condition' + tableId).data('head')
                 var filterSo = {
                     id: id,
                     head: head,
@@ -2283,7 +2283,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     field = $(this).parent().data('field'),
                     id = $(this).parent().data('id'),
                     head = $(this).parent().data('head'),
-                    prefix = $(this).parent().data('prefix')
+                    prefix = $(this).parent().data('prefix');
 
                 switch (mode) {
                     case 'in':
