@@ -260,7 +260,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     break;
                                                 }
                                             }
-                                            if (typeof x != 'undefined' && typeof y != 'undefined') {
+                                            if (typeof x !== 'undefined' && typeof y !== 'undefined') {
                                                 break;
                                             }
                                         }
@@ -285,7 +285,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     break;
                                                 }
                                             }
-                                            if (typeof x != 'undefined' && typeof y != 'undefined') {
+                                            if (typeof x !== 'undefined' && typeof y !== 'undefined') {
                                                 break;
                                             }
                                         }

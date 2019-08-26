@@ -26,7 +26,7 @@ layui.define(['table'], function (exports) {
                     if (item2.merge && item2.field) {
                         var mergeField = [item2.field];
                         if (item2.merge !== true) {
-                            if (typeof item2.merge == 'string') {
+                            if (typeof item2.merge === 'string') {
                                 mergeField = [item2.merge]
                             } else {
                                 mergeField = item2.merge

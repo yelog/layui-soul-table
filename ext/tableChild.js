@@ -235,7 +235,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 if (!child.lazy && i!==0) {
                     $('#'+childTableId).parents('.layui-tab-item:eq(0)').removeClass('layui-show'); //解决隐藏时计算表格高度有问题
                 }
-                if (typeof param.toolEvent == 'function') {
+                if (typeof param.toolEvent === 'function') {
                     table.on('tool('+childTableId+')', function (obj) {
                         param.toolEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
                     })
@@ -342,7 +342,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             };
             return JSON.parse(str,function(key, value){
                 if(typeof value === 'string' &&
-                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)==0){
+                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)===0){
                     return eval("("+value.replace(JSON_SERIALIZE_FIX.PREFIX,"").replace(JSON_SERIALIZE_FIX.SUFFIX,"")+")");
                 }
                 return value;
