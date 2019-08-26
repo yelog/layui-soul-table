@@ -99,9 +99,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 filterItems = myTable.filter?myTable.filter.items||['column','data','condition','editCondition','excel']:['column','data','condition','editCondition','excel'],
                 needFilter = false, // 是否存在筛选列需要进行初始化
                 initFilter = false, // 是否为第一次筛选
-                mainExcel = typeof myTable.excel === 'undefined' || ((myTable.excel && (typeof myTable.excel.on === 'undefined' || myTable.excel.on)) ? myTable.excel : false);
+                mainExcel = typeof myTable.excel === 'undefined' || ((myTable.excel && (typeof myTable.excel.on === 'undefined' || myTable.excel.on)) ? myTable.excel : false),
+                i, j;
 
-            for (var i = 0; i < columns.length; i++) {
+            for (i = 0; i < columns.length; i++) {
                 if (columns[i].field && columns[i].filter) {
                     needFilter = true;
                     if ($tableHead.find('th[data-field="'+columns[i].field+'"]').children().children('.soul-table-filter').length===0) {
@@ -230,7 +231,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 soulFilterList.push('<div id="soul-filter-list' + tableId + '"><form action="" class="layui-form" lay-filter="orm"><ul id="main-list' + tableId + '" style="display: none">');
                 soulFilterList.push('<li class="soul-sort" data-value="asc" ><i class="soul-icon soul-icon-asc"></i> 升序排列 </li>');
                 soulFilterList.push('<li class="soul-sort" data-value="desc"  style="border-bottom: 1px solid #e6e6e6"><i class="soul-icon soul-icon-desc"></i> 降序排列 </li>');
-                for (var i = 0; i < filterItems.length; i++) {
+                for (i = 0; i < filterItems.length; i++) {
                     if (filterItems[i]==='excel' && !mainExcel){
                         continue
                     }
@@ -240,7 +241,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
 
                 var types = {}; //存储过滤数据的类型
                 // 根据表格列显示
-                for (var i = 0; i < columns.length; i++) {
+                for (i = 0; i < columns.length; i++) {
                     if (columns[i].type === 'checkbox' || !columns[i].field) {
                         soulFilterList.push('<li class="layui-hide"><input type="checkbox" title="' + columns[i].title + '" /></li>')
                         continue;
@@ -287,7 +288,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                     // 同步配置
                     var tempColumns = [].concat.apply([], myTable.cols)
-                    for (var i = 0; i < tempColumns.length; i++) {
+                    for (i = 0; i < tempColumns.length; i++) {
                         if (tempColumns[i].field && tempColumns[i].field === data.value) {
                             tempColumns[i]['hide'] = !data.elem.checked;
                         }
@@ -386,11 +387,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         filterSos = JSON.parse(where.filterSos ? where.filterSos : null),
                         id = '', prefix = '';
                     if (filterSos) {
-                        for (var i = 0; i < filterSos.length; i++) {
+                        for (i = 0; i < filterSos.length; i++) {
                             if (filterSos[i].head && filterSos[i].mode === "in" && filterSos[i].field === field) {
                                 id = filterSos[i].id;
                                 prefix = filterSos[i].prefix;
-                                for (var j = 0; j < filterSos[i].values.length; j++) {
+                                for (j = 0; j < filterSos[i].values.length; j++) {
                                     $('#soulDropList' + tableId).find('.' + field + 'DropList li input[type=checkbox][value="' + filterSos[i].values[j] + '"]').prop('checked', true);
                                 }
                                 break;
@@ -453,7 +454,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         where = where_cache[myTable.id]||{},
                         filterSos = JSON.parse(where.filterSos ? where.filterSos : null);
                     if (filterSos) {
-                        for (var i = 0; i < filterSos.length; i++) {
+                        for (i = 0; i < filterSos.length; i++) {
                             if (filterSos[i].head && filterSos[i].field === field && (filterSos[i].mode === "date" || filterSos[i].mode === 'group')) {
                                 filterSo = filterSos[i]
                                 break;
@@ -469,7 +470,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                          * 筛选条件
                          */
                         var fieldMap = {};
-                        for (var i = 0; i < columns.length; i++) {
+                        for (i = 0; i < columns.length; i++) {
                             if (columns[i].field) {
                                 fieldMap[columns[i]['field']] = columns[i]['title']
                             }
@@ -482,7 +483,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         selectStr += "</select>";
                         conditionHtml.push('<table class="condition-table"><tbody>');
                         if (filterSo && filterSo.children && filterSo.children.length > 0) {
-                            for (var i = 0; i < filterSo.children.length; i++) {
+                            for (i = 0; i < filterSo.children.length; i++) {
                                 var id = filterSo.children[i].id,
                                     prefix = filterSo.children[i].prefix,
                                     type = filterSo.children[i].type,
@@ -759,9 +760,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 });
             } else {
 
-                var types = {}; //存储过滤数据的类型
+                types = {}; //存储过滤数据的类型
                 // 根据表格列显示
-                for (var i = 0; i < columns.length; i++) {
+                for (i = 0; i < columns.length; i++) {
                     if (columns[i].type === 'checkbox' || !columns[i].field) {
                         continue;
                     }
@@ -812,11 +813,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                         ul.push("<ul class='" + key + "DropList' data-value='" + key + "'>");
 
                                         var columnsConfigs = columns;
-                                        for (var j = 0; j < columnsConfigs.length; j++) {
+                                        for (j = 0; j < columnsConfigs.length; j++) {
                                             if (columnsConfigs[j].field === key) {
                                                 if (columnsConfigs[j].filter.split) {
                                                     var tempList = []
-                                                    for (var i = 0; i < list.length; i++) {
+                                                    for (i = 0; i < list.length; i++) {
                                                         var tempList2 = list[i].split(columnsConfigs[j].filter.split)
                                                         for (var k = 0; k < tempList2.length; k++) {
                                                             if (tempList.indexOf(tempList2[k]) === -1) {
@@ -833,7 +834,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                                         return Number(a) - Number(b)
                                                     }
                                                 })
-                                                for (var i = 0; i < list.length; i++) {
+                                                for (i = 0; i < list.length; i++) {
                                                     if (list[i]) {
                                                         var line = {};
                                                         line[key] = list[i];
@@ -859,8 +860,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     } else {
                         var tableDatas = cache[myTable.id];
                         var dropDatas = {};
-                        for (var i = 0; i < tableDatas.length; i++) {
-                            for (var j = 0; j < columnField.length; j++) {
+                        for (i = 0; i < tableDatas.length; i++) {
+                            for (j = 0; j < columnField.length; j++) {
                                 var value = typeof tableDatas[i][columnField[j]] === 'undefined' ? '' : tableDatas[i][columnField[j]];
                                 if (dropDatas[columnField[j]]) {
                                     if (dropDatas[columnField[j]].indexOf(value) === -1) {
@@ -874,13 +875,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
 
                         var columnsConfigs = columns;
                         var uls = [];
-                        for (var j = 0; j < columnsConfigs.length; j++) {
+                        for (j = 0; j < columnsConfigs.length; j++) {
                             var key = columnsConfigs[j].field;
                             var list = dropDatas[key];
                             if (list && !(list.length === 1 && list[0] === '')) {
                                 if (columnsConfigs[j].filter && columnsConfigs[j].filter.split) {
                                     var tempList = []
-                                    for (var i = 0; i < list.length; i++) {
+                                    for (i = 0; i < list.length; i++) {
                                         var tempList2 = String(list[i]).split(columnsConfigs[j].filter.split);
                                         for (var k = 0; k < tempList2.length; k++) {
                                             if (tempList.indexOf(tempList2[k])===-1) {
@@ -899,7 +900,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                 })
                                 var ul = [];
                                 ul.push("<ul class='" + key + "DropList' data-value='" + key + "'>");
-                                for (var i = 0; i < list.length; i++) {
+                                for (i = 0; i < list.length; i++) {
                                     if (list[i]) {
                                         var line = {};
                                         line[key] = list[i];
@@ -923,14 +924,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         },
         showConditionBoard: function (myTable) {
             var _this = this,
-                $table = $(myTable.elem),
                 tableId = myTable.id,
                 where = where_cache[myTable.id]||{},
                 tableFilterTypes = where.tableFilterType ? JSON.parse(where.tableFilterType) : {},
                 filterSos = where.filterSos ? JSON.parse(where.filterSos) : [],
                 filterBoard = [], fieldMap = {}, firstColumn,
-                columns = _this.getCompleteCols(myTable.cols);
-            for (var i = 0; i < columns.length; i++) {
+                columns = _this.getCompleteCols(myTable.cols),
+                i;
+            for (i = 0; i < columns.length; i++) {
                 if (columns[i].field && columns[i].filter) {
                     if (!firstColumn) {
                         firstColumn = columns[i]
@@ -943,7 +944,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             filterBoard.push('<div><a class="layui-btn layui-btn-sm" data-type="addOne"><i class="layui-icon layui-icon-add-1"></i> 添加条件</a><a class="layui-btn layui-btn-sm" data-type="addGroup"><i class="layui-icon layui-icon-add-circle" ></i> 添加分组</a><a class="layui-btn layui-btn-sm" data-type="search" style="float: right"><i class="layui-icon layui-icon-search"></i> 查询</a><span style="float: right"><input type="checkbox" lay-filter="out_auto" class="out_auto" title="实时更新"></span></div>')
             filterBoard.push('<hr>')
             filterBoard.push('<ul>')
-            for (var i = 0; i < filterSos.length; i++) {
+            for (i = 0; i < filterSos.length; i++) {
                 groupHtml(filterSos[i], filterBoard, fieldMap, i === 0, i === (filterSos.length - 1))
             }
             filterBoard.push('</ul>')
@@ -1002,7 +1003,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         filterBoard.push('<div class="layui-red delete-item"><i class="layui-icon layui-icon-close-fill"></i></div>');
                         filterBoard.push('<ul class="group ' + (isLast ? '' : 'line') + '">');
                         if (filterSo.children) {
-                            for (var i = 0; i < filterSo.children.length; i++) {
+                            for (i = 0; i < filterSo.children.length; i++) {
                                 groupHtml(filterSo.children[i], filterBoard, fieldMap, i === 0, i === (filterSo.children.length - 1));
                             }
                         }
@@ -1155,7 +1156,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         $('#soulDropList' + tableId).find('.' + field + 'DropList li input[type=checkbox]:checked').prop('checked', false);
                         var filterSo = _this.getFilterSoById(filterSos, id);
                         if (filterSo.values) {
-                            for (var i = 0; i < filterSo.values.length; i++) {
+                            for (i = 0; i < filterSo.values.length; i++) {
                                 $('#soulDropList' + tableId).find('.' + field + 'DropList li input[type=checkbox][value="' + filterSo.values[i] + '"]').prop('checked', true);
                             }
                         }
@@ -1326,8 +1327,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
         }
         , hideColumns: function (myTable, animate) {
-            var $table = $(myTable.elem),
-                tableId = myTable.id;
+            var tableId = myTable.id;
 
             $('#soul-columns' + tableId).removeClass().addClass('fadeOutLeft animated')
             if (columnsTimeOut) {
@@ -1343,8 +1343,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
 
         }
         , hideDropList: function (myTable, animate) {
-            var $table = $(myTable.elem),
-                tableId = myTable.id;
+            var tableId = myTable.id;
             $('#soul-dropList' + tableId).removeClass().addClass('fadeOutLeft animated')
             if (dorpListTimeOut) {
                 clearTimeout(dorpListTimeOut);
@@ -1359,8 +1358,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
 
         }
         , hideCondition: function (myTable, animate) {
-            var $table = $(myTable.elem),
-                tableId = myTable.id;
+            var tableId = myTable.id;
             $('#soul-condition' + tableId).removeClass().addClass('fadeOutLeft animated')
             if (conditionTimeOut) {
                 clearTimeout(conditionTimeOut);
@@ -1374,8 +1372,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
         }
         , hideBfPrefix: function (myTable, animate) {
-            var $table = $(myTable.elem),
-                tableId = myTable.id;
+            var tableId = myTable.id;
             $('#soul-bf-prefix' + tableId).removeClass().addClass('fadeOutDown animated')
             if (bfColumnTimeOut) {
                 clearTimeout(bfColumnTimeOut);
@@ -1389,8 +1386,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
         }
         , hideBfColumn: function (myTable, animate) {
-            var $table = $(myTable.elem),
-                tableId = myTable.id;
+            var tableId = myTable.id;
             $('#soul-bf-column' + tableId).removeClass().addClass('fadeOutDown animated')
             if (bfColumnTimeOut) {
                 clearTimeout(bfColumnTimeOut);
@@ -1404,8 +1400,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             }
         }
         , hideBfType: function (myTable, animate) {
-            var $table = $(myTable.elem),
-                tableId = myTable.id;
+            var tableId = myTable.id;
             $('#soul-bf-type' + tableId).removeClass().addClass('fadeOutDown animated')
             if (bfCond1TimeOut) {
                 clearTimeout(bfCond1TimeOut);
@@ -1877,7 +1872,6 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                     break;
                 case "date":
-                    var format = tableFilterTypes[field].replace(/date\[|\]/g, '').replace(/yy/g, 'YY').replace(/dd/g, 'DD');
                     var dateVal = new Date(Date.parse(item[field].replace(/-/g, "/")));
                     switch (filterSo.type) {
                         case 'all':
@@ -2535,10 +2529,12 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 heightConfig = {},
                 $table = $(myTable.elem),
                 $tableBody = $table.next().children('.layui-table-box').children('.layui-table-body').children('table'),
-                mainExcel = typeof myTable.excel === 'undefined' || ((myTable.excel && (typeof myTable.excel.on === 'undefined' || myTable.excel.on)) ? myTable.excel : false),
-                mainExcel = mainExcel === true ? {} : mainExcel || {},
-                curExcel = curExcel || {},
-                filename = curExcel.filename?(typeof curExcel.filename === 'function'?curExcel.filename.call(this):curExcel.filename)
+                mainExcel = typeof myTable.excel === 'undefined' || ((myTable.excel && (typeof myTable.excel.on === 'undefined' || myTable.excel.on)) ? myTable.excel : false);
+
+                mainExcel = mainExcel === true ? {} : mainExcel || {};
+                curExcel = curExcel || {};
+
+                var filename = curExcel.filename?(typeof curExcel.filename === 'function'?curExcel.filename.call(this):curExcel.filename)
                     : mainExcel.filename?(typeof mainExcel.filename === 'function'?mainExcel.filename.call(this):mainExcel.filename)
                         : '表格数据.xlsx',
                 checked = curExcel.checked === true ? true : mainExcel.checked === true,
