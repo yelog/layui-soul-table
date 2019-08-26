@@ -29,6 +29,8 @@
 
 [新增] 新增压缩版插件，位置 `docs/ext`
 
+[修复] 子表 修复子表方法上下文丢失的问题，包括 `rowEvent/rowDoubleEvent/toolEvent/done/data/where` 等方法
+
 ### **1.3.12** <small>`2019-08-23`</small>
 [新增] 拖拽 新增 拖拽工具栏 ，支持动态修改固定列/非固定列
 

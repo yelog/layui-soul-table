@@ -42,14 +42,14 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                     table.on('row('+$table.attr('lay-filter')+')', function (obj) {
                         var index = $(this).data('index');
                         obj.tr = $.merge($tableFixed.children('tbody').children('tr[data-index="'+index+'"]'), $tableBody.children('tbody').children('tr[data-index="'+index+'"]'));
-                        myTable.rowEvent.call(this, obj);
+                        myTable.rowEvent(obj);
                     })
                 }
                 if (typeof myTable.rowDoubleEvent === 'function') {
                     table.on('rowDouble('+$table.attr('lay-filter')+')', function (obj) {
                         var index = $(this).data('index');
                         obj.tr = $.merge($tableFixed.children('tbody').children('tr[data-index="'+index+'"]'), $tableBody.children('tbody').children('tr[data-index="'+index+'"]'));
-                        myTable.rowDoubleEvent.call(this, obj);
+                        myTable.rowDoubleEvent(obj);
                     })
                 }
             }
@@ -218,14 +218,8 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
 
             function renderChildTable(_that, _this, data, child, tableId, i) {
-                var param = _that.cloneJSON(child.children[i]), thisTableChild,
+                var param = child.children[i], thisTableChild,
                     childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
-                param.where = child.children[i].where;
-                param.data = child.children[i].data;
-                param.url = child.children[i].url;
-                param.toolEvent = child.children[i].toolEvent;
-                param.rowEvent = child.children[i].rowEvent;
-                param.rowDoubleEvent = child.children[i].rowDoubleEvent;
                 param.id = childTableId;
                 param.elem = '#'+childTableId;
                 typeof param.where === 'function' && (param.where = param.where(data));
@@ -319,37 +313,20 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 sheet.addRule(selector, rules, index)
             }
         },
-        // 深度克隆
+        // 深度克隆-不丢失方法
         deepClone: function (obj) {
-            return this.deepParse(this.deepStringify(obj))
-        },
-        deepStringify: function (obj) {
-            var JSON_SERIALIZE_FIX = {
-                PREFIX : "[[JSON_FUN_PREFIX_",
-                SUFFIX : "_JSON_FUN_SUFFIX]]"
-            };
-            return JSON.stringify(obj,function(key, value){
-                if(typeof value === 'function'){
-                    return JSON_SERIALIZE_FIX.PREFIX+value.toString()+JSON_SERIALIZE_FIX.SUFFIX;
+            var newObj = Array.isArray(obj) ? [] : {}
+            if (obj && typeof obj === "object") {
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        newObj[key] = (obj && typeof obj[key] === 'object') ? this.deepClone(obj[key]) : obj[key];
+                    }
                 }
-                return value;
-            });
+            }
+            return newObj
         },
-        deepParse: function (str) {
-            var JSON_SERIALIZE_FIX = {
-                PREFIX : "[[JSON_FUN_PREFIX_",
-                SUFFIX : "_JSON_FUN_SUFFIX]]"
-            };
-            return JSON.parse(str,function(key, value){
-                if(typeof value === 'string' &&
-                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)===0){
-                    return eval("("+value.replace(JSON_SERIALIZE_FIX.PREFIX,"").replace(JSON_SERIALIZE_FIX.SUFFIX,"")+")");
-                }
-                return value;
-            })||{};
-        }
-        ,getCompleteCols: function (origin) {
-            var cols = this.deepParse(this.deepStringify(origin));
+        getCompleteCols: function (origin) {
+            var cols = this.deepClone(origin);
             var i,j,k, cloneCol;
             for (i = 0; i < cols.length; i++) {
                 for (j = 0; j < cols[i].length; j++) {
