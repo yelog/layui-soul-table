@@ -61,7 +61,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         //obj.update(fields) //修改当前行数据
                     }
                     ,done: function () {
-                        layui.soulTable.render(this)
+                       soulTable.render(this)
                     }
                 }
             ]},
@@ -117,7 +117,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'createTime', title: '录入时间', width: 165, sort:true}
                     ]]
                     ,done: function () {
-                        layui.soulTable.render(this)
+                       soulTable.render(this)
                     }
                 }
             ]},
@@ -208,7 +208,7 @@ layui.use(['form', 'table','soulTable'], function () {
 
                     }
                     ,done: function () {
-                        layui.soulTable.render(this)
+                       soulTable.render(this)
                     }
                 }
             ]},
@@ -278,7 +278,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'createTime', title: '录入时间', width: 165, sort:true}
                     ]]
                     ,done: function() {
-                        layui.soulTable.render(this)
+                       soulTable.render(this)
                         layer.msg('子表加载完成')
                     }
                 }

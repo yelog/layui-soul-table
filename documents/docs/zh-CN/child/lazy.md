@@ -36,7 +36,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'createTime', title: '录入时间', width: 165, sort:true}
                     ]]
                     ,done: function () {
-                        layui.soulTable.render(this);
+                       soulTable.render(this);
                     }
                 },
                 {
@@ -55,7 +55,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'createTime', title: '录入时间', width: 165, sort:true}
                     ]]
                     ,done: function () {
-                        layui.soulTable.render(this);
+                       soulTable.render(this);
                     }
                 },
                  {
@@ -92,7 +92,7 @@ layui.use(['form', 'table','soulTable'], function () {
                           {field: 'createTime', title: '录入时间', width: 165, sort:true}
                       ]]
                       ,done: function () {
-                          layui.soulTable.render(this);
+                         soulTable.render(this);
                       }
                   }
             ]},
@@ -149,7 +149,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'createTime', title: '录入时间', width: 165, sort:true}
                     ]]
                     ,done: function () {
-                        layui.soulTable.render(this);
+                       soulTable.render(this);
                     }
                 }
             ]},

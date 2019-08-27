@@ -34,7 +34,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {title: '操作', width: 156, templet: '#childBar'}
                     ]]
                     ,done: function () {
-                        layui.soulTable.render(this);
+                       soulTable.render(this);
                     }
                 },
                 {
@@ -59,7 +59,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {title: '操作', width: 156, templet: '#childBar'}
                     ]]
                     ,done: function () {
-                        layui.soulTable.render(this);
+                       soulTable.render(this);
                     }
                 }
             ]},
@@ -113,7 +113,7 @@ layui.use(['form', 'table','soulTable'], function () {
                     {title: '操作', width: 156, templet: '#childBar'}
                 ]]
                 ,done: function () {
-                    layui.soulTable.render(this);
+                   soulTable.render(this);
                 }
             }]},
             {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
@@ -169,7 +169,7 @@ layui.use(['form', 'table','soulTable'], function () {
                     {title: '操作', width: 156, templet: '#childBar'}
                 ]]
                 ,done: function () {
-                    layui.soulTable.render(this);
+                   soulTable.render(this);
                 }
             }]},
             {field: 'title', title: '诗词', width: 200, sort: true, filter: true},

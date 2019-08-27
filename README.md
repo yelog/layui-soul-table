@@ -212,7 +212,7 @@ var myTable = table.render({
                         {title: '操作', width: 156, templet: '#childBar'}
                     ]]
                     ,done: function () {
-                        layui.soulTable.render(this);
+                       soulTable.render(this);
                     }
                 },
                 {
@@ -255,7 +255,7 @@ var myTable = table.render({
                         {title: '操作', width: 156, templet: '#childBar'}
                     ]]
                     ,done: function () {
-                        layui.soulTable.render(this);
+                       soulTable.render(this);
                     }
                 }
             ]},
