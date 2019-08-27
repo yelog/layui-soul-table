@@ -188,6 +188,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             if ($('#soul-filter-list' + tableId).length === 0) {
 
                 if (typeof myTable.soulSort === 'undefined' || myTable.soulSort) {
+                    if (typeof $table.attr('lay-filter') === 'undefined') {
+                        $table.attr('lay-filter', tableId);
+                    }
                     // 后台排序
                     if (myTable.url && myTable.page) {
                         table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {

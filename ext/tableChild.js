@@ -36,6 +36,9 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                     childIndex.push(i);
                 }
             }
+            if (typeof $table.attr('lay-filter') === 'undefined') {
+                $table.attr('lay-filter', tableId);
+            }
             // 绑定一下主表事件
             if (!tableChildren[tableId]) {
                 if (typeof myTable.rowEvent === 'function') {
