@@ -191,12 +191,12 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     if (typeof $table.attr('lay-filter') === 'undefined') {
                         $table.attr('lay-filter', tableId);
                     }
-                    // 后台排序
-                    if (myTable.url && myTable.page) {
-                        table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
+                    table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
+                        // 后台排序
+                        if (myTable.url && myTable.page) {
                             where_cache[myTable.id].field = obj.field;
                             where_cache[myTable.id].order = obj.type;
-                            isFilterReload[myTable.id] = true
+                            isFilterReload[myTable.id] = true;
                             table.render($.extend(myTable,{
                                 initSort: obj
                                 , where: where_cache[myTable.id]
@@ -204,9 +204,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                                     curr: 1 //重新从第 1 页开始
                                 }
                             }));
-                        });
-                    } else if (!myTable.url && myTable.page) {
-                        table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
+                        } else if (!myTable.url && myTable.page) {
                             if(obj.type === 'asc'){ //升序
                                 cache[myTable.id] = layui.sort(cache[myTable.id], obj.field)
                             } else if(obj.type === 'desc'){ //降序
@@ -214,12 +212,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             } else { //清除排序
                                 cache[myTable.id] = layui.sort(cache[myTable.id], myTable.indexName)
                             }
-                            myTable.initSort = obj
-                            myTable.page = { curr: 1}
+                            myTable.initSort = obj;
+                            myTable.page = { curr: 1};
                             _this.soulReload(myTable, false)
-                        });
-                    }
-
+                        }
+                    });
                 }
 
                 var soulFilterList = [],

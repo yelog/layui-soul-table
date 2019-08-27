@@ -139,8 +139,10 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 $tableHead.find('th').each(function () {
                     var $this = $(this),
                         field = $this.data('field'),
-                        key = $this.data('key'),
-                        keyArray = key.split('-'),
+                        key = $this.data('key');
+                    if (!key) {return;}
+
+                    var keyArray = key.split('-'),
                         curColumn = myTable.cols[keyArray[1]][keyArray[2]],
                         curKey = keyArray[1] + '-' + keyArray[2],
                         isInFixed = $this.parents('.layui-table-fixed').length>0;
