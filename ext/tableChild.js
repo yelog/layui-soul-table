@@ -218,7 +218,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
 
             function renderChildTable(_that, _this, data, child, tableId, i) {
-                var param = child.children[i], thisTableChild,
+                var param = _that.deepClone(child.children[i]), thisTableChild,
                     childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
                 param.id = childTableId;
                 param.elem = '#'+childTableId;
