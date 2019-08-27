@@ -31,6 +31,9 @@
   tableChild.js   子表 [可单独使用](http://soultable.yelog.org/#/zh-CN/component/child/alone)   
   tableMerge.js   单元格合并 [可单独使用](http://soultable.yelog.org/#/zh-CN/component/merge/alone)     
 
+源码版位置：`ext`
+压缩版位置：`docs/ext`
+
 2.定义入口模块`soulTable`  
 ```js
 // 自定义模块，这里只需要开放soulTable即可
@@ -40,7 +43,7 @@ layui.config({
     soulTable: 'soulTable'  // 模块别名
 });
 ```
-3.引入 `soulTable.css` 到自己项目中。
+3.引入 `soulTable.css` 到自己项目中。（在项目根目录可找到）
 
 4.在 `table.render()` 中使用。   
 ①`done` 中加入  `soulTable.render(this)`   
