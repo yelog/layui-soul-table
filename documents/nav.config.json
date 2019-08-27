@@ -104,6 +104,10 @@
           "name": "基础子表"
         },
         {
+          "path": "/child/show",
+          "name": "展开方式"
+        },
+        {
           "path": "/child/request",
           "name": "子表数据来源"
         },

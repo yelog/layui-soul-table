@@ -30,6 +30,8 @@
 
 [修复] 排序 即便没有设置 `lay-filter` 仍然可以使用内部监听
 
+[新增] 子表 子表定义字段 `children` 支持传入 `function` 类型 [基础子表](/#/zh-CN/component/child/basic)
+
 ### **1.3.13** <small>`2019-08-26`</small>
 [优化] 语法 修复重复变量声明、类型判断不精确的问题
 
