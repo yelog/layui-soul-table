@@ -83,6 +83,10 @@
           "name": "调用方法导出"
         },
         {
+          "path": "/excel/columns",
+          "name": "指定列导出"
+        },
+        {
           "path": "/excel/header",
           "name": "复杂表头导出"
         },

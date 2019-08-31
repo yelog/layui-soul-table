@@ -2510,7 +2510,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 ,anim: -1
                 ,fixed: false
             });
-            var cols = this.deepParse(this.deepStringify(myTable.cols))
+            var cols = this.deepClone(myTable.cols)
                 ,style = myTable.elem.next().find('style')[0]
                 ,sheet = style.sheet || style.styleSheet || {}
                 ,rules = sheet.cssRules || sheet.rules;
@@ -2537,10 +2537,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 var filename = curExcel.filename?(typeof curExcel.filename === 'function'?curExcel.filename.call(this):curExcel.filename)
                     : mainExcel.filename?(typeof mainExcel.filename === 'function'?mainExcel.filename.call(this):mainExcel.filename)
                         : '表格数据.xlsx',
-                checked = curExcel.checked === true ? true : mainExcel.checked === true,
-                type = filename.substring(filename.lastIndexOf('.') + 1, filename.length),
-                tableStartIndex = mainExcel.add && mainExcel.add.top && Array.isArray(mainExcel.add.top.data) ? mainExcel.add.top.data.length + 1 : 1,  //表格内容从哪一行开始
-                bottomLength = mainExcel.add && mainExcel.add.bottom && Array.isArray(mainExcel.add.bottom.data) ? mainExcel.add.bottom.data.length : 0;// 底部自定义行数
+                    checked = curExcel.checked === true ? true : mainExcel.checked === true,
+                    customColumns = curExcel.columns || mainExcel.columns,
+                    type = filename.substring(filename.lastIndexOf('.') + 1, filename.length),
+                    tableStartIndex = mainExcel.add && mainExcel.add.top && Array.isArray(mainExcel.add.top.data) ? mainExcel.add.top.data.length + 1 : 1,  //表格内容从哪一行开始
+                    bottomLength = mainExcel.add && mainExcel.add.bottom && Array.isArray(mainExcel.add.bottom.data) ? mainExcel.add.bottom.data.length : 0;// 底部自定义行数
 
             if (checked) { // 获取选中行数据
                 data = table.checkStatus(myTable.id).data;
@@ -2613,20 +2614,37 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                 }
             }
-            // 拼接表头数据
-            for (i = 0; i < cols.length; i++) {
-                columnsMap[i] = {}
-                tempArray = {}
-                for (j = 0; j < cols[i].length; j++) {
-                    columnsMap[i][cols[i][j].type === 'numbers' ? 'LAY_TABLE_INDEX' : cols[cols.length-1][j].field] = cols[i][j];
-                    tempArray[cols[i][j].type === 'numbers' ? 'LAY_TABLE_INDEX' : cols[cols.length-1][j].field] = cols[i][j].title
-                }
-                data.splice(i, 0, tempArray)
-            }
-            // layer.close(loading)
-            // return;
-
             var columns = cols[cols.length-1];
+            if (customColumns && Array.isArray(customColumns)) {
+                var tempCustomColumns = [];
+                tempArray = {};
+                mergeArrays = []; // 重置表头合并列
+                columnsMap[0] = {};
+                for (i = 0; i < customColumns.length; i++) {
+                    for (j = 0; j < columns.length; j++) {
+                        if (columns[j].field === customColumns[i]) {
+                            tempCustomColumns.push(columns[j]);
+                            columnsMap[0][columns[j].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[j].field] = columns[j];
+                            tempArray[columns[j].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[j].field] = columns[j].title
+                            break;
+                        }
+                    }
+                }
+                columns = tempCustomColumns;
+                data.splice(0, 0, tempArray)
+            } else {
+                // 拼接表头数据
+                for (i = 0; i < cols.length; i++) {
+                    columnsMap[i] = {}
+                    tempArray = {}
+                    for (j = 0; j < cols[i].length; j++) {
+                        columnsMap[i][cols[i][j].type === 'numbers' ? 'LAY_TABLE_INDEX' : cols[cols.length-1][j].field] = cols[i][j];
+                        tempArray[cols[i][j].type === 'numbers' ? 'LAY_TABLE_INDEX' : cols[cols.length-1][j].field] = cols[i][j].title
+                    }
+                    data.splice(i, 0, tempArray)
+                }
+            }
+
             //添加自定义内容
             if (mainExcel.add) {
                 var addTop = mainExcel.add.top,
@@ -2703,7 +2721,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     }
                     showField[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = function (field, line, data, curIndex) {
                         var bgColor = 'ffffff', color = '000000', family = 'Calibri', size = 12, cellType = 's',
-                            bodyIndex = curIndex - cols.length - tableStartIndex + 1,
+                            bodyIndex = curIndex - (customColumns ? 1 : cols.length) - tableStartIndex + 1,
                             border = {
                                 top: {
                                     style: 'thin',

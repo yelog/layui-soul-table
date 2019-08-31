@@ -24,6 +24,10 @@
 
 
 ## 更新日志
+### **1.3.15** <small>`2019-08-28`</small>
+
+[新增] excel导出 支持指定列导出 [指定列导出](/#/zh-CN/component/excel/columns)
+
 ### **1.3.14** <small>`2019-08-27`</small>
 
 [修复] 子表 `where/url/data` 事件传递过程中丢失
