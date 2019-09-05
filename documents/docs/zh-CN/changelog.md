@@ -24,6 +24,10 @@
 
 
 ## 更新日志
+### **1.3.16** <small>`2019-09-05`</small>
+
+[修复] resize 修复有底部筛选栏时，table.resize 时，没有计算底部栏而造成高度增加的问题
+
 ### **1.3.15** <small>`2019-08-28`</small>
 
 [新增] excel导出 支持指定列导出 [指定列导出](/#/zh-CN/component/excel/columns)

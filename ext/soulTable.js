@@ -575,7 +575,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         }
                                         // 更新下拉隐藏
                                         $('#soul-columns' + tableId).find('li[data-value="' + field + '"]>input').prop('checked', false);
-                                        table.resize(tableId)
+                                        tableFilter.resize(myTable)
                                     }
                                     $('#column-remove').hide();
                                 }

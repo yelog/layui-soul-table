@@ -293,7 +293,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             tempColumns[i]['hide'] = !data.elem.checked;
                         }
                     }
-                    table.resize(tableId)
+                    _this.resize(myTable)
                     if (myTable.filter && myTable.filter.cache) {
                         localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
                     }
@@ -1416,7 +1416,6 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         , bindFilterClick: function (myTable) {
             var _this = this,
                 $table = $(myTable.elem),
-                $tableMain = $table.next().children('.layui-table-box').children('.layui-table-main'),
                 $tableHead = $table.next().children('.layui-table-box').children('.layui-table-header').children('table'),
                 $fixedLeftTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-l').children('.layui-table-header').children('table'),
                 $fixedRigthTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
@@ -1534,29 +1533,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
             _this.renderBottomCondition(myTable);
 
             $(window).on('resize', function () {
-                // 减去底部筛选的高度
-                if ($table.next().children('.soul-bottom-contion').length>0) {
-                    setTimeout(function () {
-                        $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', $table.next().children('.soul-bottom-contion').width()-$table.next().children('.soul-bottom-contion').children('.editCondtion').outerWidth());
-
-                        var bodyHeight = $table.next().height() - $table.next().children('.soul-bottom-contion').outerHeight()
-                        if ($table.next().children('.layui-table-tool').length>0) {
-                            bodyHeight = bodyHeight - $table.next().children('.layui-table-tool').outerHeight();
-                        }
-                        if ($table.next().children('.layui-table-total').length>0) {
-                            bodyHeight = bodyHeight - $table.next().children('.layui-table-total').outerHeight();
-                        }
-                        if ($table.next().children('.layui-table-page').length>0) {
-                            bodyHeight = bodyHeight - $table.next().children('.layui-table-page').outerHeight();
-                        }
-
-                        bodyHeight = bodyHeight - $table.next().children('.layui-table-box').children('.layui-table-header').outerHeight();
-
-                        $table.next().children('.layui-table-box').children('.layui-table-body').height(bodyHeight)
-                        var fixHeight = bodyHeight - _this.getScrollWidth($tableMain[0]), layMainTableHeight = $tableMain.children('table').height()
-                        $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').height(layMainTableHeight >= fixHeight ? fixHeight : 'auto')
-                    }, 300)
-                }
+                _this.resize(myTable)
             })
 
             // 表头样式
@@ -1588,6 +1565,35 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                     $fixedLeftTableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
                     $fixedRigthTableHead.find('thead>tr>th[data-field="' + filterSos[i].field + '"] .soul-table-filter').attr('soul-filter', '' + hasFilter);
                 }
+            }
+        }
+        , resize: function (myTable) {
+            var _this = this,
+                $table = $(myTable.elem),
+                $tableMain = $table.next().children('.layui-table-box').children('.layui-table-main');
+            table.resize(myTable.id);
+            // 减去底部筛选的高度
+            if ($table.next().children('.soul-bottom-contion').length>0) {
+                // setTimeout(function () {
+                    $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', $table.next().children('.soul-bottom-contion').width()-$table.next().children('.soul-bottom-contion').children('.editCondtion').outerWidth());
+
+                    var bodyHeight = $table.next().height() - $table.next().children('.soul-bottom-contion').outerHeight()
+                    if ($table.next().children('.layui-table-tool').length>0) {
+                        bodyHeight = bodyHeight - $table.next().children('.layui-table-tool').outerHeight();
+                    }
+                    if ($table.next().children('.layui-table-total').length>0) {
+                        bodyHeight = bodyHeight - $table.next().children('.layui-table-total').outerHeight();
+                    }
+                    if ($table.next().children('.layui-table-page').length>0) {
+                        bodyHeight = bodyHeight - $table.next().children('.layui-table-page').outerHeight();
+                    }
+
+                    bodyHeight = bodyHeight - $table.next().children('.layui-table-box').children('.layui-table-header').outerHeight();
+
+                    $table.next().children('.layui-table-box').children('.layui-table-body').height(bodyHeight)
+                    var fixHeight = bodyHeight - _this.getScrollWidth($tableMain[0]), layMainTableHeight = $tableMain.children('table').height()
+                    $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').height(layMainTableHeight >= fixHeight ? fixHeight : 'auto')
+                // }, 300)
             }
         }
         /**
