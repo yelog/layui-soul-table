@@ -1684,6 +1684,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 }))
             }
             where['filterSos'] = JSON.stringify(filterSos);
+            myTable.where = where;
             where_cache[myTable.id] = where;
 
             function updateFilterSo(filterSo, newFilterSo) {
