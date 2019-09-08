@@ -163,7 +163,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 /**
                  * 缓存所有数据
                  */
-                cache[myTable.id] = myTable.data || layui.table.cache[myTable.id]
+                if (myTable.url && !myTable.page) {
+                    // 修复不分页时，前端筛选后，data不为空，造成所有数据丢失的问题
+                    cache[myTable.id] = layui.table.cache[myTable.id]
+                } else {
+                    cache[myTable.id] = myTable.data || layui.table.cache[myTable.id]
+                }
+
                 if (myTable.filter && myTable.filter.clearFilter) {
                     if (myTable.where && myTable.where.filterSos && JSON.parse(myTable.where.filterSos).length>0) {
                         // 重新查询新数据
@@ -1767,13 +1773,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                         })
                     } else {
                         var url = myTable.url;
-                        table.reload(myTable.id, {
+                        $table.next().off('click')
+                        var inst = table.reload(myTable.id, {
                             url: ''
                             , initSort: myTable.initSort
                             , isSoulFrontFilter: true
                             , data: newData
                         })
-                        myTable.url = url;
+                        inst.config.url = url;
                     }
                     myTable.data = newData
 
