@@ -656,15 +656,26 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     })
 
                     if (upMove) {
-                        $cloneTr.after($bodyTr.prev());
+                        updateDataIndex($bodyTr, -1)
+                        $cloneTr.after(updateDataIndex($UpTr, 1));
                         $FixBodyTr.each(function () {
-                            $(this).next().after($(this).prev());
+                            updateDataIndex($(this), -1)
+                            $(this).next().after(updateDataIndex($(this).prev(), 1));
                         })
                     } else if (downMove) {
-                        $bodyTr.before($cloneTr.next());
+                        updateDataIndex($bodyTr, 1).before(updateDataIndex($downTr, -1))
                         $FixBodyTr.each(function () {
-                            $(this).before($(this).next().next());
+                            updateDataIndex($(this), 1);
+                            $(this).before(updateDataIndex($(this).next().next(), -1));
                         })
+                    }
+
+                    // 同步 data-index
+                    function updateDataIndex ($el, diff) {
+                        var tempIndex = parseInt($el.data('index')) + diff;
+                        $el.data('index', tempIndex);
+                        $el.attr('data-index', tempIndex);
+                        return $el
                     }
 
                 }).on('mouseup', function (e) {
