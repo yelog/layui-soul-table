@@ -522,7 +522,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                             if ($dragBar.children('.active').length > 0 && $dragBar.children('.active').attr('data-type') !== $dragBar.attr('data-type')) {
                                                 var targetFix = $dragBar.children('.active').attr('data-type'),
                                                     i, j, curPos, targetPos;
-                                                console.log('移动到' + targetFix)
                                                 for (i = 0; i < myTable.cols.length; i++) {
                                                     for (j = 0; j < myTable.cols[i].length; j++) {
                                                         if (targetFix==='right' || (targetFix === 'none' && $dragBar.attr('data-type') === 'right')) {
@@ -588,22 +587,25 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             }
         },
         rowDrag: function (myTable) {
-            var _this = this,
-                $table = $(myTable.elem),
+            var $table = $(myTable.elem),
                 $tableBox = $table.next().children('.layui-table-box'),
                 $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table'),
                 $noFixedBody = $tableBox.children('.layui-table-body').children('table'),
                 $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
-                $totalTable = $table.next().children('.layui-table-total').children('table'),
                 tableId = myTable.id,
-                isDraging = false;
-            $tableBody.children('tbody').children('tr').on('mousedown', function (e) {
+                isDraging = false,
+                trigger = myTable.rowDrag.trigger || 'row',
+                $trs = trigger === 'row' ? $tableBody.children('tbody').children('tr') : $tableBody.find(trigger);
+            if (trigger !== 'row') {
+                $tableBody.find(trigger).css('cursor', 'move')
+            }
+            $trs.on('mousedown', function (e) {
                 if (e.button !== 0) {
                     return;
                 }
                 e.preventDefault();
 
-                var $this = $(this),
+                var $this = trigger === 'row' ? $(this) : $(this).parents('tr:eq(0)'),
                     index = parseInt($this.data('index')),
                     $bodyTr = $noFixedBody.children('tbody').children('tr[data-index='+ index +']'),
                     $cloneTr = $bodyTr.clone().css('visibility', 'hidden'),
