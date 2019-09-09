@@ -238,9 +238,28 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 if (!child.lazy && i!==0) {
                     $('#'+childTableId).parents('.layui-tab-item:eq(0)').removeClass('layui-show'); //解决隐藏时计算表格高度有问题
                 }
+                // 绑定 checkbox 事件
+                if (typeof param.checkboxEvent === 'function') {
+                    table.on('checkbox('+childTableId+')', function (obj) {
+                        param.checkboxEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                    })
+                }
+                // 绑定 edit 事件
+                if (typeof param.editEvent === 'function') {
+                    table.on('edit('+childTableId+')', function (obj) {
+                        param.editEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                    })
+                }
+                // 绑定 tool 事件
                 if (typeof param.toolEvent === 'function') {
                     table.on('tool('+childTableId+')', function (obj) {
                         param.toolEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                    })
+                }
+                // 绑定 toolbar 事件
+                if (typeof param.toolbarEvent === 'function') {
+                    table.on('toolbar('+childTableId+')', function (obj) {
+                        param.toolbarEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
                     })
                 }
                 // 绑定单击行事件

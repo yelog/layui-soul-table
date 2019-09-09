@@ -1,13 +1,110 @@
 ## 事件监听
-### 1.子表的行点击事件
-通过设置 `rowEvent` 和 `rowDoubleEvent` 来设置子表的点击与双击事件
-```js
-,rowEvent: function (obj, pdata) {
-    // 单击行事件
-    // obj 子表当前行对象
-    // pdata 父表当前行数据
+
+<table class='el-table el-table--border'>
+    <thead>
+    <tr>
+        <th>参数</th>
+        <th>类型</th>
+        <th>事件名</th>
+        <th>示例</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>rowEvent</td>
+        <td>function</td>
+        <td>行单击</td>
+        <td>
+<pre>
+rowEvent: function (obj, pdata) {
+    // <span class="hljs-keyword">obj</span> 子表当前行对象
+    // 可从中调用 event/data/tr/update/del
+    // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
+    // <span class="hljs-keyword">pdata</span> 父表当前行数据
 }
-```
+</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>rowDoubleEvent</td>
+        <td>function</td>
+        <td>行双击</td>
+        <td>
+<pre>
+rowDoubleEvent: function (obj, pdata) {
+    // <span class="hljs-keyword">obj</span> 子表当前行对象
+    // 可从中调用 event/data/tr/update/del
+    // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
+    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+}
+</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>toolEvent</td>
+        <td>function</td>
+        <td>行工具</td>
+        <td>
+<pre>
+toolEvent: function (obj, pdata) {
+    // <span class="hljs-keyword">obj</span> 子表当前行对象
+    // 可从中调用 event/data/tr/update/del
+    // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
+    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+}
+</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>toolbarEvent</td>
+        <td>function</td>
+        <td>头部工具栏</td>
+        <td>
+<pre>
+toolbarEvent: function (obj, pdata) {
+    // <span class="hljs-keyword">obj</span> 子表当前行对象 obj.event
+    // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
+    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+}
+</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>checkboxEvent</td>
+        <td>function</td>
+        <td>复选框选择</td>
+        <td>
+<pre>
+checkboxEvent: function (obj, pdata) {
+    // <span class="hljs-keyword">obj</span> 子表当前行对象 obj.event
+    // 可从中调用 event/data/tr/update/del
+    // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
+    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+}
+</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>editEvent</td>
+        <td>function</td>
+        <td>单元格编辑</td>
+        <td>
+<pre>
+editEvent: function (obj, pdata) {
+    // <span class="hljs-keyword">obj.value</span> 得到修改后的值
+    // <span class="hljs-keyword">obj.field</span> 当前编辑的字段名
+    // <span class="hljs-keyword">obj.data</span> 所在行的所有相关数据 
+    // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
+    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+}
+</pre>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+### 1.子表的 row/rowDouble/tool/toolbar/edit/checkbox 事件监听
 :::demo
 ```html
 <table id="myTable" lay-filter="myTable"></table>
@@ -27,23 +124,23 @@ layui.use(['form', 'table','soulTable'], function () {
                     title: '表格一'
                     ,url: 'data-1.json'
                     ,height: 400
+                    ,width: 700
+                    ,toolbar: '<div><button class="layui-btn layui-btn-sm" lay-event="reload">重载</button></div>'
                     ,page: false
                     ,cols: [[
                         {type: 'checkbox', fixed: 'left'},
-                        {field: 'title', title: '诗词', width: 200, sort: true},
+                        {field: 'title', title: '诗词（可编辑列）', edit: 'text', width: 200, sort: true},
                         {field: 'dynasty', title: '朝代', width: 100, sort: true},
-                        {field: 'author', title: '作者', width: 165 },
-                        {field: 'content', title: '内容', width: 123},
-                        {field: 'type', title: '类型', width: 112, sort:true},
-                        {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
-                        {field: 'createTime', title: '录入时间', width: 165, sort:true}
+                        {title: '操作', width: 300, templet: function(row) {
+                           return '<a class="layui-btn layui-btn-xs" lay-event="childEdit">编辑并更新当前行数据</a>' +
+                            '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="childDel">删除并重载子表</a>'
+                        }}
                     ]]
                     ,rowEvent: function (obj, pdata) {
                         // 单击行事件
                         // obj 子表当前行对象
                         // pdata 父表当前行数据
-                        layer.msg('子表-单击行事件')
-                        obj.tr.css({'background':'#5FB878','color':'white'}).siblings().removeAttr('style')
+                        obj.tr.css({'background':'#5FB878'}).siblings().removeAttr('style')
                         console.log(obj.tr) //得到当前行元素对象
                         console.log(obj.data) //得到当前行数据
                         //obj.del(); //删除当前行
@@ -53,12 +150,50 @@ layui.use(['form', 'table','soulTable'], function () {
                         // 双击行事件
                         // obj 子表当前行对象
                         // pdata 父表当前行数据
-                        layer.msg('子表-双击行事件')
-                        obj.tr.css({'background':'#FF5722','color':'white'}).siblings().removeAttr('style')
+                        obj.tr.css({'background':'#FF5722'}).siblings().removeAttr('style')
                         console.log(obj.tr) //得到当前行元素对象
                         console.log(obj.data) //得到当前行数据
                         //obj.del(); //删除当前行
                         //obj.update(fields) //修改当前行数据
+                    }
+                    ,toolEvent: function (obj, pdata) {
+                        // obj 子表当前行对象
+                        // pdata 父表当前行数据
+                        
+                        var childId = this.id; // 通过 this 对象获取当前子表的id
+                        
+                        if (obj.event === 'childEdit') {
+                            layer.confirm('修改成功！调用<span style="color: #FF5722">行对象</span>修改当前行数据', {icon: 3}, function(index) {
+                               layer.close(index)
+                               obj.update({
+                                  title: '我被修改了！'
+                               })
+                           })
+                        } else if (obj.event === 'childDel') {
+                            layer.confirm('删除成功! 调用<span style="color: #FF5722">table.reload(childId)</span>来重载子表', {icon: 3}, function(index) {
+                               layer.close(index)
+                               table.reload(childId)
+                            })
+                        }
+
+                    }
+                    ,toolbarEvent: function (obj, pdata) {
+                        // obj 子表当前行对象
+                        // pdata 父表当前行数据
+                        if (obj.event === 'reload') {
+                            table.reload(this.id)
+                            layer.msg('子表重载成功！')
+                        }
+                    }
+                    ,checkboxEvent: function(obj, pdata) {
+                        // obj 子表当前行对象
+                        // pdata 父表当前行数据
+                        layer.msg('子表checkbox事件，当前是否选中：' + obj.checked)
+                    }
+                    ,editEvent: function(obj, pdata) {
+                      // obj 子表当前行对象
+                      // pdata 父表当前行数据
+                      layer.msg("已成功改为：" + obj.value);
                     }
                     ,done: function () {
                        soulTable.render(this)
@@ -176,6 +311,8 @@ layui.use(['form', 'table','soulTable'], function () {
                     title: '表格一'
                     ,url: 'data-1.json'
                     ,height: 400
+                    ,width: 700
+                    ,toolbar: '<div><button class="layui-btn layui-btn-sm" lay-event="reload">重载</button></div>'
                     ,page: false
                     ,cols: [[
                         {type: 'checkbox', fixed: 'left'},
@@ -206,6 +343,13 @@ layui.use(['form', 'table','soulTable'], function () {
                             })
                         }
 
+                    }
+                    ,toolbarEvent: function (obj, pdata) {
+                        // obj 子表当前行对象
+                        // pdata 父表当前行数据
+                        if (obj.event === 'reload') {
+                            table.reload(this.id)
+                        }
                     }
                     ,done: function () {
                        soulTable.render(this)
@@ -312,5 +456,4 @@ layui.use(['form', 'table','soulTable'], function () {
 </script>
 ```
 :::
-
 
