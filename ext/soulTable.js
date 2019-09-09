@@ -700,8 +700,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         layui.each(rules, function(i, item){
                             if(item.selectorText === ('.layui-table-view .layui-table td')){
                                 item.style.cursor = 'default';
-                            } else if (item.selectorText === '.layui-table tr') {
-                                item.style.transition = 'all .3s'
                             }
                         });
 
