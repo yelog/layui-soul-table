@@ -21,6 +21,10 @@
           "name": "拖拽列"
         },
         {
+          "path": "/basic/row-drag",
+          "name": "拖拽行"
+        },
+        {
           "path": "/basic/auto-width",
           "name": "自适应列宽"
         },

@@ -31,6 +31,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 if (typeof myTable.drag === 'undefined' || myTable.drag) {
                     this.drag(myTable);
                 }
+                if (myTable.rowDrag) {
+                    this.rowDrag(myTable)
+                }
                 this.autoColumnWidth(myTable)
             }
 
@@ -584,7 +587,130 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 })
             }
         },
+        rowDrag: function (myTable) {
+            var _this = this,
+                $table = $(myTable.elem),
+                $tableBox = $table.next().children('.layui-table-box'),
+                $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table'),
+                $noFixedBody = $tableBox.children('.layui-table-body').children('table'),
+                $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
+                $totalTable = $table.next().children('.layui-table-total').children('table'),
+                tableId = myTable.id,
+                isDraging = false;
+            $tableBody.children('tbody').children('tr').on('mousedown', function (e) {
+                if (e.button !== 0) {
+                    return;
+                }
+                e.preventDefault();
 
+                var $this = $(this),
+                    index = parseInt($this.data('index')),
+                    $bodyTr = $noFixedBody.children('tbody').children('tr[data-index='+ index +']'),
+                    $cloneTr = $bodyTr.clone().css('visibility', 'hidden'),
+                    $FixBodyTr = $fixedBody.children('tbody').children('tr[data-index='+ index +']'),
+                    originTop = $this.position().top,
+                    disY = e.clientY - originTop; // 鼠标距离被移动元素上侧的距离
+
+                $('body').on('mousemove', function (e) {
+
+                    if (!isDraging) {
+                        isDraging = true;
+                        // 设置鼠标样式
+                        $table.next().find('style').append('.layui-table-view .layui-table td{cursor: move;}.layui-table tr{transition: none}')
+
+                        $bodyTr.after($cloneTr);
+                        $bodyTr.css({
+                            'position': 'absolute',
+                            'z-index': 1
+                        })
+
+                        $FixBodyTr.each(function () {
+                            $(this).after($(this).clone().css('visibility', 'hidden'))
+                            $(this).css({
+                                'position': 'absolute',
+                                'z-index': 102
+                            })
+                        })
+                    }
+
+                    var top = e.clientY - disY, // 计算当前被移动列左侧位置应该哪里
+                        trTop = $cloneTr.position().top, //当前行所在位置
+                        $UpTr = $bodyTr.prev(),
+                        hasUpTr = $UpTr.length > 0,
+                        $downTr = $cloneTr.next(),
+                        hasDownTr = $downTr.length > 0,
+                        upMove = hasUpTr && (trTop - top > $UpTr.height() / 2.0),
+                        downMove = hasDownTr && (top - trTop > $downTr.height() / 2.0);
+
+                    if (trTop - top > 0 ? !hasUpTr : !hasDownTr) {
+                        $bodyTr.css('top', trTop);
+                        $FixBodyTr.each(function () {
+                            $(this).css('top', trTop);
+                        })
+                        return;
+                    }
+
+                    $bodyTr.css('top', top);
+                    $FixBodyTr.each(function () {
+                        $(this).css('top', top);
+                    })
+
+                    if (upMove) {
+                        $cloneTr.after($bodyTr.prev());
+                        $FixBodyTr.each(function () {
+                            $(this).next().after($(this).prev());
+                        })
+                    } else if (downMove) {
+                        $bodyTr.before($cloneTr.next());
+                        $FixBodyTr.each(function () {
+                            $(this).before($(this).next().next());
+                        })
+                    }
+
+                }).on('mouseup', function (e) {
+                    $('body').off('mousemove').off('mouseup');
+
+                    if (isDraging) {
+                        isDraging = false;
+
+                        $bodyTr.css({'position': 'initial','z-index': 'inherit'});
+                        $bodyTr.next().remove();
+                        $FixBodyTr.each(function () {
+                            $(this).css({'position': 'initial','z-index': 'inherit'});
+                            $(this).next().remove()
+                        })
+
+                        // 恢复样式
+                        var style = $table.next().find('style')[0],
+                            sheet = style.sheet || style.styleSheet || {},
+                            rules = sheet.cssRules || sheet.rules;
+                        layui.each(rules, function(i, item){
+                            if(item.selectorText === ('.layui-table-view .layui-table td')){
+                                item.style.cursor = 'default';
+                            } else if (item.selectorText === '.layui-table tr') {
+                                item.style.transition = 'all .3s'
+                            }
+                        });
+
+                        var newIndex = $this.index();
+                        if (newIndex !== index) { // 有位置变动
+                            if (typeof myTable.rowDrag.done === 'function') {
+                                var cache = layui.table.cache[tableId],
+                                    row = cache.splice(index, 1)[0];
+                                cache.splice(newIndex , 0, row);
+                                myTable.rowDrag.done.call(myTable, {
+                                    row: row,
+                                    newIndex: newIndex,
+                                    oldIndex: index,
+                                    cache: cache
+                                })
+                            }
+                        }
+
+                    }
+                })
+            })
+        },
         fixTableRemember: function(myTable, dict) {
             if (myTable.filter && myTable.filter.cache) {
                 if (dict && dict.rule) {
