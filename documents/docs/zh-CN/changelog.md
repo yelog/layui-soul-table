@@ -28,7 +28,7 @@
 
 [新增] 子表 新增子表事件：`toolbar/edit/checkbox`
 
-[新增] 拖拽行 [指定列导出](/#/zh-CN/component/basic/row-drag)
+[新增] 拖拽行 [指定列导出](#/zh-CN/component/basic/row-drag)
 
 ### **1.3.17** <small>`2019-09-08`</small>
 
@@ -42,7 +42,7 @@
 
 ### **1.3.15** <small>`2019-08-28`</small>
 
-[新增] excel导出 支持指定列导出 [指定列导出](/#/zh-CN/component/excel/columns)
+[新增] excel导出 支持指定列导出 [指定列导出](#/zh-CN/component/excel/columns)
 
 ### **1.3.14** <small>`2019-08-27`</small>
 
@@ -50,7 +50,7 @@
 
 [修复] 排序 即便没有设置 `lay-filter` 仍然可以使用内部监听
 
-[新增] 子表 子表定义字段 `children` 支持传入 `function` 类型 [基础子表](/#/zh-CN/component/child/basic)
+[新增] 子表 子表定义字段 `children` 支持传入 `function` 类型 [基础子表](#/zh-CN/component/child/basic)
 
 ### **1.3.13** <small>`2019-08-26`</small>
 [优化] 语法 修复重复变量声明、类型判断不精确的问题
@@ -63,11 +63,11 @@
 [新增] 拖拽 新增 拖拽工具栏 ，支持动态修改固定列/非固定列
 
 ### **1.3.11** <small>`2019-08-22`</small>
-[新增] 筛选 新增方法 `soulTable.clearFilter(tableId)` 用于清除所有筛选条件 [基本筛选](/#/zh-CN/component/filter/basic)
+[新增] 筛选 新增方法 `soulTable.clearFilter(tableId)` 用于清除所有筛选条件 [基本筛选](#/zh-CN/component/filter/basic)
 
 <span class='layui-red'>[移除]</span> css 项目移除对于 `animate.min.css` 的依赖, 更新 `soulTable.css`
 
-[新增] 拖拽 新增简易拖拽，拖拽过程只有头部移动，结束时，才会同步 body [2. 简易拖拽](/#/zh-CN/component/basic/drag)
+[新增] 拖拽 新增简易拖拽，拖拽过程只有头部移动，结束时，才会同步 body [2. 简易拖拽](#/zh-CN/component/basic/drag)
 
 [增强] 拖拽 允许固定列之间进行拖拽交换，允许 `checkbox/radio` 特殊列进行拖拽交换 
 
@@ -99,21 +99,21 @@
 
 [修复] 记忆 修复插件中的表格隐藏列记忆问题
 
-[新增] 记忆 新增 工具栏列显示隐藏 的记忆方法 [记忆功能](/#/zh-CN/component/basic/cache)
+[新增] 记忆 新增 工具栏列显示隐藏 的记忆方法 [记忆功能](#/zh-CN/component/basic/cache)
 
-[新增] 单元格合并 兼容复杂表头 [复杂表头合并](/#/zh-CN/component/merge/header)
+[新增] 单元格合并 兼容复杂表头 [复杂表头合并](#/zh-CN/component/merge/header)
 
 
 ### **1.3.4** <small>`2019-08-07`</small>
 [修复] 子表 修复子表入口列宽计算bug，支持子表入口列可拖动列宽
 
 ### **1.3.3** <small>`2019-08-06`</small>
-[升级] 子表 子表兼容复杂表头、多入口 [多入口/复杂表头](/#/zh-CN/component/child/header)
+[升级] 子表 子表兼容复杂表头、多入口 [多入口/复杂表头](#/zh-CN/component/child/header)
 
 ### **1.3.2** <small>`2019-08-05`</small>
-[新增] 子表 子表标题可以通过参数隐藏 [子表title设置](/#/zh-CN/component/child/title)
+[新增] 子表 子表标题可以通过参数隐藏 [子表title设置](#/zh-CN/component/child/title)
 
-[新增] 子表 支持tab切换懒加载 [懒加载](/#/zh-CN/component/child/lazy)
+[新增] 子表 支持tab切换懒加载 [懒加载](#/zh-CN/component/child/lazy)
 
 [文档] 子表 新增**子表重载**示例
 
@@ -127,7 +127,7 @@
 
 [新增] excel导出 支持直接传 tableId 如 soulTable.export('tableId')
 
-[新增] 子表 新增手风琴展开方式 [2.手风琴方式（一次只能展开一个子表）](/#/zh-CN/component/child/basic)
+[新增] 子表 新增手风琴展开方式 [2.手风琴方式（一次只能展开一个子表）](#/zh-CN/component/child/show)
 
 ### **1.3.0** <small>`2019-07-31`</small>
 [修复] 筛选 表头请求/excel请求 添加 header/contentType 支持
