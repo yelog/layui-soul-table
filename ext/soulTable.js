@@ -614,8 +614,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 if (e.button !== 0) {
                     return;
                 }
-                e.preventDefault();
-
                 var $this = trigger === 'row' ? $(this) : $(this).parents('tr:eq(0)'),
                     index = parseInt($this.data('index')),
                     $bodyTr = $noFixedBody.children('tbody').children('tr[data-index='+ index +']'),

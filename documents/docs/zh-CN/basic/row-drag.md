@@ -31,7 +31,7 @@ layui.use(['form', 'table','soulTable'], function () {
             {type: 'checkbox', title: '##', fixed: 'left'},
             {field: 'title', title: '诗词', width: 100, fixed: 'left', totalRowText: '合计'},
             {field: 'dynasty', title: '朝代', width: 100},
-            {field: 'author', title: '作者', width: 165 },
+            {field: 'author', title: '作者-可编辑列', edit: 'text', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},
             {field: 'heat', title: '点赞数', width: 75, fixed: 'right', totalRow: true},
