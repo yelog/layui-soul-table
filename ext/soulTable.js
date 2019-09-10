@@ -35,6 +35,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     this.rowDrag(myTable)
                 }
                 this.autoColumnWidth(myTable)
+                // 修复合计栏固定列问题
+                this.fixTotal(myTable)
             }
 
         }
@@ -729,6 +731,39 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
                 localStorage.setItem(location.pathname + location.hash + myTable.id, this.deepStringify(myTable.cols))
             }
+        },
+        fixTotal: function (myTable) {
+            var $table = $(myTable.elem),
+                $total = $table.next().children('.layui-table-total');
+            if ($total.length > 0) {
+                var $tableBox = $table.next().children('.layui-table-box'),
+                    $fixedLeft = $tableBox.children('.layui-table-fixed-l').children('.layui-table-body').children('table').children('tbody').children('tr:eq(0)').children('td'),
+                    $fixedRight = $tableBox.children('.layui-table-fixed-r').children('.layui-table-body').children('table').children('tbody').children('tr:eq(0)').children('td'),
+                    html = [];
+
+                if ($fixedLeft.length > 0) {
+                    $table.next().css('position', 'relative');
+                    html.push('<table style="position: absolute;left: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table"><tbody><tr>');
+                    $fixedLeft.each(function () {
+                        html.push($total.children('table:eq(0)').find('[data-key="' + $(this).data('key') + '"]').prop("outerHTML"))
+                    })
+                    html.push('</tr></tbody></table>')
+                    $total.append(html.join(''))
+                }
+                if ($fixedRight.length > 0) {
+                    $table.next().css('position', 'relative');
+                    html = [];
+                    html.push('<table style="position: absolute;right: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table"><tbody><tr>');
+                    $fixedRight.each(function () {
+                        html.push($total.children('table:eq(0)').find('[data-key="' + $(this).data('key') + '"]').prop("outerHTML"))
+                    })
+                    html.push('</tr></tbody></table>')
+                    $total.append(html.join(''))
+                    $total.children('table:last').find('td:first').css('border-left', '1px solid #e6e6e6')
+                    $total.children('table:last').find('td:last').css('border-left', 'none')
+                }
+            }
+
         },
         deepStringify: function (obj) {
             var JSON_SERIALIZE_FIX = {
