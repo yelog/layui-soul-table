@@ -28,6 +28,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 tableChild.render(myTable);
                 tableMerge.render(myTable);
 
+                // 修复合计栏固定列问题
+                this.fixTotal(myTable)
                 if (typeof myTable.drag === 'undefined' || myTable.drag) {
                     this.drag(myTable);
                 }
@@ -35,8 +37,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     this.rowDrag(myTable)
                 }
                 this.autoColumnWidth(myTable)
-                // 修复合计栏固定列问题
-                this.fixTotal(myTable)
             }
 
         }
@@ -124,6 +124,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 $noFixedBody = $tableBox.children('.layui-table-body').children('table'),
                 $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
                 $totalTable = $table.next().children('.layui-table-total').children('table'),
+                $fixedTotalTable = $table.next().children('.layui-table-total').children('table.layui-table-total-fixed'),
+                $noFixedTotalTable = $table.next().children('.layui-table-total').children('table:eq(0)'),
                 tableId = myTable.id,
                 isSimple = myTable.drag === 'simple' || (myTable.drag && myTable.drag.type === 'simple'), // 是否为简易拖拽
                 toolbar = myTable.drag && myTable.drag.toolbar, // 是否开启工具栏
@@ -208,13 +210,12 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     'width': width + 1
                                                 });
                                             })
-                                            if (!isInFixed && $totalTable.length>0) {
-                                                $totalTable.find('td[data-key="' + key + '"]').each(function () {
+                                            if ($totalTable.length>0) {
+                                                (isInFixed ? $fixedTotalTable : $totalTable).find('td[data-key="' + key + '"]').each(function () {
                                                     $(this).after($(this).clone().css('visibility', 'hidden').attr('data-clone', ''));
                                                     $(this).addClass('isDrag').css({
                                                         'position': 'absolute',
                                                         'z-index': 1,
-                                                        'border-left': '1px solid #e6e6e6',
                                                         'background-color': $(this).parents('tr:eq(0)').css('background-color'),
                                                         'width': width + 1
                                                     });
@@ -469,7 +470,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                 $(this).remove();
                                             });
                                             if ($totalTable.length>0) {
-                                                $totalTable.find('td[data-key="' + key + '"]').each(function () {
+                                                $noFixedTotalTable.find('td[data-key="' + key + '"]').each(function () {
                                                     if (prefKey) {
                                                         $(this).parent().children('td[data-key="' + prefKey + '"]').after($(this))
                                                     } else {
@@ -489,6 +490,16 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                         }
                                                     }
                                                 });
+                                                $fixedTotalTable.find('td[data-key="' + key + '"][data-clone]').each(function () {
+                                                    $(this).prev().removeClass('isDrag').css({
+                                                        'position': 'relative',
+                                                        'z-index': 'inherit',
+                                                        'left': 'inherit',
+                                                        'width': 'inherit',
+                                                        'background-color': 'inherit'
+                                                    });
+                                                    $(this).remove();
+                                                });
                                             }
                                         } else {
                                             $tableBody.find('td[data-key="' + key + '"][data-clone]').each(function () {
@@ -496,7 +507,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                     'position': 'relative',
                                                     'z-index': 'inherit',
                                                     'left': 'inherit',
-                                                    'border-left': 'inherit',
                                                     'width': 'inherit',
                                                     'background-color': 'inherit'
                                                 });
@@ -508,7 +518,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                                         'position': 'relative',
                                                         'z-index': 'inherit',
                                                         'left': 'inherit',
-                                                        'border-left': 'inherit',
                                                         'width': 'inherit',
                                                         'background-color': 'inherit'
                                                     });
@@ -742,25 +751,27 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     html = [];
 
                 if ($fixedLeft.length > 0) {
+                    $table.next().find('style').append('.layui-table-total-fixed-l .layui-table-patch{display: none}');
                     $table.next().css('position', 'relative');
-                    html.push('<table style="position: absolute;left: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table"><tbody><tr>');
+                    html.push('<table style="position: absolute;background-color: #fff;left: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table layui-table-total-fixed layui-table-total-fixed-l"><tbody><tr>');
                     $fixedLeft.each(function () {
-                        html.push($total.children('table:eq(0)').find('[data-key="' + $(this).data('key') + '"]').prop("outerHTML"))
+                        if ($(this).data('key')) {
+                            html.push($total.children('table:eq(0)').find('[data-key="' + $(this).data('key') + '"]').prop("outerHTML"))
+                        }
                     })
-                    html.push('</tr></tbody></table>')
+                    html.push('</tr></tbody></table>');
                     $total.append(html.join(''))
                 }
                 if ($fixedRight.length > 0) {
+                    $table.next().find('style').append('.layui-table-total-fixed-r td:first-child{border-left:1px solid #e6e6e6}.layui-table-total-fixed-r td:last-child{border-left: none}');
                     $table.next().css('position', 'relative');
                     html = [];
-                    html.push('<table style="position: absolute;right: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table"><tbody><tr>');
+                    html.push('<table style="position: absolute;background-color: #fff;right: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table layui-table-total-fixed layui-table-total-fixed-r"><tbody><tr>');
                     $fixedRight.each(function () {
                         html.push($total.children('table:eq(0)').find('[data-key="' + $(this).data('key') + '"]').prop("outerHTML"))
                     })
                     html.push('</tr></tbody></table>')
                     $total.append(html.join(''))
-                    $total.children('table:last').find('td:first').css('border-left', '1px solid #e6e6e6')
-                    $total.children('table:last').find('td:last').css('border-left', 'none')
                 }
             }
 
