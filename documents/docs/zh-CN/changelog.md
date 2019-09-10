@@ -28,7 +28,7 @@
 
 [新增] 子表 新增子表事件：`toolbar/edit/checkbox`
 
-[新增] 拖拽行 [指定列导出](#/zh-CN/component/basic/row-drag)
+[新增] 拖拽行 [拖拽行](#/zh-CN/component/basic/row-drag)
 
 ### **1.3.17** <small>`2019-09-08`</small>
 
