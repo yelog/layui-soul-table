@@ -28,6 +28,10 @@
 
 [新增] 子表 入口支持自定义图标 [展开方式](#/zh-CN/component/child/show) 第4点
 
+[新增] 子表 支持入口图标和字段放在一起 [展开方式](#/zh-CN/component/child/show) 第5点
+
+[新增] 子表 支持父表固定列 [展开方式](#/zh-CN/component/child/show)
+
 ### **1.3.19** <small>`2019-09-10`</small>
 
 [添加] 合计行 合计行支持固定列

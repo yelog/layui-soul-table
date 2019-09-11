@@ -1,7 +1,7 @@
 ## 展开方式
 
 ### 1.展开方式 （默认方式）
-通过设置 `show: 1` 或 不设置 
+通过设置 `show: 1` 或 不设置 ,支持固定列
 :::demo
 ```html
 <table id="myTable" lay-filter="myTable"></table>
@@ -16,11 +16,11 @@ layui.use(['form', 'table','soulTable'], function () {
         ,height: 500
         ,page: false
         ,cols: [[
-            {title: '#', width: 50, children:[
+            {title: '#', width: 50, fixed: 'left', children:[
                 {
                     title: '表格一'
                     ,url: 'data-1.json'
-                    ,height: 300
+                    ,height: 200
                     ,page: false
                     ,cols: [[
                         {type: 'checkbox', fixed: 'left'},
@@ -30,8 +30,7 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'content', title: '内容', width: 123, filter: true},
                         {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
                         {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
-                        {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
-                        {title: '操作', width: 156, templet: '#childBar'}
+                        {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true}
                     ]]
                     ,done: function () {
                        soulTable.render(this);
@@ -55,21 +54,20 @@ layui.use(['form', 'table','soulTable'], function () {
                         {field: 'content', title: '内容', width: 123, filter: true},
                         {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
                         {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
-                        {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
-                        {title: '操作', width: 156, templet: '#childBar'}
+                        {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true}
                     ]]
                     ,done: function () {
                        soulTable.render(this);
                     }
                 }
             ]},
-            {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+            {field: 'title', title: '诗词', fixed: 'left', width: 200, sort: true, filter: true},
             {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
             {field: 'author', title: '作者', width: 165 , filter: true},
             {field: 'content', title: '内容', width: 123, filter: true},
             {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
             {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
-            {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
+            {field: 'createTime', title: '录入时间', width: 165, fixed: 'right', filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
         ]]
         ,done: function () {
             soulTable.render(this)
@@ -119,7 +117,7 @@ layui.use(['form', 'table','soulTable'], function () {
                 },
                 {
                     title: '表格二'
-                    ,height: 200
+                    ,height: 300
                     ,limit: 1000000
                     ,data: function (d) {
                         // d 为当前行数据
