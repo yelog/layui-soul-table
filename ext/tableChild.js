@@ -74,15 +74,23 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                         if (child.isChild && typeof child.isChild === 'function') {
                             $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').each(function (index) {
                                 if (child.isChild(layui.table.cache[tableId][index])) {
-                                    $(this).addClass('childTable').css({'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="'+icon[0]+'"></i>');
+                                    if (child.field) {
+                                        $(this).prepend('<i style="cursor: pointer" class="childTable '+icon[0]+'"></i>');
+                                    } else {
+                                        $(this).html('<i style="cursor: pointer" class="childTable '+icon[0]+'"></i>');
+                                    }
                                 }
                             })
                         } else {
-                            $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').addClass('childTable').css({'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="'+icon[0]+'"></i>');
+                            if (child.field) {
+                                $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').prepend('<i style="cursor: pointer" class="childTable '+icon[0]+'"></i>');
+                            } else {
+                                $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').html('<i style="cursor: pointer" class="childTable '+icon[0]+'"></i>');
+                            }
                         }
 
                         $tableBody.children('tbody').children('tr').each(function () {
-                            $(this).children('td:eq('+curIndex+')').children('.childTable').on('click', function () {
+                            $(this).children('td:eq('+curIndex+')').find('.childTable').on('click', function () {
                                 var data = table.cache[myTable.id][$(this).parents('tr:eq(0)').data('index')],
                                     children = child.children;
                                 if (typeof child.children === 'function') {
@@ -96,29 +104,33 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                 } else { // 展开模式
 
                                     // 开启手风琴模式
-                                    if (!$(this).find('i').hasClass(icon[1]) && child.collapse) {
-                                        $tableBody.children('tbody').children('tr').children('td').children('.childTable').each(function () {
-                                            if ($(this).find('i').hasClass(icon[1])) {
-                                                $(this).find('i').attr('class', icon[0]);
+                                    if (!$(this).hasClass(icon[1]) && child.collapse) {
+                                        $tableBody.children('tbody').children('tr').children('td').find('.childTable').each(function () {
+                                            if ($(this).hasClass(icon[1])) {
+                                                $(this).removeClass(icon[1]).addClass(icon[0])
                                                 _this.destroyChildren($(this), tableId)
                                             }
                                         })
                                     }
 
                                     // 多个入口时，关闭其他入口
-                                    if (!$(this).find('i').hasClass(icon[1])) {
-                                        $(this).parents('tr:eq(0)').children('td').children('.childTable').each(function () {
-                                            if ($(this).find('i').hasClass(icon[1])) {
-                                                $(this).find('i').attr('class', icon[0]);
+                                    if (!$(this).hasClass(icon[1])) {
+                                        $(this).parents('tr:eq(0)').children('td').find('.childTable').each(function () {
+                                            if ($(this).hasClass(icon[1])) {
+                                                $(this).removeClass(icon[1]).addClass(icon[0])
                                                 _this.destroyChildren($(this), tableId)
                                             }
                                         })
                                     }
 
-                                    $(this).find('i').attr('class', $(this).find('i').hasClass(icon[1]) ? icon[0] : icon[1])
+                                    if ($(this).hasClass(icon[1])) {
+                                        $(this).removeClass(icon[1]).addClass(icon[0])
+                                    } else {
+                                        $(this).removeClass(icon[0]).addClass(icon[1])
+                                    }
                                     var rowspanIndex=$(this).parents('td:eq(0)').attr("rowspan");
 
-                                    if ($(this).find('i').hasClass(icon[1])) {
+                                    if ($(this).hasClass(icon[1])) {
                                         var newTr = [];
                                         newTr.push('<tr class="noHover childTr"><td colspan="'+$tableHead.find('th:visible').length+'" style="cursor: inherit; padding: 0; width: '+$(this).parents('tr:eq(0)').width()+'px">');
                                         newTr.push(_this.getTables(this, data, child, myTable, children));
@@ -148,7 +160,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                         })
 
                         if (child.spread && child.show !== 2) {
-                            $tableBody.children('tbody').children('tr').children('td').children('.childTable').trigger('click');
+                            $tableBody.children('tbody').children('tr').children('td').find('.childTable').trigger('click');
                         }
                     })()
 
