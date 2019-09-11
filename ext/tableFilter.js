@@ -1442,40 +1442,6 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 showFilter($(this))
             });
 
-            $tableHead.find('thead>tr>th').on('contextmenu', function (e) {
-                return false;
-            }).mousedown(function (e) {
-                if (3 === e.which) {
-                    e.stopPropagation();
-                    if ($(this).find('.soul-table-filter').length > 0) {
-                        showFilter($(this).find('.soul-table-filter'))
-                    }
-                    return false;
-                }
-            })
-            $fixedLeftTableHead.find('thead>tr>th').on('contextmenu', function (e) {
-                return false;
-            }).mousedown(function (e) {
-                if (3 === e.which) {
-                    e.stopPropagation();
-                    if ($(this).find('.soul-table-filter').length > 0) {
-                        showFilter($(this).find('.soul-table-filter'))
-                    }
-                    return false;
-                }
-            })
-            $fixedRigthTableHead.find('thead>tr>th').on('contextmenu', function (e) {
-                return false;
-            }).mousedown(function (e) {
-                if (3 === e.which) {
-                    e.stopPropagation();
-                    if ($(this).find('.soul-table-filter').length > 0) {
-                        showFilter($(this).find('.soul-table-filter'))
-                    }
-                    return false;
-                }
-            })
-
             function showFilter($that) {
                 _this.hideColumns(myTable, false);
                 _this.hideDropList(myTable, false);
