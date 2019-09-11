@@ -61,7 +61,8 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 for ( i = 0; i < childIndex.length; i++) {
                     (function f() {
                         var child = columns[childIndex[i]]
-                            ,curIndex = childIndex[i];
+                            ,curIndex = childIndex[i]
+                            ,icon = child.icon || ['layui-icon layui-icon-right', 'layui-icon layui-icon-down'];
 
                         if (soulSort && !(myTable.url && myTable.page)) {
                             // 前台排序
@@ -73,11 +74,11 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                         if (child.isChild && typeof child.isChild === 'function') {
                             $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').each(function (index) {
                                 if (child.isChild(layui.table.cache[tableId][index])) {
-                                    $(this).addClass('childTable').css({'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
+                                    $(this).addClass('childTable').css({'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="'+icon[0]+'"></i>');
                                 }
                             })
                         } else {
-                            $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').addClass('childTable').css({'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="layui-icon layui-icon-right"></i>');
+                            $tableBody.find('tr').find('td[data-key$="'+child.key+'"]>div').addClass('childTable').css({'cursor': 'pointer'}).html('<i style="font-weight: bolder" class="'+icon[0]+'"></i>');
                         }
 
                         $tableBody.children('tbody').children('tr').each(function () {
@@ -95,29 +96,29 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                 } else { // 展开模式
 
                                     // 开启手风琴模式
-                                    if (!$(this).find('i').hasClass('layui-icon-down') && child.collapse) {
+                                    if (!$(this).find('i').hasClass(icon[1]) && child.collapse) {
                                         $tableBody.children('tbody').children('tr').children('td').children('.childTable').each(function () {
-                                            if ($(this).find('i').hasClass('layui-icon-down')) {
-                                                $(this).find('i').toggleClass('layui-icon-down');
+                                            if ($(this).find('i').hasClass(icon[1])) {
+                                                $(this).find('i').attr('class', icon[0]);
                                                 _this.destroyChildren($(this), tableId)
                                             }
                                         })
                                     }
 
                                     // 多个入口时，关闭其他入口
-                                    if (!$(this).find('i').hasClass('layui-icon-down')) {
+                                    if (!$(this).find('i').hasClass(icon[1])) {
                                         $(this).parents('tr:eq(0)').children('td').children('.childTable').each(function () {
-                                            if ($(this).find('i').hasClass('layui-icon-down')) {
-                                                $(this).find('i').toggleClass('layui-icon-down');
+                                            if ($(this).find('i').hasClass(icon[1])) {
+                                                $(this).find('i').attr('class', icon[0]);
                                                 _this.destroyChildren($(this), tableId)
                                             }
                                         })
                                     }
 
-                                    $(this).find('i').toggleClass('layui-icon-down');
+                                    $(this).find('i').attr('class', $(this).find('i').hasClass(icon[1]) ? icon[0] : icon[1])
                                     var rowspanIndex=$(this).parents('td:eq(0)').attr("rowspan");
 
-                                    if ($(this).find('i').hasClass('layui-icon-down')) {
+                                    if ($(this).find('i').hasClass(icon[1])) {
                                         var newTr = [];
                                         newTr.push('<tr class="noHover childTr"><td colspan="'+$tableHead.find('th:visible').length+'" style="cursor: inherit; padding: 0; width: '+$(this).parents('tr:eq(0)').width()+'px">');
                                         newTr.push(_this.getTables(this, data, child, myTable, children));

@@ -239,3 +239,60 @@ layui.use(['form', 'table','soulTable'], function () {
 </script>
 ```
 :::
+
+### 4.自定义图标
+设置 `icon` 一个数组， 第一个元素为展开前图标，第二个为展开后图标
+
+`icon` 默认值 `['layui-icon layui-icon-right', 'layui-icon layui-icon-down']`
+:::demo
+```html
+<table id="myTable4" lay-filter="myTable4"></table>
+<script>
+layui.use(['form', 'table','soulTable'], function () {
+    var table = layui.table,
+        soulTable = layui.soulTable;
+
+    table.render({
+        elem: '#myTable4'
+        ,url: 'data-1.json'
+        ,height: 500
+        ,page: false
+        ,cols: [[
+            {title: '#', width: 50, icon: ['layui-icon layui-icon-triangle-r', 'layui-icon layui-icon-triangle-d'], children:[
+                {
+                    title: '表格一'
+                    ,url: 'data-1.json'
+                    ,height: 300
+                    ,page: false
+                    ,cols: [[
+                        {type: 'checkbox', fixed: 'left'},
+                        {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+                        {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+                        {field: 'author', title: '作者', width: 165 , filter: true},
+                        {field: 'content', title: '内容', width: 123, filter: true},
+                        {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
+                        {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
+                        {field: 'createTime', title: '录入时间', width: 165, sort:true},
+                        {title: '操作', width: 156, templet: '#childBar'}
+                    ]]
+                    ,done: function () {
+                       soulTable.render(this);
+                    }
+                }
+            ]},
+            {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+            {field: 'author', title: '作者', width: 165 , filter: true},
+            {field: 'content', title: '内容', width: 123, filter: true},
+            {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
+            {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
+            {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
+        ]]
+        ,done: function () {
+            soulTable.render(this)
+        }
+    });
+})
+</script>
+```
+:::
