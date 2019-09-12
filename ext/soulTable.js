@@ -946,7 +946,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     }
                     dict.allowResize = pLeft <= 10; //是否处于拖拽允许区域
                     _BODY.css('cursor', (dict.allowResize ? 'col-resize' : ''));
-                    othis.css('cursor', (dict.allowResize ? 'col-resize!important' : ''));
                 }).off('mousedown').on('mousedown', function (e) {
                     var othis = $(this);
                     if(dict.allowResize){
@@ -980,9 +979,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }).on('mouseup', function(e){
                     if(dict.resizeStart){
                         setTimeout(function () {
-                            // dict.othis.find('.'+ELEM_NO_SORT).removeClass(ELEM_NO_SORT).addClass(ELEM_SORT)
+                            dict.othis.find('.'+ELEM_NO_SORT).removeClass(ELEM_NO_SORT).addClass(ELEM_SORT)
                             _BODY.css('cursor', '');
-                            dict.othis.css('cursor', '');
                             dict = {};
                             _this.scrollPatch(myTable);
                         }, 30)
