@@ -35,6 +35,10 @@
         {
           "path": "/basic/sort",
           "name": "排序监听"
+        },
+        {
+          "path": "/basic/contextmenu",
+          "name": "右键菜单"
         }
       ]
     },

@@ -37,6 +37,10 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     this.rowDrag(myTable)
                 }
                 this.autoColumnWidth(myTable)
+
+                if (myTable.contextmenu) {
+                    this.contextmenu(myTable);
+                }
             }
 
         }
@@ -738,6 +742,160 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
                 localStorage.setItem(location.pathname + location.hash + myTable.id, this.deepStringify(myTable.cols))
             }
+        },
+        contextmenu: function (myTable) {
+            var _this = this,
+                $table = $(myTable.elem),
+                $tableBox = $table.next().children('.layui-table-box'),
+                $tableHead = $.merge($tableBox.children('.layui-table-header').children('table'),$tableBox.children('.layui-table-fixed').children('.layui-table-header').children('table')),
+                $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table'),
+                $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
+                $totalTable = $table.next().children('.layui-table-total').children('table'),
+                tableId = myTable.id,
+                header = myTable.contextmenu.header,
+                body = myTable.contextmenu.body,
+                total = myTable.contextmenu.total;
+
+
+            if (header === false) {
+                $tableHead.find('th').on('contextmenu', function () {
+                    return false
+                })
+            } else if (header && header.length>0) {
+                $tableHead.find('th').on('contextmenu', function (e) {
+
+                    $('#soul-table-contextmenu-wrapper').remove();
+
+                    $('body').append('<div id="soul-table-contextmenu-wrapper"></div>');
+                    $('#soul-table-contextmenu-wrapper').on('click', function (e) {
+                        e.stopPropagation()
+                    })
+                    genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, header, $(this));
+
+                    return false
+                })
+            }
+
+            if (body === false) {
+                $tableBody.find('td').on('contextmenu', function () {
+                    return false
+                })
+            } else if (body && body.length>0) {
+                $tableBody.find('td').on('contextmenu', function (e) {
+
+                    $('#soul-table-contextmenu-wrapper').remove();
+
+                    $('body').append('<div id="soul-table-contextmenu-wrapper"></div>');
+                    $('#soul-table-contextmenu-wrapper').on('click', function (e) {
+                        e.stopPropagation()
+                    })
+                    genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, body, $(this), true);
+
+                    return false
+                })
+            }
+
+            if (total === false) {
+                $totalTable.find('td').on('contextmenu', function () {
+                    return false
+                })
+            } else if (total && total.length>0) {
+                $totalTable.find('td').on('contextmenu', function (e) {
+
+                    $('#soul-table-contextmenu-wrapper').remove();
+
+                    $('body').append('<div id="soul-table-contextmenu-wrapper"></div>');
+                    $('#soul-table-contextmenu-wrapper').on('click', function (e) {
+                        e.stopPropagation()
+                    })
+                    genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, total, $(this));
+
+                    return false
+                })
+            }
+
+            $('body').on('click', function () {
+                $('#soul-table-contextmenu-wrapper').remove();
+            })
+
+            function genePanel($parent, left, top, options, $this, isBody) {
+                var html = [], css = [], i;
+                css.push('top: '+top+'px;');
+                css.push('left: '+left+'px;');
+                html.push('<ul style="'+css.join('')+'" class="soul-table-contextmenu">');
+                for (i = 0; i < options.length; i++) {
+                    html.push('<li data-index="'+i+'" class="'+(options[i].children && options[i].children.length>0 ? 'contextmenu-children' : '')+'">')
+                    if (options[i].icon) {
+                        html.push('<i class="prefixIcon '+options[i].icon+'" />')
+                    } else {
+                        html.push('<i class="prefixIcon" />')
+                    }
+                    html.push(options[i].name)
+
+                    if (options[i].children && options[i].children.length>0) {
+                        html.push('<i class="endIcon layui-icon layui-icon-right" />')
+                    }
+
+                    html.push('</li>')
+                }
+                html.push('</ul>');
+                $parent.append(html.join(''));
+
+                for (i = 0; i < options.length; i++) {
+                    if (typeof options[i].click === "function") {
+                        (function (i) {
+                            $parent.children('.soul-table-contextmenu:last').children('li[data-index="'+i+'"]').on('click', function () {
+                            var index = $this.parents('tr:eq(0)').data('index'),
+                                tr = $tableBody.find('tr[data-index="'+ index +'"]'),
+                                row = layui.table.cache[tableId][index];
+
+                                options[i].click.call(myTable, {
+                                    elem: $this,
+                                    text: $this.text(),
+                                    field: $this.data('field'),
+                                    del: !isBody? '' : function() {
+                                        table.cache[tableId][index] = [];
+                                        tr.remove();
+                                        table.resize(tableId);
+                                    },
+                                    update: !isBody?'':function(fields) {
+                                        fields = fields || {};
+                                        layui.each(fields, function(key, value){
+                                            if(key in row){
+                                                var templet, td = tr.children('td[data-field="'+ key +'"]');
+                                                row[key] = value;
+                                                table.eachCols(tableId, function(i, item2){
+                                                    if(item2.field == key && item2.templet){
+                                                        templet = item2.templet;
+                                                    }
+                                                });
+                                                td.children('.layui-table-cell').html(function(){
+                                                    return templet ? function(){
+                                                        return typeof templet === 'function'
+                                                            ? templet(row)
+                                                            : layui.laytpl($(templet).html() || value).render(row)
+                                                    }() : value;
+                                                }());
+                                                td.data('content', value);
+                                            }
+                                        });
+                                    },
+                                    row: isBody ? row : {},
+                                })
+                                $('#soul-table-contextmenu-wrapper').remove();
+                            })
+                        })(i)
+                    }
+                }
+                $parent.children('.soul-table-contextmenu:last').children('li').on('mouseenter', function (e) {
+                    e.stopPropagation()
+                    $(this).siblings('.contextmenu-children').children('ul').remove();
+                    if ($(this).hasClass('contextmenu-children')) {
+                        genePanel($(this), $(this).outerWidth(), $(this).position().top, options[$(this).data('index')].children, $this)
+                    }
+                })
+            }
+
         },
         fixTotal: function (myTable) {
             var $table = $(myTable.elem),

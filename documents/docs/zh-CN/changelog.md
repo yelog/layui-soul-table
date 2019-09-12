@@ -25,6 +25,11 @@
 
 ## 更新日志
 ### **1.3.20** <small>`2019-09-11`</small>
+[移除] 筛选 筛选菜单的右击呼出功能
+
+[新增] 右键菜单 可配置 header/body/total [右键菜单](#/zh-CN/component/basic/contextmenu)
+
+### **1.3.20** <small>`2019-09-11`</small>
 
 [新增] 子表 入口支持自定义图标 [展开方式](#/zh-CN/component/child/show) 第4点
 

@@ -178,6 +178,7 @@
     overflow-y: auto;
     border: 1px solid #e6e6e6;
     border-radius: 5px;
+    box-shadow: 2px 2px 4px -2px rgba(0,0,0,.2);
 }
 [id^=main-list] {
     max-height: initial;
@@ -697,4 +698,33 @@
     -moz-animation-name: fadeOutDown;
     -o-animation-name: fadeOutDown;
     animation-name: fadeOutDown;
+}
+
+.soul-table-contextmenu {
+    position: absolute;
+    z-index: 200;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ebeef5;
+    box-shadow: 2px 2px 4px -2px rgba(0,0,0,.2);
+    background: white;
+}
+.soul-table-contextmenu li {
+    line-height: 26px;
+    padding: 0 30px;
+    cursor: pointer;
+    word-break: keep-all;
+}
+.soul-table-contextmenu li:hover {
+    background: #c5c5c5;
+}
+.soul-table-contextmenu li i.prefixIcon{
+    position: absolute;
+    left: 8px;
+}
+
+.soul-table-contextmenu li i.endIcon{
+    position: absolute;
+    right: 8px;
 }
