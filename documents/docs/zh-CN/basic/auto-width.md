@@ -20,13 +20,13 @@ layui.use(['form', 'table','soulTable'], function () {
         ,page: false
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
-            {field: 'title', title: '诗词', width: 200},
+            {field: 'title', title: '诗词', fixed: 'left', width: 200},
             {field: 'dynasty', title: '朝代', width: 100},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},
-            {field: 'heat', title: '点赞数', width: 112},
-            {field: 'createTime', title: '录入时间', width: 165},
+            {field: 'heat', title: '点赞数', fixed: 'right', width: 112},
+            {field: 'createTime', title: '录入时间', fixed: 'right', width: 165},
         ]]
         ,done: function () {
             soulTable.render(this)

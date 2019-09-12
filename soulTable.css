@@ -728,3 +728,33 @@
     position: absolute;
     right: 8px;
 }
+
+/*拖拽相关*/
+.layui-table-sort-invalid {
+    width: 10px;
+    height: 20px;
+    margin-left: 5px;
+    cursor: pointer!important;
+}
+.layui-table-sort-invalid .layui-table-sort-asc {
+    top: 3px;
+    border-top: none;
+    border-bottom-style: solid;
+    border-bottom-color: #b2b2b2;
+}
+.layui-table-sort-invalid .layui-edge {
+    position: absolute;
+    left: 5px;
+    border-width: 5px;
+}
+.layui-table-sort-invalid .layui-table-sort-desc {
+    bottom: 5px;
+    border-bottom: none;
+    border-top-style: solid;
+    border-top-color: #b2b2b2;
+}
+.layui-table-sort-invalid .layui-edge {
+    position: absolute;
+    left: 5px;
+    border-width: 5px;
+}

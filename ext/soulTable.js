@@ -39,6 +39,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 this.autoColumnWidth(myTable)
 
                 this.contextmenu(myTable);
+
+                this.fixResizeRightFixed(myTable);
             }
 
         }
@@ -50,8 +52,19 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
         , export: function (myTable, curExcel) {
             tableFilter.export(myTable.config||myTable, curExcel);
         }
+        ,getCssRule: function(that, key, callback){
+            var style = that.elem.next().find('style')[0]
+                ,sheet = style.sheet || style.styleSheet || {}
+                ,rules = sheet.cssRules || sheet.rules;
+            layui.each(rules, function(i, item){
+                if(item.selectorText === ('.laytable-cell-'+ key)){
+                    return callback(item), true;
+                }
+            });
+        }
         , autoColumnWidth: function (myTable) {
-            var $table = $(myTable.elem),
+            var _this = this,
+                $table = $(myTable.elem),
                 th = $table.next().children('.layui-table-box').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
                 fixTh = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
                 $tableBodytr = $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr');
@@ -65,17 +78,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 o.remove();
                 return w;
             }
-            var getCssRule = function(that, key, callback){
-                var style = that.elem.next().find('style')[0]
-                    ,sheet = style.sheet || style.styleSheet || {}
-                    ,rules = sheet.cssRules || sheet.rules;
-                layui.each(rules, function(i, item){
-                    if(item.selectorText === ('.laytable-cell-'+ key)){
-                        return callback(item), true;
-                    }
-                });
-            };
             th.add(fixTh).on('dblclick', function(e){
+                console.log('dbclick')
                 var othis = $(this)
                     ,field = othis.data('field')
                     ,key = othis.data('key')
@@ -84,7 +88,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 if(othis.attr('colspan') > 1){
                     return;
                 }
-                if (othis.width() - pLeft<=10) {
+                if ($(this).parents('.layui-table-fixed-r').length>0 ? pLeft<=10 : othis.width() - pLeft<=10) {
                     var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
                     $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
                         var curWidth = $(this).text().width(font);
@@ -95,7 +99,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
                     maxWidth +=32;
 
-                    getCssRule(myTable, key, function(item){
+                    _this.getCssRule(myTable, key, function(item){
                         item.style.width = maxWidth+'px'
                     });
                     for (var i = 0; i < myTable.cols.length; i++) {
@@ -922,6 +926,130 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
             }
 
+        },
+        fixResizeRightFixed: function (myTable) {
+            var _this = this,
+                $table = $(myTable.elem),
+                $tableBox = $table.next().children('.layui-table-box'),
+                $fixedHead = $tableBox.children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
+                dict = {},_BODY = $('body'),_DOC = $(document), resizing, ELEM_SORT='layui-table-sort', ELEM_NO_SORT='layui-table-sort-invalid';
+            if ($fixedHead.length>0) {
+                $fixedHead.find('th').off('mousemove').on('mousemove', function (e) {
+                    var othis = $(this)
+                        ,oLeft = othis.offset().left
+                        ,pLeft = e.clientX - oLeft;
+                    if(othis.data('unresize') || dict.resizeStart){
+                        return;
+                    }
+                    if (othis.width() - pLeft <= 10) {
+                        _BODY.css('cursor', 'initial')
+                    }
+                    dict.allowResize = pLeft <= 10; //是否处于拖拽允许区域
+                    _BODY.css('cursor', (dict.allowResize ? 'col-resize' : ''));
+                    othis.css('cursor', (dict.allowResize ? 'col-resize!important' : ''));
+                }).off('mousedown').on('mousedown', function (e) {
+                    var othis = $(this);
+                    if(dict.allowResize){
+                        othis.find('.'+ELEM_SORT).removeClass(ELEM_SORT).addClass(ELEM_NO_SORT)
+                        var key = othis.data('key');
+                        e.preventDefault();
+                        dict.resizeStart = true; //开始拖拽
+                        dict.offset = [e.clientX, e.clientY]; //记录初始坐标
+
+                        _this.getCssRule(myTable, key, function(item){
+                            var width = item.style.width || othis.outerWidth();
+                            dict.rule = item;
+                            dict.ruleWidth = parseFloat(width);
+                            dict.othis = othis;
+                            dict.minWidth = othis.data('minwidth') || myTable.cellMinWidth;
+                        });
+                    }
+                });
+                //拖拽中
+                _DOC.on('mousemove', function(e){
+                    if(dict.resizeStart){
+                        layui.soulTable.fixTableRemember(myTable, dict)
+                        e.preventDefault();
+                        if(dict.rule){
+                            var setWidth = dict.ruleWidth - e.clientX + dict.offset[0];
+                            if(setWidth < dict.minWidth) setWidth = dict.minWidth;
+                            dict.rule.style.width = setWidth + 'px';
+                        }
+                        resizing = 1
+                    }
+                }).on('mouseup', function(e){
+                    if(dict.resizeStart){
+                        setTimeout(function () {
+                            // dict.othis.find('.'+ELEM_NO_SORT).removeClass(ELEM_NO_SORT).addClass(ELEM_SORT)
+                            _BODY.css('cursor', '');
+                            dict.othis.css('cursor', '');
+                            dict = {};
+                            _this.scrollPatch(myTable);
+                        }, 30)
+                    }
+                    if(resizing === 2){
+                        resizing = null;
+                    }
+                });
+            }
+        },
+        scrollPatch: function (myTable) {
+            var $table = $(myTable.elem),
+                layHeader = $table.next().children('.layui-table-box').children('.layui-table-header'),
+                layTotal = $table.next().children('.layui-table-total'),
+                layMain = $table.next().children('.layui-table-box').children('.layui-table-main'),
+                layFixed = $table.next().children('.layui-table-box').children('.layui-table-fixed'),
+                layFixRight = $table.next().children('.layui-table-box').children('.layui-table-fixed-r'),
+                layMainTable = layMain.children('table'),
+                scollWidth = layMain.width() - layMain.prop('clientWidth'),
+                scollHeight = layMain.height() - layMain.prop('clientHeight'),
+                outWidth = layMainTable.outerWidth() - layMain.width() //表格内容器的超出宽度
+
+                //添加补丁
+                ,addPatch = function(elem){
+                    if(scollWidth && scollHeight){
+                        elem = elem.eq(0);
+                        if(!elem.find('.layui-table-patch')[0]){
+                            var patchElem = $('<th class="layui-table-patch"><div class="layui-table-cell"></div></th>'); //补丁元素
+                            patchElem.find('div').css({
+                                width: scollWidth
+                            });
+                            elem.find('tr').append(patchElem);
+                        }
+                    } else {
+                        elem.find('.layui-table-patch').remove();
+                    }
+                }
+
+            addPatch(layHeader);
+            addPatch(layTotal);
+
+            //固定列区域高度
+            var mainHeight = layMain.height()
+                ,fixHeight = mainHeight - scollHeight;
+            layFixed.find('.layui-table-body').css('height', layMainTable.height() >= fixHeight ? fixHeight : 'auto');
+
+            //表格宽度小于容器宽度时，隐藏固定列
+            layFixRight[outWidth > 0 ? 'removeClass' : 'addClass'](HIDE);
+
+            //操作栏
+            layFixRight.css('right', scollWidth - 1);
+        },
+        getScrollWidth: function (elem) {
+            var width = 0;
+            if(elem){
+                width = elem.offsetWidth - elem.clientWidth;
+            } else {
+                elem = document.createElement('div');
+                elem.style.width = '100px';
+                elem.style.height = '100px';
+                elem.style.overflowY = 'scroll';
+
+                document.body.appendChild(elem);
+                width = elem.offsetWidth - elem.clientWidth;
+                document.body.removeChild(elem);
+            }
+            return width;
         },
         deepStringify: function (obj) {
             var JSON_SERIALIZE_FIX = {
