@@ -29,6 +29,8 @@
 
 [新增] 右键菜单 可配置 header/body/total [右键菜单](#/zh-CN/component/basic/contextmenu)
 
+[修复] 拖动行 修复自适应宽度的列，在拖动后宽度异常的问题
+
 ### **1.3.20** <small>`2019-09-11`</small>
 
 [新增] 子表 入口支持自定义图标 [展开方式](#/zh-CN/component/child/show) 第4点

@@ -631,7 +631,11 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     if (!isDraging) {
                         isDraging = true;
                         // 设置鼠标样式
-                        $table.next().find('style').append('.layui-table-view .layui-table td{cursor: move;}.layui-table tr{transition: none}')
+                        // $table.next().find('style').append('.layui-table-view .layui-table td{cursor: move;}.layui-table tr{transition: none}')
+                        var style = $table.next().find('style')[0],
+                            sheet = style.sheet || style.styleSheet || {};
+                        sheet.insertRule('.layui-table-view .layui-table td{cursor: move;}')
+                        sheet.insertRule('.layui-table tr{transition: none}')
 
                         $bodyTr.after($cloneTr);
                         $bodyTr.css({
