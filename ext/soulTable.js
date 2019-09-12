@@ -38,9 +38,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
                 this.autoColumnWidth(myTable)
 
-                if (myTable.contextmenu) {
-                    this.contextmenu(myTable);
-                }
+                this.contextmenu(myTable);
             }
 
         }
@@ -747,82 +745,69 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 localStorage.setItem(location.pathname + location.hash + myTable.id, this.deepStringify(myTable.cols))
             }
         },
+        // 右键菜单配置
         contextmenu: function (myTable) {
-            var _this = this,
-                $table = $(myTable.elem),
+            var $table = $(myTable.elem),
                 $tableBox = $table.next().children('.layui-table-box'),
                 $tableHead = $.merge($tableBox.children('.layui-table-header').children('table'),$tableBox.children('.layui-table-fixed').children('.layui-table-header').children('table')),
                 $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table'),
                 $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
                 $totalTable = $table.next().children('.layui-table-total').children('table'),
                 tableId = myTable.id,
-                header = myTable.contextmenu.header,
-                body = myTable.contextmenu.body,
-                total = myTable.contextmenu.total;
+                header = myTable.contextmenu ? myTable.contextmenu.header : '',
+                body = myTable.contextmenu ? myTable.contextmenu.body : '',
+                total = myTable.contextmenu ? myTable.contextmenu.total: '',
+                options = {header: {box: $tableHead, tag:'th', opts: header, cols:{}},
+                    body: {box: $tableBody, tag:'td', opts: body, cols:{}, isBody: true},
+                    total: {box: $totalTable, tag: 'td', opts: total, cols:{}}},
+                hasColsContext = false;
 
-
-            if (header === false) {
-                $tableHead.find('th').on('contextmenu', function () {
-                    return false
-                })
-            } else if (header && header.length>0) {
-                $tableHead.find('th').on('contextmenu', function (e) {
-
-                    $('#soul-table-contextmenu-wrapper').remove();
-
-                    $('body').append('<div id="soul-table-contextmenu-wrapper"></div>');
-                    $('#soul-table-contextmenu-wrapper').on('click', function (e) {
-                        e.stopPropagation()
-                    })
-                    genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, header, $(this));
-
-                    return false
-                })
+            for (var i = 0; i < myTable.cols.length; i++) {
+                for (var j = 0; j < myTable.cols[i].length; j++) {
+                    if (myTable.cols[i][j].contextmenu) {
+                        hasColsContext = true
+                        options.header.cols[myTable.cols[i][j].key] = myTable.cols[i][j].contextmenu.header
+                        options.body.cols[myTable.cols[i][j].key] = myTable.cols[i][j].contextmenu.body
+                        options.total.cols[myTable.cols[i][j].key] = myTable.cols[i][j].contextmenu.total
+                    }
+                }
             }
 
-            if (body === false) {
-                $tableBody.find('td').on('contextmenu', function () {
-                    return false
-                })
-            } else if (body && body.length>0) {
-                $tableBody.find('td').on('contextmenu', function (e) {
-
-                    $('#soul-table-contextmenu-wrapper').remove();
-
-                    $('body').append('<div id="soul-table-contextmenu-wrapper"></div>');
-                    $('#soul-table-contextmenu-wrapper').on('click', function (e) {
-                        e.stopPropagation()
-                    })
-                    genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, body, $(this), true);
-
-                    return false
-                })
+            if (!myTable.contextmenu && !hasColsContext) {
+                return;
             }
 
-            if (total === false) {
-                $totalTable.find('td').on('contextmenu', function () {
-                    return false
-                })
-            } else if (total && total.length>0) {
-                $totalTable.find('td').on('contextmenu', function (e) {
 
-                    $('#soul-table-contextmenu-wrapper').remove();
-
-                    $('body').append('<div id="soul-table-contextmenu-wrapper"></div>');
-                    $('#soul-table-contextmenu-wrapper').on('click', function (e) {
-                        e.stopPropagation()
+            for (var name in options) {
+                (function (name) {
+                    options[name].box.find(options[name].tag).on('contextmenu', function (e) {
+                        $('#soul-table-contextmenu-wrapper').remove();
+                        $('body').append('<div id="soul-table-contextmenu-wrapper"></div>');
+                        $('#soul-table-contextmenu-wrapper').on('click', function (e) {
+                            e.stopPropagation()
+                        })
+                        var curColsOpts = options[name].cols[$(this).data('key').substr($(this).data('key').indexOf('-')+1)];
+                        if (curColsOpts === false) {
+                            return false
+                        } else if (curColsOpts && curColsOpts.length>0) {
+                            genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, curColsOpts, $(this), options[name].box, options[name].tag, options[name].isBody);
+                            return false
+                        } else if (options[name].opts === false) {
+                            return false
+                        } else if (options[name].opts && options[name].opts.length>0) {
+                            genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, options[name].opts, $(this), options[name].box, options[name].tag, options[name].isBody);
+                            return false
+                        }
                     })
-                    genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, total, $(this));
-
-                    return false
-                })
+                })(name)
             }
+
 
             $('body').on('click', function () {
                 $('#soul-table-contextmenu-wrapper').remove();
             })
 
-            function genePanel($parent, left, top, options, $this, isBody) {
+            function genePanel($parent, left, top, options, $this, box, tag, isBody) {
                 var html = [], css = [], i;
                 css.push('top: '+top+'px;');
                 css.push('left: '+left+'px;');
@@ -850,11 +835,13 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         (function (i) {
                             $parent.children('.soul-table-contextmenu:last').children('li[data-index="'+i+'"]').on('click', function () {
                             var index = $this.parents('tr:eq(0)').data('index'),
-                                tr = $tableBody.find('tr[data-index="'+ index +'"]'),
+                                tr = box.find('tr[data-index="'+ index +'"]'),
                                 row = layui.table.cache[tableId][index];
 
                                 options[i].click.call(myTable, {
-                                    elem: $this,
+                                    cell: $this,
+                                    elem: tag === 'th' ? $this : isBody ? box.children('tbody').children('tr[data-index="'+index+'"]').children('[data-key="'+$this.data('key')+'"]') : box.find('[data-key="'+$this.data('key')+'"]'),
+                                    trElem: box.children('tbody').children('tr[data-index="'+index+'"]'),
                                     text: $this.text(),
                                     field: $this.data('field'),
                                     del: !isBody? '' : function() {
@@ -895,7 +882,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     e.stopPropagation()
                     $(this).siblings('.contextmenu-children').children('ul').remove();
                     if ($(this).hasClass('contextmenu-children')) {
-                        genePanel($(this), $(this).outerWidth(), $(this).position().top, options[$(this).data('index')].children, $this)
+                        genePanel($(this), $(this).outerWidth(), $(this).position().top, options[$(this).data('index')].children, $this, box, tag, isBody)
                     }
                 })
             }
