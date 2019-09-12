@@ -27,12 +27,15 @@ layui.use(['form', 'table','soulTable'], function () {
         }}
         ,totalRow: true
         ,cols: [[
-            {type: 'radio', title: '##'},
-            {type: 'checkbox', title: '##'},
-            {field: 'title', title: '诗词', width: 100, totalRowText: '合计'},
+            {type: 'radio', title: '##', fixed: 'left'},
+            {type: 'checkbox', title: '##', fixed: 'left'},
+            {field: 'title', title: '诗词', width: 100, fixed: 'left', totalRowText: '合计'},
             {field: 'dynasty', title: '朝代', width: 100},
             {field: 'author', title: '作者-可编辑列', edit: 'text', width: 165 },
-            {field: 'content', title: '内容'}
+            {field: 'content', title: '内容', width: 123},
+            {field: 'type', title: '类型', width: 112},
+            {field: 'heat', title: '点赞数', width: 75, fixed: 'right', totalRow: true},
+            {field: 'createTime', title: '录入时间', fixed: 'right', width: 165},
         ]]
         ,done: function () {
             soulTable.render(this)
