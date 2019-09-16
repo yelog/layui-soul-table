@@ -40,7 +40,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
                 this.contextmenu(myTable);
 
-                this.fixResizeRightFixed(myTable);
+                if (typeof myTable.fixResize === 'undefined' || myTable.fixResize) {
+                    this.fixResizeRightFixed(myTable);
+                }
             }
 
         }

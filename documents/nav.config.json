@@ -39,6 +39,10 @@
         {
           "path": "/basic/contextmenu",
           "name": "右键菜单"
+        },
+        {
+          "path": "/basic/fixResize",
+          "name": "右侧固定列拖动列宽"
         }
       ]
     },
