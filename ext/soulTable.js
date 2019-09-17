@@ -1039,22 +1039,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             //操作栏
             layFixRight.css('right', scollWidth - 1);
         },
-        getScrollWidth: function (elem) {
-            var width = 0;
-            if(elem){
-                width = elem.offsetWidth - elem.clientWidth;
-            } else {
-                elem = document.createElement('div');
-                elem.style.width = '100px';
-                elem.style.height = '100px';
-                elem.style.overflowY = 'scroll';
-
-                document.body.appendChild(elem);
-                width = elem.offsetWidth - elem.clientWidth;
-                document.body.removeChild(elem);
-            }
-            return width;
-        },
         deepStringify: function (obj) {
             var JSON_SERIALIZE_FIX = {
                 PREFIX : "[[JSON_FUN_PREFIX_",

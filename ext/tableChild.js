@@ -152,7 +152,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
                                     if ($this.hasClass(icon[1])) {
                                         var newTr = [];
-                                        newTr.push('<tr class="noHover childTr"><td colspan="'+$tableHead.find('th:visible').length+'" style="cursor: inherit; padding: 0; width: '+$this.parents('tr:eq(0)').width()+'px">');
+                                        newTr.push('<tr class="noHover childTr"><td colspan="'+$tableHead.find('th:visible').length+'"  style="cursor: inherit; padding: 0; width: '+$this.parents('tr:eq(0)').width()+'px">');
                                         newTr.push(_this.getTables(this, data, child, myTable, children));
                                         newTr.push('</td></tr>');
 
@@ -222,12 +222,16 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 rowTableId = tableId + $(_this).parents('tr:eq(0)').data('index'),
                 $tableMain = $table.next().children('.layui-table-box').children('.layui-table-body'),
                 $tableBody = $tableMain.children('table'),
+                scrollWidth = 0,
                 i;
             tables.push('<div class="layui-tab layui-tab-card" lay-filter="table-child-'+rowTableId+'" style="margin: 0;border: 0;');
             if (child.show === 2) {
                 tables.push('max-width: '+ ($tableBody.width()-2) +'px">')
             } else {
-                tables.push('max-width: '+ ($tableMain.width()-2) +'px">')
+                if ($tableMain.prop('scrollHeight') + (children.length>0?children[0].height:0) > $tableMain.height()) {
+                    scrollWidth = this.getScrollWidth();
+                }
+                tables.push('max-width: '+ ($tableMain.width() - 1 - scrollWidth) +'px">')
             }
             if (typeof child.childTitle === 'undefined' || child.childTitle) {
                 tables.push('<ul class="layui-tab-title">')
@@ -237,7 +241,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 tables.push('</ul>')
             }
 
-            tables.push('<div class="layui-tab-content" style="padding: 0">');
+            tables.push('<div class="layui-tab-content" style="padding: 0 10px">');
             for (i=0;i<children.length;i++) {
                 var childTableId = rowTableId + i;
                 tables.push('<div class="layui-tab-item layui-show"><form action="" class="layui-form" ><table id="'+childTableId+'" lay-filter="'+childTableId+'"></table></form></div>');
@@ -448,6 +452,22 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 }
             }
             return cols[cols.length-1];
+        },
+        getScrollWidth: function (elem) {
+            var width = 0;
+            if(elem){
+                width = elem.offsetWidth - elem.clientWidth;
+            } else {
+                elem = document.createElement('div');
+                elem.style.width = '100px';
+                elem.style.height = '100px';
+                elem.style.overflowY = 'scroll';
+
+                document.body.appendChild(elem);
+                width = elem.offsetWidth - elem.clientWidth;
+                document.body.removeChild(elem);
+            }
+            return width;
         }
     };
 
