@@ -351,3 +351,56 @@ layui.use(['form', 'table','soulTable'], function () {
 </script>
 ```
 :::
+
+### 6. 模拟树表-测试中
+设置 `show: 3`，还在测试中，不建议生产环境使用
+
+保证子表和主表结构一致
+:::demo
+```html
+<table id="myTable6" lay-filter="myTable6"></table>
+<script>
+layui.use(['form', 'table','soulTable'], function () {
+    var table = layui.table,
+        soulTable = layui.soulTable;
+
+    table.render({
+        elem: '#myTable6'
+        ,url: 'data-1.json'
+        ,height: 500
+        ,page: false
+        ,cols: [[
+            {title: '诗词',  field:'title', width: 200,show: 3, children:[
+                {
+                    title: '表格一'
+                    ,url: 'data-1.json'
+                    ,page: false
+                    ,cols: [[
+                        {field: 'title', title: '诗词', width: 200, sort: true},
+                        {field: 'dynasty', title: '朝代', width: 100, sort: true},
+                        {field: 'author', title: '作者', width: 165 },
+                        {field: 'content', title: '内容', width: 123},
+                        {field: 'type', title: '类型', width: 112,  sort:true},
+                        {field: 'heat', title: '点赞数', width: 112,  sort:true},
+                        {field: 'createTime', title: '录入时间', width: 165, sort:true}
+                    ]]
+                    ,done: function () {
+                       soulTable.render(this);
+                    }
+                }
+            ]},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true},
+            {field: 'author', title: '作者', width: 165 },
+            {field: 'content', title: '内容', width: 123, filter: true},
+            {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
+            {field: 'heat', title: '点赞数', width: 112,  filter: true, sort:true},
+            {field: 'createTime', title: '录入时间', width: 165, sort:true},
+        ]]
+        ,done: function () {
+            soulTable.render(this)
+        }
+    });
+})
+</script>
+```
+:::

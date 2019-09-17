@@ -179,6 +179,11 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                             })
                                             table.resize(tableId)
                                         }
+                                        if (child.show === 3) {
+                                            $this.parents('tr:eq(0)').next().find('.layui-table-view').css({margin:0, 'border-width':0});
+                                            $this.parents('tr:eq(0)').next().find('.layui-table-header').css('display', 'none');
+                                            $this.parents('tr:eq(0)').next().find('.layui-tab-card').css('box-shadow', 'none');
+                                        }
                                         // 阻止事件冒泡
                                         $this.parents('tr:eq(0)').next().children('td').children('.layui-tab').children('.layui-tab-content').on('click', function (e) {
                                             e.stopPropagation()
@@ -227,21 +232,27 @@ layui.define(['table' ,'element', 'form'], function (exports) {
             tables.push('<div class="layui-tab layui-tab-card" lay-filter="table-child-'+rowTableId+'" style="margin: 0;border: 0;');
             if (child.show === 2) {
                 tables.push('max-width: '+ ($tableBody.width()-2) +'px">')
+            } else if (child.show === 3) {
+                //不限制宽度
+                tables.push('">')
             } else {
                 if ($tableMain.prop('scrollHeight') + (children.length>0?children[0].height:0) > $tableMain.height()) {
                     scrollWidth = this.getScrollWidth();
                 }
                 tables.push('max-width: '+ ($tableMain.width() - 1 - scrollWidth) +'px">')
             }
-            if (typeof child.childTitle === 'undefined' || child.childTitle) {
+            if (child.show !== 3 && (typeof child.childTitle === 'undefined' || child.childTitle)) {
                 tables.push('<ul class="layui-tab-title">')
                 for (i=0;i<children.length;i++) {
                     tables.push('<li class="'+(i===0?'layui-this':'')+'">'+(typeof children[i].title === 'function' ? children[i].title(data) :children[i].title)+'</li>');
                 }
                 tables.push('</ul>')
             }
-
-            tables.push('<div class="layui-tab-content" style="padding: 0 10px">');
+            if (child.show === 3) {
+                tables.push('<div class="layui-tab-content" style="padding: 0">');
+            } else {
+                tables.push('<div class="layui-tab-content" style="padding: 0 10px">');
+            }
             for (i=0;i<children.length;i++) {
                 var childTableId = rowTableId + i;
                 tables.push('<div class="layui-tab-item layui-show"><form action="" class="layui-form" ><table id="'+childTableId+'" lay-filter="'+childTableId+'"></table></form></div>');
