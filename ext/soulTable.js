@@ -29,7 +29,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 tableMerge.render(myTable);
 
                 // 修复合计栏固定列问题
-                this.fixTotal(myTable)
+                if (myTable.fixTotal) {
+                    this.fixTotal(myTable)
+                }
                 if (typeof myTable.drag === 'undefined' || myTable.drag) {
                     this.drag(myTable);
                 }
@@ -81,7 +83,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 return w;
             }
             th.add(fixTh).on('dblclick', function(e){
-                console.log('dbclick')
                 var othis = $(this)
                     ,field = othis.data('field')
                     ,key = othis.data('key')
@@ -896,7 +897,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
         },
         fixTotal: function (myTable) {
             var $table = $(myTable.elem),
-                $total = $table.next().children('.layui-table-total');
+                $total = $table.next().children('.layui-table-total'),
+                style = $table.next().find('style')[0],
+                sheet = style.sheet || style.styleSheet || {};
             if ($total.length > 0) {
                 var $tableBox = $table.next().children('.layui-table-box'),
                     $fixedLeft = $tableBox.children('.layui-table-fixed-l').children('.layui-table-body').children('table').children('tbody').children('tr:eq(0)').children('td'),
@@ -904,7 +907,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     html = [];
 
                 if ($fixedLeft.length > 0) {
-                    $table.next().find('style').append('.layui-table-total-fixed-l .layui-table-patch{display: none}');
+                    sheet.insertRule('.layui-table-total-fixed-l .layui-table-patch{display: none}');
                     $table.next().css('position', 'relative');
                     html.push('<table style="position: absolute;background-color: #fff;left: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table layui-table-total-fixed layui-table-total-fixed-l"><tbody><tr>');
                     $fixedLeft.each(function () {
@@ -916,7 +919,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     $total.append(html.join(''))
                 }
                 if ($fixedRight.length > 0) {
-                    $table.next().find('style').append('.layui-table-total-fixed-r td:first-child{border-left:1px solid #e6e6e6}.layui-table-total-fixed-r td:last-child{border-left: none}');
+                    sheet.insertRule('.layui-table-total-fixed-r td:first-child{border-left:1px solid #e6e6e6}');
+                    sheet.insertRule('.layui-table-total-fixed-r td:last-child{border-left: none}');
                     $table.next().css('position', 'relative');
                     html = [];
                     html.push('<table style="position: absolute;background-color: #fff;right: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table layui-table-total-fixed layui-table-total-fixed-r"><tbody><tr>');
