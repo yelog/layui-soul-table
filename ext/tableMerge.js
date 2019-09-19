@@ -43,9 +43,9 @@ layui.define(['table'], function (exports) {
                     if (i===$main.length-1 || isMaster(i, item)) {
                         var tdHeight = $(this).children('[data-key="'+item+'"]').outerHeight(), patchHeight = 0; // 获取td高度
                         if ($main.eq(i).data('index') === 0) {patchHeight = 1}
-                        $(this).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight});
-                        $fixLeft.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight});
-                        $fixRight.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight});
+                        $(this).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight}).children().css({height: 'auto', 'white-space': 'normal', 'max-height': tdHeight*mergeRecord[item].rowspan + patchHeight - 10});
+                        $fixLeft.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight}).children().css({height: 'auto', 'white-space': 'normal', 'max-height': tdHeight*mergeRecord[item].rowspan + patchHeight - 10});
+                        $fixRight.eq(i).children('[data-key="'+item+'"]').attr('rowspan', mergeRecord[item].rowspan).css({'position': 'static', 'height': tdHeight*mergeRecord[item].rowspan + patchHeight}).children().css({height: 'auto', 'white-space': 'normal', 'max-height': tdHeight*mergeRecord[item].rowspan + patchHeight - 10});
                         mergeRecord[item].rowspan = 1;
                     } else {
                         $(this).children('[data-key="'+item+'"]').remove();

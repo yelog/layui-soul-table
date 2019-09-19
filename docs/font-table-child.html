@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="//www.layuicdn.com/layui-v2.5.5/css/layui.css" media="all"/>
     <style>
         .unshow>#result {
             display: none;
@@ -74,7 +74,7 @@
 
     </pre>
 </div>
-<script type="text/javascript" src="layui/layui.js"></script>
+<script type="text/javascript" src="//www.layuicdn.com/layui/layui.js"></script>
 <script>
     // 自定义模块
     layui.config({
@@ -147,7 +147,7 @@
                             ,cols: [[
                                 {type: 'checkbox', fixed: 'left'},
                                 {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
-                                {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+                                {field: 'dynasty', title: '朝代', sort: true, filter: true},
                                 {field: 'author', title: '作者', width: 165 , filter: true},
                                 {field: 'content', title: '内容', width: 123, filter: true},
                                 {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
@@ -203,8 +203,8 @@
                             }
                         }
                     ]},
-                {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
-                {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+                {field: 'title', title: '诗词', width: 100, sort: true, filter: true},
+                {field: 'dynasty', title: '朝代', sort: true, filter: true},
                 {field: 'author', title: '作者', width: 165 , filter: true},
                 {field: 'content', title: '内容', width: 123, filter: true},
                 {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
