@@ -21,6 +21,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
         HIDE = 'layui-hide',
         maxId = 1,
         where_cache = {},
+        isFilterCache = {},
         table_cache = {},
         conditionChangeItems = {
             'eq': '等于',
@@ -129,7 +130,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 }
             }
             table_cache[myTable.id] = myTable // 缓存table配置
-            if (!needFilter) {return} //如果没筛选列，直接退出
+            isFilterCache[myTable.id] = needFilter;
+            if (!needFilter) {return;} //如果没筛选列，直接退出
 
             // 渲染底部筛选条件
             if (!(myTable.filter && typeof myTable.filter.bottom !== 'undefined' && !myTable.filter.bottom) && $table.next().children('.soul-bottom-contion').length === 0) {
@@ -807,6 +809,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             url: url,
                             data: datas,
                             dataType: 'json',
+                            method: 'post',
                             headers: myTable.headers || {},
                             contentType: myTable.contentType,
                             success: function (result) {
@@ -2529,8 +2532,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                 var ajaxStatus = true;
                 $.ajax({
                     url: myTable.url,
-                    data: where_cache[myTable.id],
+                    data: isFilterCache[myTable.id] ? where_cache[myTable.id] : table_cache[myTable.id].where,
                     dataType: 'json',
+                    method: 'post',
                     async: false,
                     cache: false,
                     headers: myTable.headers || {},
