@@ -43,6 +43,10 @@
         {
           "path": "/basic/fixResize",
           "name": "右侧固定列拖动列宽"
+        },
+        {
+          "path": "/basic/overflow",
+          "name": "内容超出设置"
         }
       ]
     },

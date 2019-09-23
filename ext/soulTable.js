@@ -45,6 +45,10 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 if (typeof myTable.fixResize === 'undefined' || myTable.fixResize) {
                     this.fixResizeRightFixed(myTable);
                 }
+
+                if(typeof myTable.overflow) {
+                    this.overflow(myTable);
+                }
             }
 
         }
@@ -751,6 +755,63 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
                 localStorage.setItem(location.pathname + location.hash + myTable.id, this.deepStringify(myTable.cols))
             }
+        },
+        overflow: function (myTable) {
+            var options = {};
+            if (typeof myTable.overflow === 'string') {
+                options = {
+                    type: myTable.overflow
+                }
+            } else if (typeof myTable.overflow === 'object') {
+                 options = myTable.overflow
+            } else {
+                console.error('填写正确的参数！')
+                return;
+            }
+            var $table = $(myTable.elem),
+                layBody = $table.next().find('.layui-table-body'),
+                tooltipIndex,
+                hoverTime = options.hoverTime || 0,
+                tooltipTimeOut,
+                color = options.color || 'white',
+                bgColor = options.bgColor || 'black';
+
+            if (options.type === 'tips') {
+                layBody.off('mouseenter', 'td').on('mouseenter', 'td', function () {
+                    var _this = this;
+                    tooltipTimeOut = setTimeout(function () {
+                        toopTip.call(_this)
+                    }, hoverTime)
+                }).on('mouseleave', 'td', function () {
+                    toopTip.call(this, 'hide')
+                })
+
+                function toopTip(hide) {
+                    clearTimeout(tooltipTimeOut);
+                    var othis = $(this)
+                        ,elemCell = othis.children('.layui-table-cell');
+                    if(othis.data('off')) return;
+
+                    if (hide) {
+                        layer.close(tooltipIndex)
+                    } else if(elemCell.prop('scrollWidth') > elemCell.outerWidth()) {
+                        tooltipIndex = layer.tips('<span style="color: '+color+'">' + $(this).text() + '</span>', this, {
+                            tips: [1, bgColor]
+                        });
+                    }
+                }
+            } else if (options.type === 'title') {
+                layBody.off('mouseenter', 'td').on('mouseenter', 'td', function () {
+                    var othis = $(this)
+                        ,elemCell = othis.children('.layui-table-cell');
+                    if(othis.data('off')) return;
+
+                    if(elemCell.prop('scrollWidth') > elemCell.outerWidth()) {
+                        elemCell.attr('title', $(this).text())
+                    }
+                })
+            }
+
         },
         // 右键菜单配置
         contextmenu: function (myTable) {
