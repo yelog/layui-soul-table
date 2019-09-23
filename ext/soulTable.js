@@ -46,7 +46,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     this.fixResizeRightFixed(myTable);
                 }
 
-                if(typeof myTable.overflow) {
+                if (myTable.overflow) {
                     this.overflow(myTable);
                 }
             }
@@ -765,7 +765,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             } else if (typeof myTable.overflow === 'object') {
                  options = myTable.overflow
             } else {
-                console.error('填写正确的参数！')
                 return;
             }
             var $table = $(myTable.elem),
