@@ -170,6 +170,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                             $tr.children('td').children('.layui-tab-card').css({
                                                 position: 'absolute',
                                                 top: 0,
+                                                width: '100%',
                                                 background: 'white',
                                                 'z-index': 200
                                             })
