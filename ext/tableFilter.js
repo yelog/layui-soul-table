@@ -3,12 +3,13 @@
  * @name:  表格筛选扩展
  * @author: 杨玉杰
  */
-layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
+layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
     var $ = layui.jquery,
         table = layui.table,
         form = layui.form,
         laydate = layui.laydate,
+        laytpl = layui.laytpl,
         util = layui.util,
         excel = layui.excel,
         columnsTimeOut,
@@ -2817,7 +2818,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel'], function (exports) {
                             v: bodyIndex >= 0 && columnsMap[columnsMap.length - 1][field].templet ?
                                 typeof columnsMap[columnsMap.length - 1][field].templet === 'function' ?
                                     $('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').find(':input').length===0?$('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').text():$tableBody.children('tbody').children('tr[data-index='+bodyIndex+']').children('td[data-field="'+field+'"]').find(':input').val() || line[field] || ''
-                                    : $('<div>'+$(columnsMap[columnsMap.length - 1][field].templet).html()+'</div>').find(':input').length===0?$('<div>'+$(columnsMap[columnsMap.length - 1][field].templet).html()+'</div>').text():$tableBody.children('tbody').children('tr[data-index='+bodyIndex+']').children('td[data-field="'+field+'"]').find(':input').val() || line[field] || ''
+                                    : $('<div>'+laytpl($(columnsMap[columnsMap.length - 1][field].templet).html() || String(columnsMap[columnsMap.length - 1][field].templet)).render(line)+'</div>').find(':input').length===0?$('<div>'+laytpl($(columnsMap[columnsMap.length - 1][field].templet).html() || String(columnsMap[columnsMap.length - 1][field].templet)).render(line)+'</div>').text():$tableBody.children('tbody').children('tr[data-index='+bodyIndex+']').children('td[data-field="'+field+'"]').find(':input').val() || line[field] || ''
                                 : bodyIndex >=0 && field === 'LAY_TABLE_INDEX' ? bodyIndex+1 : line[field] || '',// v 代表单元格的值
                             s: {// s 代表样式
                                 alignment: {

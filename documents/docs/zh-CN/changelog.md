@@ -39,6 +39,8 @@
 
 [新增] 内容超出显示 除了官网默认方式外，添加 tips/title 两种方式 [内容超出设置](#/zh-CN/component/basic/overflow)
 
+[修复] excel导出 兼容 templet 以 script/function/string 方式的模版
+
 ### **1.3.25** <small>`2019-09-20`</small>
 [修复] excel导出 修复关闭筛选时，后台分页的excel导出丢失查询条件的问题
 
