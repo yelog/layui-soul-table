@@ -3,10 +3,11 @@
  * @name:  子表格扩展
  * @author: 杨玉杰
  */
-layui.define(['table' ,'element', 'form'], function (exports) {
+layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
 
     var $ = layui.jquery,
         table = layui.table,
+        laytpl = layui.laytpl,
         tableChildren={},
         ELEM_HOVER='soul-table-hover';
 
@@ -42,7 +43,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 $table.attr('lay-filter', tableId);
             }
             // 绑定一下主表事件
-            if (!tableChildren[tableId]) {
+            if ($table.parents('.childTr').length === 0) {
                 if (typeof myTable.rowEvent === 'function') {
                     table.on('row('+$table.attr('lay-filter')+')', function (obj) {
                         var index = $(this).data('index');
@@ -105,7 +106,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                 if (child.show === 2) { // 弹窗模式
 
                                     layer.open({type: 1, title: '子表', maxmin: true ,content: _this.getTables(this, data, child, myTable, children), area: '1000px', offset: '100px'});
-                                    _this.renderTable(this, data, child, tableId, children);
+                                    _this.renderTable(this, data, child, myTable, children, icon);
 
                                 } else { // 展开模式
 
@@ -113,14 +114,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                     if (!$this.hasClass(icon[1]) && child.collapse) {
                                         $tableBody.children('tbody').children('tr').children('td').find('.childTable').each(function () {
                                             if ($(this).hasClass(icon[1])) {
-                                                $(this).removeClass(icon[1]).addClass(icon[0])
-                                                _this.destroyChildren($(this), tableId)
-                                            }
-                                        })
-                                        $fixedThis.children('tbody').children('tr').children('td').find('.childTable').each(function () {
-                                            if ($(this).hasClass(icon[1])) {
-                                                $(this).removeClass(icon[1]).addClass(icon[0])
-                                                _this.destroyChildren($(this), tableId)
+                                                _this.destroyChildren($(this).parents('tr:eq(0)').data('index'), myTable, icon)
                                             }
                                         })
                                     }
@@ -130,13 +124,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                         $this.parents('tr:eq(0)').children('td').find('.childTable').each(function () {
                                             if ($(this).hasClass(icon[1])) {
                                                 $(this).removeClass(icon[1]).addClass(icon[0])
-                                                _this.destroyChildren($(this), tableId)
-                                            }
-                                        })
-                                        $fixedThis.parents('tr:eq(0)').children('td').find('.childTable').each(function () {
-                                            if ($(this).hasClass(icon[1])) {
-                                                $(this).removeClass(icon[1]).addClass(icon[0])
-                                                _this.destroyChildren($(this), tableId)
+                                                _this.destroyChildren($(this).parents('tr:eq(0)').data('index'), myTable, icon)
                                             }
                                         })
                                     }
@@ -162,7 +150,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                         }else{
                                             $this.parents('tr:eq(0)').after(newTr.join(''));
                                         }
-                                        _this.renderTable(this, data, child, tableId, children);
+                                        _this.renderTable(this, data, child, myTable, children, icon);
                                         if ($fixedBody.length>0) {
                                             var $tr = $this.parents('tr:eq(0)').next(),
                                                 height = $tr.children('td').height(),
@@ -192,10 +180,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                                             e.stopPropagation()
                                         })
                                     } else {
-                                        _this.destroyChildren($this, tableId)
-                                        $fixedBody.find('tr[data-index="'+rowIndex+'"]').each(function () {
-                                            $(this).next().remove();
-                                        })
+                                        _this.destroyChildren(rowIndex, myTable, icon);
                                         table.resize(tableId)
                                     }
 
@@ -266,19 +251,20 @@ layui.define(['table' ,'element', 'form'], function (exports) {
          * @param _this
          * @param data 父表当前行数据
          * @param child 子表列
-         * @param tableId 父表id
+         * @param myTable 父表配置
          * @param children 子表配置
          */
-        renderTable: function (_this, data, child, tableId, children) {
+        renderTable: function (_this, data, child, myTable, children, icon) {
             var tables = []
                 ,_that = this
+                ,tableId = myTable.id
                 ,rowTableId = tableId + $(_this).parents('tr:eq(0)').data('index');
 
             if (child.lazy) {
-                tables.push(renderChildTable(_that, _this, data, child, tableId, 0, children));
+                tables.push(renderChildTable(_that, _this, data, child, myTable, 0, children, icon));
             } else {
                 for (var i=0; i<children.length; i++) {
-                    tables.push(renderChildTable(_that, _this, data, child, tableId, i, children));
+                    tables.push(renderChildTable(_that, _this, data, child, myTable, i, children, icon));
                 }
             }
             tableChildren[rowTableId]=tables;
@@ -294,7 +280,7 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                         }
                     }
                     if (!isRender) {
-                        tableChildren[rowTableId].push(renderChildTable(_that, _this, data, child, tableId, tabData.index, children))
+                        tableChildren[rowTableId].push(renderChildTable(_that, _this, data, child, myTable, tabData.index, children))
                     }
                 }
 
@@ -310,9 +296,54 @@ layui.define(['table' ,'element', 'form'], function (exports) {
 
 
 
-            function renderChildTable(_that, _this, data, child, tableId, i, children) {
+            function renderChildTable(_that, _this, data, child, myTable, i, children, icon) {
                 var param = _that.deepClone(children[i]), thisTableChild,
-                    childTableId = tableId + $(_this).parents('tr:eq(0)').data('index') + i;
+                    tableId = myTable.id,
+                    rowIndex = $(_this).parents('tr:eq(0)').data('index'),
+                    childTableId = tableId + rowIndex + i,
+                    $table = $(myTable.elem),
+                    $tableBox = $table.next().children('.layui-table-box'),
+                    $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table')),
+                    tr = $tableBody.children('tbody').children('tr[data-index="'+rowIndex+'"]'),
+                    row = table.cache[tableId][rowIndex],
+                    // 父表当前行对象
+                    pobj = {
+                        data: row,
+                        tr: tr,
+                        del: function() {
+                            table.cache[tableId][rowIndex] = [];
+                            _that.destroyChildren(rowIndex, myTable, icon)
+                            tr.remove();
+                            table.resize(tableId);
+                        },
+                        update: function(fields) {
+                            fields = fields || {};
+                            layui.each(fields, function(key, value){
+                                if(key in row){
+                                    var templet, td = tr.children('td[data-field="'+ key +'"]');
+                                    row[key] = value;
+                                    table.eachCols(tableId, function(i, item2){
+                                        if(item2.field == key && item2.templet){
+                                            templet = item2.templet;
+                                        }
+                                    });
+                                    td.children('.layui-table-cell').html(function(){
+                                        return templet ? function(){
+                                            return typeof templet === 'function'
+                                                ? templet(row)
+                                                : laytpl($(templet).html() || value).render(row)
+                                        }() : value;
+                                    }());
+                                    td.data('content', value);
+                                }
+                            });
+                        },
+                        close: function () {
+                            _that.destroyChildren(rowIndex, myTable, icon)
+                            table.resize(tableId);
+                        }
+
+                    };
                 param.id = childTableId;
                 param.elem = '#'+childTableId;
                 typeof param.where === 'function' && (param.where = param.where(data));
@@ -325,55 +356,66 @@ layui.define(['table' ,'element', 'form'], function (exports) {
                 // 绑定 checkbox 事件
                 if (typeof param.checkboxEvent === 'function') {
                     table.on('checkbox('+childTableId+')', function (obj) {
-                        param.checkboxEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                        param.checkboxEvent(obj, pobj)
                     })
                 }
                 // 绑定 edit 事件
                 if (typeof param.editEvent === 'function') {
                     table.on('edit('+childTableId+')', function (obj) {
-                        param.editEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                        param.editEvent(obj, pobj)
                     })
                 }
                 // 绑定 tool 事件
                 if (typeof param.toolEvent === 'function') {
                     table.on('tool('+childTableId+')', function (obj) {
-                        param.toolEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                        param.toolEvent(obj, pobj)
                     })
                 }
                 // 绑定 toolbar 事件
                 if (typeof param.toolbarEvent === 'function') {
                     table.on('toolbar('+childTableId+')', function (obj) {
-                        param.toolbarEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                        param.toolbarEvent(obj, pobj)
                     })
                 }
                 // 绑定单击行事件
                 if (typeof param.rowEvent === 'function') {
                     table.on('row('+childTableId+')', function (obj) {
-                        param.rowEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                        param.rowEvent(obj, pobj)
                     })
                 }
                 // 绑定双击行事件
                 if (typeof param.rowDoubleEvent === 'function') {
                     table.on('rowDouble('+childTableId+')', function (obj) {
-                        param.rowDoubleEvent(obj, table.cache[tableId][$(_this).parents('tr:eq(0)').data('index')])
+                        param.rowDoubleEvent(obj, pobj)
                     })
                 }
                 return thisTableChild;
             }
         },
-        destroyChildren: function ($this, tableId) {
-            var rowspanIndex = $this.parents('td:eq(0)').attr("rowspan");
-            if(rowspanIndex){
-                var index=$this.parents('tr:eq(0)').index()+parseInt(rowspanIndex);
-                $this.parents('table:eq(0)').children().children('tr:eq('+index+')').remove()
-            }else{
-                $this.parents('tr:eq(0)').next().remove();
-            }
-            var tables = tableChildren[tableId + $this.parents('tr:eq(0)').data('index')];
+        destroyChildren: function (rowIndex, myTable, icon) {
+            var tableId = myTable.id,
+                $table = $(myTable.elem),
+                $tableBox = $table.next().children('.layui-table-box'),
+                $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table'),
+                $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
+                $tr = $tableBody.children('tbody').children('tr[data-index="'+rowIndex+'"]');
+
+            $tr.find('.childTable').removeClass(icon[1]).addClass(icon[0]);
+
+            // 暂时不处理 rowspan 情况
+            // var rowspanIndex = $this.parents('td:eq(0)').attr("rowspan");
+            // if(rowspanIndex){
+            //     var index=$this.parents('tr:eq(0)').index()+parseInt(rowspanIndex);
+            //     $this.parents('table:eq(0)').children().children('tr:eq('+index+')').remove()
+            // }else{
+            //     $this.parents('tr:eq(0)').next().remove();
+            // }
+            $tr.next().remove()
+            var tables = tableChildren[tableId + rowIndex];
             if (layui.tableFilter) { //如果使用了筛选功能，怎同时清理筛选渲染的数据
                 layui.tableFilter.destroy(tables);
             }
-            delete tableChildren[tableId + $this.parents('tr:eq(0)').data('index')]
+            delete tableChildren[tableId + rowIndex]
         },
         cloneJSON: function (obj) {
             var JSON_SERIALIZE_FIX = {

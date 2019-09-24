@@ -16,11 +16,16 @@
         <td>行单击</td>
         <td>
 <pre>
-rowEvent: function (obj, pdata) {
+rowEvent: function (obj, pobj) {
     // <span class="hljs-keyword">obj</span> 子表当前行对象
     // 可从中调用 event/data/tr/update/del
     // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
-    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+    // <span class="hljs-keyword">pobj</span> 父表当前行数据
+    //  pobj.data 父表当前行数据
+    //  pobj.tr 父表当前行dom
+    //  pobj.update 更新父表当前行数据
+    //  pobj.del 删除父表当前行，并关闭子表
+    //  pobj.close 关闭父表当前行展开的子表
 }
 </pre>
         </td>
@@ -31,11 +36,13 @@ rowEvent: function (obj, pdata) {
         <td>行双击</td>
         <td>
 <pre>
-rowDoubleEvent: function (obj, pdata) {
+rowDoubleEvent: function (obj, pobj) {
     // <span class="hljs-keyword">obj</span> 子表当前行对象
     // 可从中调用 event/data/tr/update/del
     // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
-    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+    // <span class="hljs-keyword">pobj</span> 父表当前行数据
+    // 可从pobj中调用 
+    //    data/tr/update/del/close
 }
 </pre>
         </td>
@@ -46,11 +53,13 @@ rowDoubleEvent: function (obj, pdata) {
         <td>行工具</td>
         <td>
 <pre>
-toolEvent: function (obj, pdata) {
+toolEvent: function (obj, pobj) {
     // <span class="hljs-keyword">obj</span> 子表当前行对象
     // 可从中调用 event/data/tr/update/del
     // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
-    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+    // <span class="hljs-keyword">pobj</span> 父表当前行数据
+    // 可从pobj中调用 
+    //    data/tr/update/del/close
 }
 </pre>
         </td>
@@ -61,10 +70,12 @@ toolEvent: function (obj, pdata) {
         <td>头部工具栏</td>
         <td>
 <pre>
-toolbarEvent: function (obj, pdata) {
+toolbarEvent: function (obj, pobj) {
     // <span class="hljs-keyword">obj</span> 子表当前行对象 obj.event
     // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
-    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+    // <span class="hljs-keyword">pobj</span> 父表当前行数据
+    // 可从pobj中调用 
+    //    data/tr/update/del/close
 }
 </pre>
         </td>
@@ -75,11 +86,13 @@ toolbarEvent: function (obj, pdata) {
         <td>复选框选择</td>
         <td>
 <pre>
-checkboxEvent: function (obj, pdata) {
+checkboxEvent: function (obj, pobj) {
     // <span class="hljs-keyword">obj</span> 子表当前行对象 obj.event
     // 可从中调用 event/data/tr/update/del
     // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
-    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+    // <span class="hljs-keyword">pobj</span> 父表当前行数据
+    // 可从pobj中调用 
+    //    data/tr/update/del/close
 }
 </pre>
         </td>
@@ -90,12 +103,14 @@ checkboxEvent: function (obj, pdata) {
         <td>单元格编辑</td>
         <td>
 <pre>
-editEvent: function (obj, pdata) {
+editEvent: function (obj, pobj) {
     // <span class="hljs-keyword">obj.value</span> 得到修改后的值
     // <span class="hljs-keyword">obj.field</span> 当前编辑的字段名
     // <span class="hljs-keyword">obj.data</span> 所在行的所有相关数据 
     // <span class="hljs-keyword">this.id</span> 通过 this 对象获取当前子表的id
-    // <span class="hljs-keyword">pdata</span> 父表当前行数据
+    // <span class="hljs-keyword">pobj</span> 父表当前行数据
+    // 可从pobj中调用 
+    //    data/tr/update/del/close
 }
 </pre>
         </td>
@@ -125,7 +140,7 @@ layui.use(['form', 'table','soulTable'], function () {
                     ,url: 'data-1.json'
                     ,height: 400
                     ,width: 700
-                    ,toolbar: '<div><button class="layui-btn layui-btn-sm" lay-event="reload">重载</button></div>'
+                    ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="reload">重载</a> <a class="layui-btn layui-btn-normal layui-btn-sm" lay-event="update">更新父表（朝代+1）</a> <a class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">删除父表当前行</a> <a class="layui-btn layui-btn-sm layui-btn-warm" lay-event="close">关闭子表</a></div>'
                     ,page: false
                     ,cols: [[
                         {type: 'checkbox', fixed: 'left'},
@@ -136,29 +151,30 @@ layui.use(['form', 'table','soulTable'], function () {
                             '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="childDel">删除并重载子表</a>'
                         }}
                     ]]
-                    ,rowEvent: function (obj, pdata) {
+                    ,rowEvent: function (obj, pobj) {
                         // 单击行事件
                         // obj 子表当前行对象
-                        // pdata 父表当前行数据
+                        // pobj 父表当前行对象
                         obj.tr.css({'background':'#5FB878'}).siblings().removeAttr('style')
                         console.log(obj.tr) //得到当前行元素对象
                         console.log(obj.data) //得到当前行数据
+                        console.log(pobj) //得到当前行数据
                         //obj.del(); //删除当前行
                         //obj.update(fields) //修改当前行数据
                     }
-                    ,rowDoubleEvent: function (obj, pdata) {
+                    ,rowDoubleEvent: function (obj, pobj) {
                         // 双击行事件
                         // obj 子表当前行对象
-                        // pdata 父表当前行数据
+                        // pobj 父表当前行对象
                         obj.tr.css({'background':'#FF5722'}).siblings().removeAttr('style')
                         console.log(obj.tr) //得到当前行元素对象
                         console.log(obj.data) //得到当前行数据
                         //obj.del(); //删除当前行
                         //obj.update(fields) //修改当前行数据
                     }
-                    ,toolEvent: function (obj, pdata) {
+                    ,toolEvent: function (obj, pobj) {
                         // obj 子表当前行对象
-                        // pdata 父表当前行数据
+                        // pobj 父表当前行对象
                         
                         var childId = this.id; // 通过 this 对象获取当前子表的id
                         
@@ -177,22 +193,28 @@ layui.use(['form', 'table','soulTable'], function () {
                         }
 
                     }
-                    ,toolbarEvent: function (obj, pdata) {
+                    ,toolbarEvent: function (obj, pobj) {
                         // obj 子表当前行对象
-                        // pdata 父表当前行数据
+                        // pobj 父表当前行对象
                         if (obj.event === 'reload') {
                             table.reload(this.id)
                             layer.msg('子表重载成功！')
+                        } else if (obj.event === 'delete') {
+                            pobj.del()
+                        } else if (obj.event === 'update') {
+                            pobj.update({dynasty: pobj.data.dynasty + '+1'})
+                        } else if (obj.event === 'close') {
+                            pobj.close()
                         }
                     }
-                    ,checkboxEvent: function(obj, pdata) {
+                    ,checkboxEvent: function(obj, pobj) {
                         // obj 子表当前行对象
-                        // pdata 父表当前行数据
+                        // pobj 父表当前行对象
                         layer.msg('子表checkbox事件，当前是否选中：' + obj.checked)
                     }
-                    ,editEvent: function(obj, pdata) {
+                    ,editEvent: function(obj, pobj) {
                       // obj 子表当前行对象
-                      // pdata 父表当前行数据
+                      // pobj 父表当前行对象
                       layer.msg("已成功改为：" + obj.value);
                     }
                     ,done: function () {
