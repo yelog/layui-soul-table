@@ -611,7 +611,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             }
         },
         rowDrag: function (myTable) {
-            var $table = $(myTable.elem),
+            var _this = this,
+                $table = $(myTable.elem),
                 $tableBox = $table.next().children('.layui-table-box'),
                 $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table'),
                 $noFixedBody = $tableBox.children('.layui-table-body').children('table'),
@@ -643,8 +644,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         // $table.next().find('style').append('.layui-table-view .layui-table td{cursor: move;}.layui-table tr{transition: none}')
                         var style = $table.next().find('style')[0],
                             sheet = style.sheet || style.styleSheet || {};
-                        sheet.insertRule('.layui-table-view .layui-table td{cursor: move;}')
-                        sheet.insertRule('.layui-table tr{transition: none}')
+                        _this.addCSSRule(sheet, '.layui-table-view .layui-table td', 'cursor: move')
+                        _this.addCSSRule(sheet, '.layui-table tr', 'transition: none')
 
                         $bodyTr.after($cloneTr);
                         $bodyTr.css({
@@ -712,10 +713,10 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     if (isDraging) {
                         isDraging = false;
 
-                        $bodyTr.css({'position': 'initial','z-index': 'inherit'});
+                        $bodyTr.css({'position': 'inherit','z-index': 'inherit'});
                         $bodyTr.next().remove();
                         $FixBodyTr.each(function () {
-                            $(this).css({'position': 'initial','z-index': 'inherit'});
+                            $(this).css({'position': 'inherit','z-index': 'inherit'});
                             $(this).next().remove()
                         })
 
@@ -967,7 +968,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     html = [];
 
                 if ($fixedLeft.length > 0) {
-                    sheet.insertRule('.layui-table-total-fixed-l .layui-table-patch{display: none}');
+                    this.addCSSRule(sheet, '.layui-table-total-fixed-l .layui-table-patch', 'display: none')
                     $table.next().css('position', 'relative');
                     html.push('<table style="position: absolute;background-color: #fff;left: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table layui-table-total-fixed layui-table-total-fixed-l"><tbody><tr>');
                     $fixedLeft.each(function () {
@@ -979,8 +980,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     $total.append(html.join(''))
                 }
                 if ($fixedRight.length > 0) {
-                    sheet.insertRule('.layui-table-total-fixed-r td:first-child{border-left:1px solid #e6e6e6}');
-                    sheet.insertRule('.layui-table-total-fixed-r td:last-child{border-left: none}');
+                    this.addCSSRule(sheet, '.layui-table-total-fixed-r td:first-child', 'border-left:1px solid #e6e6e6')
+                    this.addCSSRule(sheet, '.layui-table-total-fixed-r td:last-child', 'border-left: none')
                     $table.next().css('position', 'relative');
                     html = [];
                     html.push('<table style="position: absolute;background-color: #fff;right: 0;top: '+ ($total.position().top + 1) +'px" cellspacing="0" cellpadding="0" border="0" class="layui-table layui-table-total-fixed layui-table-total-fixed-r"><tbody><tr>');
@@ -1098,6 +1099,13 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
             //操作栏
             layFixRight.css('right', scollWidth - 1);
+        },
+        addCSSRule: function(sheet, selector, rules, index) {
+            if ('inserRule' in sheet) {
+                sheet.insertRule(selector + '{' + rules + '}', index)
+            } else if ('addRule' in sheet) {
+                sheet.addRule(selector, rules, index)
+            }
         },
         deepStringify: function (obj) {
             var JSON_SERIALIZE_FIX = {
