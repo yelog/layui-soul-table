@@ -1,5 +1,6 @@
 ## 给 layui-table 注入点灵魂
 当前layui版本 `v2.5.4` 
+
 在线demo及文档： [https://saodiyang.gitee.io/layui-soul-table](https://saodiyang.gitee.io/layui-soul-table)
 
 国内下载地址: [https://gitee.com/saodiyang/layui-soul-table](https://gitee.com/saodiyang/layui-soul-table)

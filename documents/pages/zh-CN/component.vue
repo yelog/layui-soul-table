@@ -36,7 +36,7 @@
 
     .side-nav {
       height: 100%;
-      padding-top: 50px;
+      padding-top: 80px;
       padding-bottom: 50px;
       padding-right: 0;
 
@@ -52,11 +52,9 @@
     }
 
     .content {
-      padding-top: 50px;
-
       > {
         h3 {
-          margin: 55px 0 20px;
+          margin: 20px 0;
         }
 
         table {

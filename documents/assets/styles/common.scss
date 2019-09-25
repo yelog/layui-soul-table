@@ -6,6 +6,8 @@ html, body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  color: #333;
+  line-height: 1.75rem;
 
   &.is-component {
     overflow: hidden;
@@ -45,11 +47,18 @@ a {
 }
 
 code {
-  background-color: #f9fafc;
-  padding: 0 4px;
-  border: 1px solid #eaeefb;
-  border-radius: 4px;
+  background-color: #fff5f5;
+  color: #ff502c;
+  font-size: .87em;
+  padding: .065em .4em;
 }
+ul, ol {
+  padding-left: 25px;
+  li {
+    list-style: inherit;
+  }
+}
+
 
 button, input, select, textarea {
   font-family: inherit;
@@ -98,6 +107,7 @@ button, input, select, textarea {
   h2, h3, h4, h5 {
     font-weight: normal;
     color: #1f2f3d;
+    margin: 20px 0;
 
     &:hover a {
       opacity: .4;
@@ -117,7 +127,6 @@ button, input, select, textarea {
 
   p {
     font-size: 14px;
-    color: #5e6d82;
     line-height: 1.75em;
   }
 
@@ -149,6 +158,13 @@ button, input, select, textarea {
 }
 .demo {
   margin: 20px 0;
+}
+blockquote {
+  color: #666;
+  margin: 15px 0;
+  padding: 10px;
+  border-left: 4px solid #cbcbcb;
+  background-color: #f8f8f8;
 }
 @media (max-width: 1140px) {
   .container,

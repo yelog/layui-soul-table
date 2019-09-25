@@ -122,9 +122,6 @@
     :class="{ 'is-fade': isFade }"
     :style="navStyle">
     <ul>
-      <li class="nav-item sponsors">
-        <h2>vue-soul-ui</h2>
-      </li>
       <li
         class="nav-item"
         v-for="(item, key) in data"

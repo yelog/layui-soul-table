@@ -774,7 +774,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 hoverTime = options.hoverTime || 0,
                 tooltipTimeOut,
                 color = options.color || 'white',
-                bgColor = options.bgColor || 'black';
+                bgColor = options.bgColor || 'black',
+                minWidth = options.minWidth || 300,
+                maxWidth = options.maxWidth || 300;
 
             if (options.type === 'tips') {
                 layBody.off('mouseenter', 'td').on('mouseenter', 'td', function () {
@@ -789,14 +791,18 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 function toopTip(hide) {
                     clearTimeout(tooltipTimeOut);
                     var othis = $(this)
-                        ,elemCell = othis.children('.layui-table-cell');
+                        ,elemCell = othis.children('.layui-table-cell')
+                        ,width = elemCell.outerWidth()
+                        ,layerWidth = width < minWidth ? minWidth : width > maxWidth ? maxWidth : width;
                     if(othis.data('off')) return;
 
                     if (hide) {
                         layer.close(tooltipIndex)
-                    } else if(elemCell.prop('scrollWidth') > elemCell.outerWidth()) {
+                    } else if(elemCell.prop('scrollWidth') > width) {
                         tooltipIndex = layer.tips('<span style="color: '+color+'">' + $(this).text() + '</span>', this, {
-                            tips: [1, bgColor]
+                            tips: [1, bgColor],
+                            maxWidth: layerWidth,
+                            time: 0
                         });
                     }
                 }

@@ -48,6 +48,13 @@ layui.use(['form', 'table','soulTable'], function () {
 :::
 
 ### 2.修改样式，悬停 300ms 才会显示
+>**宽度设置介绍**：默认最大宽度为300  
+>但是可以通过配置 `minWidth/maxWidth`，实现以下效果
+>1. 如果当前列宽在此范围内，则tips最大宽度为当前列宽。
+>2. 如果当前列宽小于 `minWidth`，则tips最大宽度为 `minWidth`
+>3. 如果当前列宽大于 `maxWidth`，则tips最大宽度为 `maxWidth`
+
+
 :::demo
 ```html
 <table id="myTable2" ></table>
@@ -67,15 +74,17 @@ layui.use(['form', 'table','soulTable'], function () {
             ,hoverTime: 300 // 悬停时间，单位ms, 悬停 hoverTime 后才会显示，默认为 0
             ,color: 'black' // 字体颜色
             ,bgColor: 'white' // 背景色
+            ,minWidth: 100 // 最小宽度
+            ,maxWidth: 500 // 最大宽度
         }
         ,cols: [[
             {type: 'radio', title: '##', fixed: 'left'},
             {type: 'checkbox', title: '##', fixed: 'left'},
             {field: 'title', title: '诗词', width: 100, fixed: 'left', totalRowText: '合计'},
-            {field: 'content', title: '内容', width: 123},
+            {field: 'content', title: '内容', width: 400},
             {field: 'type', title: '类型', width: 112},
-            {field: 'heat', title: '点赞数', width: 75, fixed: 'right', totalRow: true},
-            {field: 'createTime', title: '录入时间', fixed: 'right', width: 165},
+            {field: 'heat', title: '点赞数', width: 75, totalRow: true},
+            {field: 'createTime', title: '录入时间',width: 165},
         ]]
         ,done: function () {
             soulTable.render(this)
