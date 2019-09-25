@@ -75,7 +75,7 @@ layui.use(['form', 'table','soulTable'], function () {
 
     table.render({
         elem: '#myTable2'
-        ,url: 'http://47.98.40.63:8089/poetry/dataGrid'
+        ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
         ,height: 400 
         ,limit: 20
         ,page: true

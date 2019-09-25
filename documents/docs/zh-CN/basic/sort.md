@@ -17,7 +17,7 @@
         table.render({
             id: 'myTable'
             ,elem: '#myTable'
-            ,url: 'http://47.98.40.63:8089/poetry/dataGrid'
+            ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
             ,height: 400 
             ,limit: 20
             ,page: true
@@ -57,7 +57,7 @@
         table.render({
             id: 'myTable2'
             ,elem: '#myTable2'
-            ,url: 'http://47.98.40.63:8089/poetry/dataGrid'
+            ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
             ,height: 400 
             ,limit: 20
             ,soulSort: false
