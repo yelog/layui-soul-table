@@ -178,6 +178,8 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                                             e.stopPropagation()
                                         }).off('dblclick').on('dblclick', function (e) {
                                             e.stopPropagation()
+                                        }).on('mouseenter', 'td', function (e) {
+                                            e.stopPropagation()
                                         })
                                     } else {
                                         _this.destroyChildren(rowIndex, myTable, icon);

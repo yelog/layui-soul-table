@@ -33,6 +33,8 @@
 
 [优化] 右键菜单 支持自适应方向显示 需要更新 `soulTable.js soulTable.css`
 
+[优化] 内容超出显示 兼容子表配置 [内容超出设置](#/zh-CN/component/basic/overflow) 第4点
+
 ### **1.3.27** <small>`2019-09-25`</small>
 
 [文档] 修复后台分页的示例报错问题 
