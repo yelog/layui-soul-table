@@ -171,7 +171,6 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                                         if (child.show === 3) {
                                             $this.parents('tr:eq(0)').next().find('.layui-table-view').css({margin:0, 'border-width':0});
                                             $this.parents('tr:eq(0)').next().find('.layui-table-header').css('display', 'none');
-                                            $this.parents('tr:eq(0)').next().find('.layui-tab-card').css('box-shadow', 'none');
                                         }
                                         // 阻止事件冒泡
                                         $this.parents('tr:eq(0)').next().children('td').children('.layui-tab').children('.layui-tab-content').on('click', function (e) {
@@ -217,7 +216,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                 $tableBody = $tableMain.children('table'),
                 scrollWidth = 0,
                 i;
-            tables.push('<div class="layui-tab layui-tab-card" lay-filter="table-child-'+rowTableId+'" style="margin: 0;border: 0;');
+            tables.push('<div class="layui-tab layui-tab-card" lay-filter="table-child-'+rowTableId+'" style="margin: 0;border: 0;box-shadow: none;');
             if (child.show === 2) {
                 tables.push('max-width: '+ ($tableBody.width()-2) +'px">')
             } else if (child.show === 3) {
