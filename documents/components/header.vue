@@ -380,7 +380,20 @@ export default {
         title: 'soulTable 在线运行',
         content: $('#runjs'),
         maxmin: true,
-        area: ['90%', '90%']
+        area: ['90%', '90%'],
+        success: function () {
+          var mixedMode = {
+            name: "htmlmixed",
+            scriptTypes: [{matches: /\/x-handlebars-template|\/x-mustache/i,
+              mode: null},
+              {matches: /(text|application)\/(x-)?vb(a|script)/i,
+                mode: "vbscript"}]
+          };
+          window.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            mode: mixedMode,
+            selectionPointer: true
+          });
+        }
       })
     }
   },

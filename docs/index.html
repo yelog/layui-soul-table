@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_137970_p1tpzmomxp9cnmi.css">
     <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="codemirror/codemirror.css">
     <link rel="stylesheet" href="soulTable.css" media="all"/>
     <title>示例文档 | layui-soul-table</title>
     <meta name="description" content="layui-soul-table 为layui table 扩展的 表头筛选, 表格筛选, 子表, 父子表, 列拖拽, excel导出" />
@@ -23,22 +24,11 @@
             position: absolute;
             bottom: 15px;
             right: 20px;
+            z-index: 10000;
       }
-      #runjs textarea {
-          position: absolute;
-          line-height: 1rem;
+      #runjs .CodeMirror {
           width: 100%;
           height: 100%;
-          padding: 10px;
-          border: none;
-          resize: none;
-          background-color: #13151A;
-          color: white;
-          font-family: Courier New;
-          font-size: 12px;
-          -webkit-box-sizing: border-box !important;
-          -moz-box-sizing: border-box !important;
-          box-sizing: border-box !important;
       }
       #runjsDemo {
         width: 100%;
@@ -58,7 +48,7 @@
       <div id="runjs">
         <div class="layui-row">
           <div class="layui-col-xs6">
-            <textarea></textarea>
+            <textarea id="code"></textarea>
             <div class="site-demo-btn">
               <a type="button" class="layui-btn" id="LAY_demo_run">运行代码</a>
             </div>
@@ -72,8 +62,14 @@
       </div>
     </div>
     <script src="layui/layui.js"></script>
+    <script src="codemirror/codemirror.js"></script>
+    <script src="codemirror/selection-pointer.js"></script>
+    <script src="codemirror/xml.js"></script>
+    <script src="codemirror/javascript.js"></script>
+    <script src="codemirror/css.js"></script>
+    <script src="codemirror/htmlmixed.js"></script>
     
-  <script type="text/javascript" src="app.6343999.js"></script></body>
+  <script type="text/javascript" src="app.59324b1.js"></script></body>
   
   <script>
     var ga = function() {
@@ -101,7 +97,7 @@
         })
         layui.$('#LAY_demo_run').on('click', function() {
             var ifr = document.getElementById("runjsDemo");
-            var code = $('#runjs textarea').val();
+            var code = window.editor.getValue();
             ifr.contentWindow.document.body.innerHTML = "";
             ifr.contentWindow.document.write(code);
         })

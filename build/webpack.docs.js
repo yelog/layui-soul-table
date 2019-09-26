@@ -111,6 +111,10 @@ const webpackConfig = {
       { from: '*.json' },
       { from: '*.html' },
       {
+        from: 'codemirror',
+        to: 'codemirror'
+      },
+      {
         from: 'layui',
         to: 'layui'
       }
