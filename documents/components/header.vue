@@ -108,7 +108,6 @@
       &.lang-item,
       &:last-child {
         cursor: default;
-        margin-left: 34px;
 
         span {
           opacity: .8;
@@ -158,7 +157,6 @@
 
   .nav-dropdown {
     margin-bottom: 6px;
-    padding-left: 18px;
     width: 100%;
 
     span {
@@ -272,20 +270,6 @@
   <div class="headerWrapper">
     <header class="header" ref="header">
       <div class="container">
-        <!--<h1><router-link :to="`/${ lang }`">-->
-          <!--&lt;!&ndash; logo &ndash;&gt;-->
-          <!--<slot>-->
-            <!--<img-->
-              <!--src="../assets/images/element-logo.svg"-->
-              <!--alt="element-logo"-->
-              <!--class="nav-logo">-->
-            <!--<img-->
-              <!--src="../assets/images/element-logo-small.svg"-->
-              <!--alt="element-logo"-->
-              <!--class="nav-logo-small">-->
-          <!--</slot>-->
-
-        <!--</router-link></h1>-->
         <h1><router-link :to="`/${ lang }`">layui-soul-table</router-link></h1>
         <!-- nav -->
         <ul class="nav">
@@ -294,29 +278,13 @@
             <div class="nav-gap"></div>
           </li>
 
-          <!-- 版本选择器 -->
-          <!--<li class="nav-item nav-versions" v-show="isComponentPage">-->
-            <!--<el-dropdown-->
-              <!--trigger="click"-->
-              <!--class="nav-dropdown"-->
-              <!--:class="{ 'is-active': verDropdownVisible }">-->
-              <!--<span>-->
-                <!--{{ version }}-->
-                <!--<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
-              <!--</span>-->
-              <!--<el-dropdown-menu-->
-                <!--slot="dropdown"-->
-                <!--class="nav-dropdown-list"-->
-                <!--@input="handleVerDropdownToggle">-->
-                <!--<el-dropdown-item-->
-                  <!--v-for="item in Object.keys(versions)"-->
-                  <!--:key="item"-->
-                  <!--@click.native="switchVersion(item)">-->
-                  <!--{{ item }}-->
-                <!--</el-dropdown-item>-->
-              <!--</el-dropdown-menu>-->
-            <!--</el-dropdown>-->
-          <!--</li>-->
+          <li class="nav-item" v-show="isComponentPage">
+            <el-button type="primary" @click="runjs">在线运行</el-button>
+          </li>
+          <!-- gap -->
+          <li class="nav-item" v-show="isComponentPage">
+            <div class="nav-gap"></div>
+          </li>
 
           <!-- 语言选择器 -->
           <li class="nav-item lang-item">
@@ -341,11 +309,12 @@
               </el-dropdown-menu>
             </el-dropdown>
           </li>
+
         </ul>
         <a class="github" href="https://github.com/yelog/layui-soul-table" target="_blank">
-          <img src="https://img.shields.io/github/watchers/yelog/layui-soul-table.svg?style=social">
-          <img src="https://img.shields.io/github/stars/yelog/layui-soul-table.svg?style=social">
-          <img src="https://img.shields.io/github/forks/yelog/layui-soul-table.svg?style=social">
+          <img src="https://img.shields.io/github/watchers/yelog/layui-soul-table.svg">
+          <img src="https://img.shields.io/github/stars/yelog/layui-soul-table.svg">
+          <img src="https://img.shields.io/github/forks/yelog/layui-soul-table.svg">
         </a>
       </div>
     </header>
@@ -404,6 +373,15 @@ export default {
 
     handleLangDropdownToggle (visible) {
       this.langDropdownVisible = visible
+    },
+    runjs () {
+      layer.open({
+        type: 1,
+        title: 'soulTable 在线运行',
+        content: $('#runjs'),
+        maxmin: true,
+        area: ['90%', '90%']
+      })
     }
   },
 

@@ -8,6 +8,44 @@
     <link rel="stylesheet" href="soulTable.css" media="all"/>
     <title>示例文档 | layui-soul-table</title>
     <meta name="description" content="layui-soul-table 为layui table 扩展的 表头筛选, 表格筛选, 子表, 父子表, 列拖拽, excel导出" />
+    <style>
+        #runjsParent #runjs{
+            display: none;
+            height: 100%;
+      }
+      #runjs .layui-row {
+        height: 100%;
+      }
+      #runjs .layui-row>div{
+        height: 97%;
+      }
+      #runjs .site-demo-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+      }
+      #runjs textarea {
+          position: absolute;
+          line-height: 1rem;
+          width: 100%;
+          height: 100%;
+          padding: 10px;
+          border: none;
+          resize: none;
+          background-color: #13151A;
+          color: white;
+          font-family: Courier New;
+          font-size: 12px;
+          -webkit-box-sizing: border-box !important;
+          -moz-box-sizing: border-box !important;
+          box-sizing: border-box !important;
+      }
+      #runjsDemo {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+    </style>
   </head>
   <body>
     <script>
@@ -16,6 +54,23 @@
       }
     </script>
     <div id="app"></div>
+     <div id="runjsParent">
+      <div id="runjs">
+        <div class="layui-row">
+          <div class="layui-col-xs6">
+            <textarea></textarea>
+            <div class="site-demo-btn">
+              <a type="button" class="layui-btn" id="LAY_demo_run">运行代码</a>
+            </div>
+          </div>
+          <div class="layui-col-xs6">
+            <iframe id="runjsDemo" src='runjs.html' >
+
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="layui/layui.js"></script>
     <% if (process.env.NODE_ENV === 'production') { %>
       <script src="//shadow.elemecdn.com/npm/vue@2.5.21/dist/vue.runtime.min.js"></script>
@@ -52,7 +107,21 @@
       });
       var tableFilter;
       layui.use('tableFilter', function() {
-        tableFilter = layui.tableFilter
+        tableFilter = layui.tableFilter,
+
+        layui.$.ajax({
+            url: 'runjs.html',
+            dataType: 'html',
+            success: function(res) {
+                $('#runjs textarea').val(res)
+            }
+        })
+        layui.$('#LAY_demo_run').on('click', function() {
+            var ifr = document.getElementById("runjsDemo");
+            var code = $('#runjs textarea').val();
+            ifr.contentWindow.document.body.innerHTML = "";
+            ifr.contentWindow.document.write(code);
+        })
      })
   </script>
 </html>

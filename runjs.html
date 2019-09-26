@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>在线调试</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="soulTable.css" media="all"/>
+</head>
+<body>
+<table id="myTable" ></table>
+<script type="text/html" id="toolbar">
+    <div><button class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</button></div>
+</script>
+<script type="text/html" id="bar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/javascript" src="layui/layui.js"></script>
+<script>
+    // 自定义模块
+    layui.config({
+        base: 'ext/',   // 模块目录
+        version: 'v1.3.28'
+    }).extend({                         // 模块别名
+        soulTable: 'soulTable'
+    });
+    layui.use(['form', 'table','soulTable'], function () {
+        var table = layui.table,
+            soulTable = layui.soulTable;
+
+        table.render({
+            elem: '#myTable'
+            ,id: 'myTable'
+            ,url: 'data.json'
+            ,height: 500
+            ,toolbar: '#toolbar'
+            ,page: false
+            ,cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+                {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+                {field: 'author', title: '作者', width: 165 , filter: true},
+                {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
+                {field: 'content', title: '内容', width: 823, filter: true},
+                {field: 'heat', title: '点赞数', width: 112,  filter: true,  sort:true, excel:{cellType: 'n'}},
+                {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true},
+                {title: '操作', width: 156, fixed: 'right', templet: '#bar'}
+            ]]
+            ,done: function () {
+                soulTable.render(this)
+            }
+        });
+
+        table.on('toolbar(myTable)', function(obj){
+            if (obj.event === 'clearFilter') {
+                // 清除所有筛选条件并重载表格
+                // 参数: tableId
+                soulTable.clearFilter('myTable')
+            }
+        });
+    })
+</script>
+</body>
+</html>
