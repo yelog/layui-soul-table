@@ -166,6 +166,12 @@ blockquote {
   border-left: 4px solid #cbcbcb;
   background-color: #f8f8f8;
 }
+[id^=soul] {
+  line-height: 1rem;
+}
+[id^=soul] ul, [id^=soul] ol {
+  padding-left: 0;
+}
 @media (max-width: 1140px) {
   .container,
   .page-container {

@@ -882,10 +882,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             })
 
             function genePanel($parent, left, top, options, $this, box, tag, isBody) {
-                var html = [], css = [], i;
-                css.push('top: '+top+'px;');
-                css.push('left: '+left+'px;');
-                html.push('<ul style="'+css.join('')+'" class="soul-table-contextmenu">');
+                var html = [], i;
+
+                html.push('<ul class="soul-table-contextmenu">');
                 for (i = 0; i < options.length; i++) {
                     html.push('<li data-index="'+i+'" class="'+(options[i].children && options[i].children.length>0 ? 'contextmenu-children' : '')+'">')
                     if (options[i].icon) {
@@ -903,6 +902,27 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
                 html.push('</ul>');
                 $parent.append(html.join(''));
+                var $curPanel = $parent.children().last();
+                if (top + $curPanel.outerHeight() > $('body').prop('scrollHeight')) {
+                    top = top - $curPanel.outerHeight()
+                    if (top < 0) {
+                        top = 0
+                    }
+                }
+                if ($parent.parent().data('direction') === 'left' && ($parent.offset().left - $curPanel.outerWidth()) > 0) {
+                    left = - $curPanel.outerWidth();
+                    $curPanel.data('direction', 'left')
+                } else if (left + $curPanel.outerWidth() + $parent.offset().left > $('body').prop('scrollWidth')) {
+                    left = left - $curPanel.outerWidth() - $parent.outerWidth()
+                    if (left + $parent.offset().left < 0) {
+                        left = - $parent.offset().left
+                    }
+                    $curPanel.data('direction', 'left')
+                }
+                $curPanel.css({
+                    top: top + 'px',
+                    left: left + 'px'
+                })
 
                 for (i = 0; i < options.length; i++) {
                     if (typeof options[i].click === "function") {

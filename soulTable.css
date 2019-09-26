@@ -700,9 +700,12 @@
     animation-name: fadeOutDown;
 }
 
+#soul-table-contextmenu-wrapper {
+    width: 0;
+}
 .soul-table-contextmenu {
     position: absolute;
-    z-index: 200;
+    z-index: 999999;
     list-style: none;
     margin: 0;
     padding: 0;
