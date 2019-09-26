@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="//at.alicdn.com/t/font_137970_p1tpzmomxp9cnmi.css">
     <link rel="stylesheet" href="layui/css/layui.css">
     <link rel="stylesheet" href="codemirror/codemirror.css">
+    <link rel="stylesheet" href="codemirror/darcula.css">
     <link rel="stylesheet" href="soulTable.css" media="all"/>
     <title>示例文档 | layui-soul-table</title>
     <meta name="description" content="layui-soul-table 为layui table 扩展的 表头筛选, 表格筛选, 子表, 父子表, 列拖拽, excel导出" />

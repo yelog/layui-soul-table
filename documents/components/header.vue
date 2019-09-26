@@ -382,6 +382,7 @@ export default {
         maxmin: true,
         area: ['90%', '90%'],
         success: function () {
+          $('#runjs .CodeMirror').remove();
           var mixedMode = {
             name: "htmlmixed",
             scriptTypes: [{matches: /\/x-handlebars-template|\/x-mustache/i,
@@ -391,6 +392,12 @@ export default {
           };
           window.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
             mode: mixedMode,
+            // 显示行号
+            lineNumbers:true,
+            // 括号匹配
+            matchBrackets:true,
+            theme: "darcula",
+            tabSize: 4,
             selectionPointer: true
           });
         }
