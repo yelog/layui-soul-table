@@ -31,13 +31,14 @@
     var table = layui.table,
       soulTable = layui.soulTable;
 
+    // 后台分页
     table.render({
       elem: '#myTable'
       ,id: 'myTable'
-      ,url: 'data.json'
+      ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
       ,height: 500
       ,toolbar: '#toolbar'
-      ,page: false
+      ,page: true
       ,cols: [[
         {type: 'checkbox', fixed: 'left'},
         {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
