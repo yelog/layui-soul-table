@@ -49,6 +49,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 if (myTable.overflow) {
                     this.overflow(myTable);
                 }
+
+                this.fixFixedScroll(myTable);
             }
 
         }
@@ -1083,6 +1085,21 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     }
                 });
             }
+        },
+        fixFixedScroll: function (myTable) {
+            var $table = $(myTable.elem),
+                layFixed = $table.next().children('.layui-table-box').children('.layui-table-fixed'),
+                layMain = $table.next().children('.layui-table-box').children('.layui-table-main'),
+                style = $table.next().find('style')[0],
+                sheet = style.sheet || style.styleSheet || {};
+
+            this.addCSSRule(sheet, '.soul-fixed-scroll::-webkit-scrollbar', 'display: none');
+            this.addCSSRule(sheet, '.soul-fixed-scroll', 'overflow-y: auto!important');
+            layFixed.children('.layui-table-body').addClass('soul-fixed-scroll').on('scroll', function () {
+                var scrollTop = $(this).scrollTop()
+                layFixed.children('.layui-table-body').scrollTop(scrollTop);
+                layMain.scrollTop(scrollTop);
+            })
         },
         scrollPatch: function (myTable) {
             var $table = $(myTable.elem),
