@@ -1093,8 +1093,15 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 style = $table.next().find('style')[0],
                 sheet = style.sheet || style.styleSheet || {};
 
-            this.addCSSRule(sheet, '.soul-fixed-scroll::-webkit-scrollbar', 'display: none');
-            this.addCSSRule(sheet, '.soul-fixed-scroll', 'overflow-y: auto!important');
+            try {
+                sheet.insertRule( '.soul-fixed-scroll::-webkit-scrollbar{display: none}');
+                sheet.insertRule( '.soul-fixed-scroll{overflow-y: auto!important}');
+            } catch (e) {
+                sheet.addRule('.soul-fixed-scroll', 'overflow-y: auto!important')
+                sheet.addRule('.soul-fixed-scroll', '-ms-overflow-style:none')
+                sheet.addRule('.soul-fixed-scroll', 'overflow:-moz-scrollbars-none')
+            }
+
             layFixed.children('.layui-table-body').addClass('soul-fixed-scroll').on('scroll', function () {
                 var scrollTop = $(this).scrollTop()
                 layFixed.children('.layui-table-body').scrollTop(scrollTop);
@@ -1144,7 +1151,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             layFixRight.css('right', scollWidth - 1);
         },
         addCSSRule: function(sheet, selector, rules, index) {
-            if ('inserRule' in sheet) {
+            if ('insertRule' in sheet) {
                 sheet.insertRule(selector + '{' + rules + '}', index)
             } else if ('addRule' in sheet) {
                 sheet.addRule(selector, rules, index)

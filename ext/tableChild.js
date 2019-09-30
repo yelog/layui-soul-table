@@ -462,7 +462,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
             })
         },
         addCSSRule: function(sheet, selector, rules, index) {
-            if ('inserRule' in sheet) {
+            if ('insertRule' in sheet) {
                 sheet.insertRule(selector + '{' + rules + '}', index)
             } else if ('addRule' in sheet) {
                 sheet.addRule(selector, rules, index)
