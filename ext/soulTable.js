@@ -50,7 +50,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     this.overflow(myTable);
                 }
 
-                this.fixFixedScroll(myTable);
+                // this.fixFixedScroll(myTable);
             }
 
         }
