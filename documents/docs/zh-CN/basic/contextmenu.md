@@ -61,7 +61,8 @@ layui.use(['form', 'table','soulTable'], function () {
                     name: '复制',
                     icon: 'layui-icon layui-icon-template',
                     click: function(obj) {
-                        layer.msg('复制操作自行处理。待复制内容: <span class="layui-red">' + obj.text + '</span>') 
+                        soulTable.copy(obj.text)
+                        layer.msg('复制成功！') 
                     }
                 },
                 {
@@ -128,6 +129,14 @@ layui.use(['form', 'table','soulTable'], function () {
             ],
             // 表格内容右键菜单配置
             body: [
+                {
+                   name: '复制',
+                   icon: 'layui-icon layui-icon-template',
+                   click: function(obj) {
+                       soulTable.copy(obj.text)
+                       layer.msg('复制成功！') 
+                   }
+                },
                 {
                     name: '删除当前行数据',
                     click: function(obj) {
@@ -216,7 +225,8 @@ layui.use(['form', 'table','soulTable'], function () {
                        name: '复制',
                        icon: 'layui-icon layui-icon-template',
                        click: function(obj) {
-                           layer.msg('复制操作自行处理。待复制内容: <span class="layui-red">' + obj.text + '</span>') 
+                           soulTable.copy(obj.text)
+                           layer.msg('复制成功！') 
                        }
                    },
                    {
