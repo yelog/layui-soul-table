@@ -58,7 +58,11 @@ ul, ol {
     list-style: inherit;
   }
 }
-
+.soul-edit-out ul {
+  li {
+    list-style: none;
+  }
+}
 
 button, input, select, textarea {
   font-family: inherit;

@@ -1,4 +1,7 @@
 ## 安装
+### 下载地址
+<el-link href="https://github.com/yelog/layui-soul-table" type="primary" target="_blank">[github]</el-link>      <el-link href="https://gitee.com/saodiyang/layui-soul-table" type="primary" style="margin-left: 20px;" target="_blank">[gitee]</el-link>
+
 ### 将下面模块放入到自己的项目中
 
 >soulTable.js     总入口  
