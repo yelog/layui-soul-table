@@ -635,6 +635,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     $bodyTr = $noFixedBody.children('tbody').children('tr[data-index='+ index +']'),
                     $cloneTr = $bodyTr.clone().css('visibility', 'hidden'),
                     $FixBodyTr = $fixedBody.children('tbody').children('tr[data-index='+ index +']'),
+                    bodyScrollTop = $tableBox.children('.layui-table-body').scrollTop(), // 记录当前滚动条位置
                     originTop = $this.position().top,
                     disY = e.clientY - originTop; // 鼠标距离被移动元素上侧的距离
 
@@ -648,6 +649,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                             sheet = style.sheet || style.styleSheet || {};
                         _this.addCSSRule(sheet, '.layui-table-view .layui-table td', 'cursor: move')
                         _this.addCSSRule(sheet, '.layui-table tr', 'transition: none')
+
+                        $tableBox.addClass('noselect'); // 禁止选中文本
 
                         $bodyTr.after($cloneTr);
                         $bodyTr.css({
@@ -664,7 +667,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         })
                     }
 
-                    var top = e.clientY - disY, // 计算当前被移动列左侧位置应该哪里
+                    var top = e.clientY - disY + ($tableBox.children('.layui-table-body').scrollTop() - bodyScrollTop), // 计算当前被移动行top位置应该哪里
                         trTop = $cloneTr.position().top, //当前行所在位置
                         $UpTr = $bodyTr.prev(),
                         hasUpTr = $UpTr.length > 0,
@@ -715,6 +718,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     if (isDraging) {
                         isDraging = false;
 
+                        $tableBox.removeClass('noselect'); // 取消禁止选中文本
                         $bodyTr.css({'position': 'inherit','z-index': 'inherit'});
                         $bodyTr.next().remove();
                         $FixBodyTr.each(function () {
