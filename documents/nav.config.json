@@ -113,6 +113,10 @@
         {
           "path": "/excel/form",
           "name": "包含表单元素的导出"
+        },
+        {
+          "path": "/excel/total-row",
+          "name": "合计行导出"
         }
       ]
     },

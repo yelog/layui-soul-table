@@ -2522,7 +2522,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                     : mainExcel.filename?(typeof mainExcel.filename === 'function'?mainExcel.filename.call(this):mainExcel.filename)
                         : '表格数据.xlsx',
                     checked = curExcel.checked === true ? true : mainExcel.checked === true,
-                    customColumns = curExcel.columns || mainExcel.columns,
+                    customColumns = typeof curExcel.columns === 'undefined' ? mainExcel.columns : curExcel.columns,
+                    totalRow = typeof curExcel.totalRow === 'undefined' ? mainExcel.totalRow : curExcel.totalRow,
                     type = filename.substring(filename.lastIndexOf('.') + 1, filename.length),
                     tableStartIndex = mainExcel.add && mainExcel.add.top && Array.isArray(mainExcel.add.top.data) ? mainExcel.add.top.data.length + 1 : 1,  //表格内容从哪一行开始
                     bottomLength = mainExcel.add && mainExcel.add.bottom && Array.isArray(mainExcel.add.bottom.data) ? mainExcel.add.bottom.data.length : 0;// 底部自定义行数
@@ -2599,7 +2600,28 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                     }
                 }
             }
-            var columns = cols[cols.length-1];
+            var columns = cols[cols.length-1]; // 获取真实列
+
+            // 处理合计行
+            if (totalRow !== false && myTable.totalRow) {
+                var obj = {}, totalRows = {};
+                for (i = 0; i < columns.length; i++) {
+                    if (columns[i].totalRowText) {
+                        obj[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i].totalRowText
+                    } else if (columns[i].totalRow) {
+                        totalRows[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = 0
+                    }
+                }
+                if (JSON.stringify(totalRows) !== '{}') {
+                    for (i = 0; i < data.length; i++) {
+                        for (var key in totalRows) {
+                            totalRows[key] += Number(data[i][key])||0
+                        }
+                    }
+                }
+                data.push(Object.assign(obj, totalRows));
+            }
+
             if (customColumns && Array.isArray(customColumns)) {
                 var tempCustomColumns = [];
                 tempArray = {};
