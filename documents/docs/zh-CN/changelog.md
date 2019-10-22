@@ -3,7 +3,7 @@
 
 为 `layui table` 扩展的插件， 计划和目标（有好的想法/建议/BUG反馈，可以加入QQ群：<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3cbfbd2169afc3f4d11732101388941b0db5330a64755e68f27740b604409629"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="layui-使用交流" title="layui-使用交流"></a>）
 
-当前layui版本 `v2.5.4`
+当前layui版本 `v2.5.5`
 
 </el-card>
 
@@ -27,6 +27,11 @@
 
 
 ## 更新日志
+
+### **1.4.1** <small>`2019-10-16`</small>
+
+[文档] 文档系统的 `layui` 版本升级到 `2.5.5`
+
 ### **1.4.1** <small>`2019-10-16`</small>
 
 [修复] 行拖动 修复行拖动时，滚动表格内容造成拖动行错位的问题
