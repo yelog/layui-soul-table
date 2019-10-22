@@ -999,6 +999,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     $fixedRight = $tableBox.children('.layui-table-fixed-r').children('.layui-table-body').children('table').children('tbody').children('tr:eq(0)').children('td'),
                     html = [];
 
+                $total.children('.layui-table-total-fixed').remove()
+
                 if ($fixedLeft.length > 0) {
                     this.addCSSRule(sheet, '.layui-table-total-fixed-l .layui-table-patch', 'display: none')
                     $table.next().css('position', 'relative');
