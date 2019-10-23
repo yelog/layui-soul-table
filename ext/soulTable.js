@@ -50,7 +50,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     this.overflow(myTable);
                 }
 
-                // this.fixFixedScroll(myTable);
+                this.fixFixedScroll(myTable);
             }
 
         }
@@ -1095,23 +1095,16 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
         fixFixedScroll: function (myTable) {
             var $table = $(myTable.elem),
                 layFixed = $table.next().children('.layui-table-box').children('.layui-table-fixed'),
-                layMain = $table.next().children('.layui-table-box').children('.layui-table-main'),
-                style = $table.next().find('style')[0],
-                sheet = style.sheet || style.styleSheet || {};
+                layMain = $table.next().children('.layui-table-box').children('.layui-table-main');
 
-            try {
-                sheet.insertRule( '.soul-fixed-scroll::-webkit-scrollbar{display: none}');
-                sheet.insertRule( '.soul-fixed-scroll{overflow-y: auto!important}');
-            } catch (e) {
-                sheet.addRule('.soul-fixed-scroll', 'overflow-y: auto!important')
-                sheet.addRule('.soul-fixed-scroll', '-ms-overflow-style:none')
-                sheet.addRule('.soul-fixed-scroll', 'overflow:-moz-scrollbars-none')
-            }
-
-            layFixed.children('.layui-table-body').addClass('soul-fixed-scroll').on('scroll', function () {
-                var scrollTop = $(this).scrollTop()
-                layFixed.children('.layui-table-body').scrollTop(scrollTop);
-                layMain.scrollTop(scrollTop);
+            layFixed.on('mouseenter', function () {
+                $(this).children('.layui-table-body').addClass('soul-fixed-scroll').on('scroll', function () {
+                    var scrollTop = $(this).scrollTop()
+                    // layFixed.children('.layui-table-body[class!="soul-fixed-scroll"]').scrollTop(scrollTop);
+                    layMain.scrollTop(scrollTop);
+                })
+            }).on('mouseleave', function () {
+                $(this).children('.layui-table-body').removeClass('soul-fixed-scroll').off('scroll');
             })
         },
         scrollPatch: function (myTable) {

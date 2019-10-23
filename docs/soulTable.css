@@ -776,3 +776,12 @@
     user-select: none; /* Non-prefixed version, currently */
 
 }
+/* 固定列滚动 */
+.soul-fixed-scroll::-webkit-scrollbar{
+    display: none
+}
+.soul-fixed-scroll{
+    overflow-y: auto!important;
+    -ms-overflow-style:none;
+    overflow:-moz-scrollbars-none;
+}
