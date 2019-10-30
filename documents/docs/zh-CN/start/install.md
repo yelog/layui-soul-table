@@ -7,8 +7,8 @@
 >soulTable.js     总入口  
   tableFilter.js  表头筛选   
   excel.js        excel导出    
-  tableChild.js   子表 [可单独使用](/#/zh-CN/component/child/alone)   
-  tableMerge.js   单元格合并 [可单独使用](/#/zh-CN/component/merge/alone)   
+  tableChild.js   子表 [可单独使用](#/zh-CN/component/child/alone)   
+  tableMerge.js   单元格合并 [可单独使用](#/zh-CN/component/merge/alone)   
 
 源码版位置：`ext`
 压缩版位置：`docs/ext`
