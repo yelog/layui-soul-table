@@ -104,6 +104,7 @@ checkboxEvent: function (obj, pobj) {
         <td>
 <pre>
 editEvent: function (obj, pobj) {
+    // <span class="hljs-keyword">obj.oldValue</span> 修改前的值
     // <span class="hljs-keyword">obj.value</span> 得到修改后的值
     // <span class="hljs-keyword">obj.field</span> 当前编辑的字段名
     // <span class="hljs-keyword">obj.data</span> 所在行的所有相关数据 
@@ -215,7 +216,7 @@ layui.use(['form', 'table','soulTable'], function () {
                     ,editEvent: function(obj, pobj) {
                       // obj 子表当前行对象
                       // pobj 父表当前行对象
-                      layer.msg("已成功改为：" + obj.value);
+                      layer.msg(obj.oldValue + " 已成功改为：" + obj.value);
                     }
                     ,done: function () {
                        soulTable.render(this)

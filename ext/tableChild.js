@@ -363,6 +363,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                 // 绑定 edit 事件
                 if (typeof param.editEvent === 'function') {
                     table.on('edit('+childTableId+')', function (obj) {
+                        obj.oldValue = $(this).prev().text();
                         param.editEvent(obj, pobj)
                     })
                 }
