@@ -27,6 +27,8 @@
 
 
 ## 更新日志
+### **1.4.4** <small>`2019-11-12`</small>
+[修复] excel导出 支持 `method`、`contentType` 参数
 
 ### **1.4.3** <small>`2019-11-07`</small>
 

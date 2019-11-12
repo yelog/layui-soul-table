@@ -1,8 +1,8 @@
 /**
- * Created by YujieYang.
- * @name:  表格筛选扩展
- * @author: 杨玉杰
- * @version: 1.0
+ *
+ * @name:  表格增强插件
+ * @author: yelog
+ * @version: v1.4.4
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 

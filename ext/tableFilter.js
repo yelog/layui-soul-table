@@ -1,7 +1,8 @@
 /**
- * Created by YujieYang.
+ *
  * @name:  表格筛选扩展
- * @author: 杨玉杰
+ * @author: yelog
+ * @version: v1.4.4
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -2532,11 +2533,15 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                 data = table.checkStatus(myTable.id).data;
             } else if (myTable.url && myTable.page) {
                 var ajaxStatus = true;
+                var searchParam = isFilterCache[myTable.id] ? where_cache[myTable.id] : table_cache[myTable.id].where;
+                if(myTable.contentType && myTable.contentType.indexOf("application/json") == 0){ //提交 json 格式
+                    searchParam = JSON.stringify(searchParam);
+                }
                 $.ajax({
                     url: myTable.url,
-                    data: isFilterCache[myTable.id] ? where_cache[myTable.id] : table_cache[myTable.id].where,
+                    data: searchParam,
                     dataType: 'json',
-                    method: 'post',
+                    method: myTable.method || 'post',
                     async: false,
                     cache: false,
                     headers: myTable.headers || {},

@@ -1,8 +1,8 @@
 /**
- * Created by YujieYang.
+ *
  * @name:  子表格扩展
- * @author: 杨玉杰
- * @version 1.0
+ * @author: yelog
+ * @version: v1.4.4
  */
 layui.define(['table'], function (exports) {
 
