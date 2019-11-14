@@ -2523,6 +2523,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                     : mainExcel.filename?(typeof mainExcel.filename === 'function'?mainExcel.filename.call(this):mainExcel.filename)
                         : '表格数据.xlsx',
                     checked = curExcel.checked === true ? true : mainExcel.checked === true,
+                    curPage = curExcel.curPage === true ? true : mainExcel.curPage === true,
                     customColumns = typeof curExcel.columns === 'undefined' ? mainExcel.columns : curExcel.columns,
                     totalRow = typeof curExcel.totalRow === 'undefined' ? mainExcel.totalRow : curExcel.totalRow,
                     type = filename.substring(filename.lastIndexOf('.') + 1, filename.length),
@@ -2531,6 +2532,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
 
             if (checked) { // 获取选中行数据
                 data = table.checkStatus(myTable.id).data;
+            } else if (curPage) {
+                data = layui.table.cache[myTable.id]
             } else if (myTable.url && myTable.page) {
                 var ajaxStatus = true;
                 var searchParam = isFilterCache[myTable.id] ? where_cache[myTable.id] : table_cache[myTable.id].where;

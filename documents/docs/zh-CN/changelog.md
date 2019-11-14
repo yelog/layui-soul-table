@@ -28,7 +28,10 @@
 
 ## 更新日志
 ### **1.4.5** <small>`2019-11-14`</small>
+
 [修复] excel导出 修复数据 0 导出为空的问题
+
+[新增] excel导出 支持导出当前页数据，配置 `excel.curPage = true` [四、分页情况下只导出当前页数据](#/zh-CN/component/excel/basic)
 
 ### **1.4.4** <small>`2019-11-12`</small>
 
