@@ -159,7 +159,7 @@ layui.use(['form', 'table','soulTable'], function () {
 :::
 
 ### 3.弹窗方式
-通过设置 `show: 2`
+通过设置 `show: 2`, 弹窗的配置可以通过 `layerOption: {}` 来配置
 :::demo 设置 `show: 2`
 ```html
 <table id="myTable2" lay-filter="myTable2"></table>
@@ -174,7 +174,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,height: 500
         ,page: false
         ,cols: [[
-            {title: '#', show: 2, width: 50, children:[
+            {title: '#', show: 2, layerOption: {title: '我的子表', area: '1000px',},width: 50, children:[
                 {
                     title: '表格一'
                     ,url: 'data-1.json'

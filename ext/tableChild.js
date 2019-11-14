@@ -107,7 +107,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                                 }
                                 if (child.show === 2) { // 弹窗模式
 
-                                    layer.open({type: 1, title: '子表', maxmin: true ,content: _this.getTables(this, data, child, myTable, children), area: '1000px', offset: '100px'});
+                                    layer.open($.extend({type: 1, title: '子表', maxmin: true ,content: _this.getTables(this, data, child, myTable, children), area: '1000px', offset: '100px'}, child.layerOption || {}));
                                     _this.renderTable(this, data, child, myTable, children, icon);
 
                                 } else { // 展开模式
