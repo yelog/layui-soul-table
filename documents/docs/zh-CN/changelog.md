@@ -41,6 +41,8 @@
 
 [修复] excel导出 修复 cols 中的事件上下问丢失问题
 
+[修复] excel导出 兼容 table.render 使用 response 的情况
+
 ### **1.4.4** <small>`2019-11-12`</small>
 
 [修复] excel导出 支持 `method`、`contentType` 参数

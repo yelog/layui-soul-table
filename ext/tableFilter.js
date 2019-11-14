@@ -2553,7 +2553,12 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                         if(typeof myTable.parseData === 'function'){
                             res = myTable.parseData(res) || res;
                         }
-                        data = res.data
+                        //检查数据格式是否符合规范
+                        if(res[myTable.response.statusName] != myTable.response.statusCode){
+                            layer.msg('返回的数据不符合规范，正确的成功状态码应为："'+ myTable.response.statusName +'": '+ myTable.response.statusCode,{icon:2,anim:6});
+                        } else {
+                            data = res[myTable.response.dataName]
+                        }
                     },
                     error: function (res) {
                         layer.msg('请求异常！',{icon:2,anim:6});
