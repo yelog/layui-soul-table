@@ -225,10 +225,15 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                 //不限制宽度
                 tables.push('">')
             } else {
-                if ($tableMain.prop('scrollHeight') + (children.length>0?children[0].height:0) > $tableMain.height()) {
-                    scrollWidth = this.getScrollWidth();
+                if (child.childWidth === 'full') {
+                    //不限制宽度
+                    tables.push('">')
+                } else {
+                    if ($tableMain.prop('scrollHeight') + (children.length>0?children[0].height:0) > $tableMain.height()) {
+                        scrollWidth = this.getScrollWidth();
+                    }
+                    tables.push('max-width: '+ ($tableMain.width() - 1 - scrollWidth) +'px">')
                 }
-                tables.push('max-width: '+ ($tableMain.width() - 1 - scrollWidth) +'px">')
             }
             if (child.show !== 3 && (typeof child.childTitle === 'undefined' || child.childTitle)) {
                 tables.push('<ul class="layui-tab-title">')
