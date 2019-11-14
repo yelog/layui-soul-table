@@ -2728,7 +2728,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                 }
             }
 
-            var index = 0, alignTrans = {'left':'top', 'center':'center', 'right': 'bottom'}, borderTypes=['top','bottom', 'left', 'right'];
+            var index = 0, alignTrans = {'left':'left', 'center':'center', 'right': 'right'}, borderTypes=['top','bottom', 'left', 'right'];
             for (i = 0; i < columns.length; i++) {
                 if ((columns[i].field || columns[i].type === 'numbers') && !columns[i].hide) {
                     if (columns[i].width) {
