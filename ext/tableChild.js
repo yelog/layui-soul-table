@@ -94,7 +94,8 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                         }
 
                         $tableBody.children('tbody').children('tr').each(function () {
-                            $(this).children('td:eq('+curIndex+')').find('.childTable').on('click', function () {
+                            $(this).children('td:eq('+curIndex+')').find('.childTable').on('click', function (e) {
+                                layui.stope(e)
                                 var rowIndex = $(this).parents('tr:eq(0)').data('index'),
                                     key = $(this).parents('td:eq(0)').data('key'),
                                     $this = $noFixedBody.children('tbody').children('tr[data-index=' + rowIndex + ']').children('td[data-key="'+key+'"]').find('.childTable:eq(0)'),
