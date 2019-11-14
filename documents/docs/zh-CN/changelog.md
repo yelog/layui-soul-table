@@ -39,6 +39,8 @@
 
 [增强] 子表 弹窗方式支持通过 `layerOption` 自定义弹窗的配置 [3.弹窗方式](#/zh-CN/component/child/show)
 
+[修复] excel导出 修复 cols 中的事件上下问丢失问题
+
 ### **1.4.4** <small>`2019-11-12`</small>
 
 [修复] excel导出 支持 `method`、`contentType` 参数

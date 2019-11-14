@@ -54,7 +54,9 @@ layui.use(['form', 'table','soulTable'], function () {
                    bgColor: row.dynasty === '唐代' ? '01AAED' : 'FFFFFF', // 唐代显示为浅蓝色底色
                }
             }},
-            {field: 'author', title: '作者', width: 165 },
+            {field: 'author', title: '作者', width: 165, templet: function(row) {
+              return changeAuthor(row.author)
+            } },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112, sort:true},
             {field: 'heat', title: '点赞数', width: 112, fixed: 'right', sort:true, excel:{cellType: 'n'}},
@@ -64,6 +66,10 @@ layui.use(['form', 'table','soulTable'], function () {
             soulTable.render(this)
         }
     });
+    
+    function changeAuthor(val) {
+        return val + "_"
+    }
     
     layui.$('#export').on('click', function() {
       soulTable.export(myTable, {

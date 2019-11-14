@@ -2977,9 +2977,17 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             var reg = new RegExp("^" + str);
             return content && reg.test(content);
         },
-        // 深度克隆
+        // 深度克隆-不丢失方法
         deepClone: function (obj) {
-          return this.deepParse(this.deepStringify(obj))
+            var newObj = Array.isArray(obj) ? [] : {}
+            if (obj && typeof obj === "object") {
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        newObj[key] = (obj && typeof obj[key] === 'object') ? this.deepClone(obj[key]) : obj[key];
+                    }
+                }
+            }
+            return newObj
         },
         deepStringify: function (obj) {
             var JSON_SERIALIZE_FIX = {
@@ -2992,19 +3000,6 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                 }
                 return value;
             });
-        },
-        deepParse: function (str) {
-            var JSON_SERIALIZE_FIX = {
-                PREFIX : "[[JSON_FUN_PREFIX_",
-                SUFFIX : "_JSON_FUN_SUFFIX]]"
-            };
-            return JSON.parse(str,function(key, value){
-                if(typeof value === 'string' &&
-                    value.indexOf(JSON_SERIALIZE_FIX.SUFFIX)>0 && value.indexOf(JSON_SERIALIZE_FIX.PREFIX)===0){
-                    return eval("("+value.replace(JSON_SERIALIZE_FIX.PREFIX,"").replace(JSON_SERIALIZE_FIX.SUFFIX,"")+")");
-                }
-                return value;
-            })||{};
         },
         /* layui table 中原生的方法 */
         getScrollWidth: function (elem) {
@@ -3024,7 +3019,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             return width;
         }
         ,getCompleteCols: function (origin) {
-            var cols = this.deepParse(this.deepStringify(origin));
+            var cols = this.deepClone(origin);
             var i,j,k, cloneCol;
             for (i = 0; i < cols.length; i++) {
                 for (j = 0; j < cols[i].length; j++) {
