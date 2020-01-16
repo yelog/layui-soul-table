@@ -69,7 +69,7 @@ layui.use(['form', 'table','soulTable'], function () {
 ### 后台分页
 后台分页的筛选，由于前台数据不全，所以需要后台插件支持。
 
-**java** 的 `mybatis/mybatis-plus` 版 ：[https://github.com/yelog/layui-soul-table-java](https://github.com/yelog/layui-soul-table-java) 
+**java** 的 `mybatis/mybatis-plus/hibernate` 版 ：[https://github.com/yelog/layui-soul-table-java](https://github.com/yelog/layui-soul-table-java) 
 
 其他版本的后台插件可以加qq群详聊：<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3cbfbd2169afc3f4d11732101388941b0db5330a64755e68f27740b604409629"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="layui-使用交流" title="layui-使用交流"></a>
 
