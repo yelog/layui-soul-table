@@ -17,6 +17,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,height: 500
         ,limit: 20
         ,page: true
+        ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="refresh">重载</a></div>'
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
             {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
@@ -52,6 +53,14 @@ layui.use(['form', 'table','soulTable'], function () {
             }
         })
     }
+
+    table.on('toolbar(myTable)', function(obj){
+        if (obj.event === 'refresh') {
+            // 清除所有筛选条件并重载表格
+            // 参数: tableId
+            search()
+        }
+    });
 })
 </script>
 ```
