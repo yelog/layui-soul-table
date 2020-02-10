@@ -3,7 +3,7 @@
 
 为 `layui table` 扩展的插件， 计划和目标（有好的想法/建议/BUG反馈，可以加入QQ群：<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3cbfbd2169afc3f4d11732101388941b0db5330a64755e68f27740b604409629"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="layui-使用交流" title="layui-使用交流"></a>）
 
-当前layui版本 `v2.5.5`
+当前layui版本 `v2.5.6`
 
 </el-card>
 
