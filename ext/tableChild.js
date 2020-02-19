@@ -181,6 +181,8 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                                             e.stopPropagation()
                                         }).on('mouseenter', 'td', function (e) {
                                             e.stopPropagation()
+                                        }).on('change', function (e) {
+                                            layui.stope(e)
                                         })
                                     } else {
                                         _this.destroyChildren(rowIndex, myTable, icon);
@@ -261,6 +263,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
          * @param child 子表列
          * @param myTable 父表配置
          * @param children 子表配置
+         * @param icon 自定义图标
          */
         renderTable: function (_this, data, child, myTable, children, icon) {
             var tables = []

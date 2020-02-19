@@ -224,7 +224,7 @@ layui.use(['form', 'table','soulTable'], function () {
                 }
             ]},
             {field: 'title', title: '诗词', width: 200, sort: true},
-            {field: 'dynasty', title: '朝代', width: 100, sort: true},
+            {field: 'dynasty', edit: 'text', title: '朝代', width: 100, sort: true},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112, sort:true},
@@ -234,6 +234,10 @@ layui.use(['form', 'table','soulTable'], function () {
         ,done: function () {
             soulTable.render(this)
         }
+    });
+    
+   table.on('edit(myTable)', function(obj){      
+      console.log('父表编辑事件');     
     });
 })
 </script>
