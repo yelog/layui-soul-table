@@ -1014,7 +1014,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                         filterBoard.push('<div class="layui-red delete-item"><i class="layui-icon layui-icon-close-fill"></i></div>');
                         filterBoard.push('<ul class="group ' + (isLast ? '' : 'line') + '">');
                         if (filterSo.children) {
-                            for (i = 0; i < filterSo.children.length; i++) {
+                            for (var i = 0; i < filterSo.children.length; i++) {
                                 groupHtml(filterSo.children[i], filterBoard, fieldMap, i === 0, i === (filterSo.children.length - 1));
                             }
                         }
