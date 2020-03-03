@@ -34,7 +34,8 @@
 /* 全选*/
 .soul-icon-quanxuan:before { content: "\e623"; }
 .soul-icon-qingkong:before { content: "\e63e"; }
-.soul-icon-fanxuan:before { content: "\e614"; }
+.soul-icon-autoColumnWidth
+:before { content: "\e614"; }
 
 /*最大化*/
 .soul-icon-min:before { content: "\e656"; }

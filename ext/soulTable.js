@@ -2,7 +2,7 @@
  *
  * @name:  表格增强插件
  * @author: yelog
- * @version: v1.5.1
+ * @version: v1.5.2
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 
@@ -38,7 +38,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 if (myTable.rowDrag) {
                     this.rowDrag(myTable)
                 }
-                this.autoColumnWidth(myTable)
+                if (typeof myTable.autoColumnWidth === 'undefined' || myTable.autoColumnWidth) {
+                    this.autoColumnWidth(myTable)
+                }
 
                 this.contextmenu(myTable);
 
@@ -88,16 +90,28 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 o.remove();
                 return w;
             }
-            th.add(fixTh).on('dblclick', function(e){
-                var othis = $(this)
-                    ,field = othis.data('field')
+			if (typeof myTable.autoColumnWidth === 'undefined' || typeof myTable.autoColumnWidth.dblclick === 'undefined' || myTable.autoColumnWidth.dblclick) {
+                th.add(fixTh).on('dblclick', function(e){
+                	var othis = $(this),
+                        pLeft = e.clientX - othis.offset().left;
+                    handleColumnWidth(myTable, othis,  othis.parents('.layui-table-fixed-r').length>0 ? pLeft<=10 : othis.width() - pLeft<=10);
+                })
+			}
+			// 初始化表格后，自动调整所有列宽
+            if (myTable.autoColumnWidth && myTable.autoColumnWidth.init) {
+                th.add(fixTh).each(function (e) {
+                    if (!Array.isArray(myTable.autoColumnWidth.init) || myTable.autoColumnWidth.init.indexOf($(this).attr('data-field')) !== -1) {
+                        handleColumnWidth(myTable, $(this), true);
+                    }
+                })
+            }
+            function handleColumnWidth(myTable, othis, isHandle) {
+                var field = othis.data('field')
                     ,key = othis.data('key')
-                    ,oLeft = othis.offset().left
-                    ,pLeft = e.clientX - oLeft;
                 if(othis.attr('colspan') > 1){
                     return;
                 }
-                if ($(this).parents('.layui-table-fixed-r').length>0 ? pLeft<=10 : othis.width() - pLeft<=10) {
+                if (isHandle) {
                     var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
                     $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
                         var curWidth = $(this).text().width(font);
@@ -120,7 +134,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         }
                     }
                 }
-            })
+            }
+
         }
         /**
          * 左右拖拽调整列顺序、向上拖隐藏列
