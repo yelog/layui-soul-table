@@ -4,8 +4,7 @@
 
 :::demo
 ```html
-<button class="layui-btn" id="export"><i class="layui-icon layui-icon-download-circle"></i>导出</button>
-<table id="myTable" ></table>
+<table id="myTable" lay-filter="myTable"></table>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
@@ -14,9 +13,12 @@ layui.use(['form', 'table','soulTable'], function () {
     var myTable = table.render({
         elem: '#myTable'
         ,url: 'data-1.json'
+        ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="export"><i class="layui-icon layui-icon-download-circle"></i>导出所有数据</a><a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="export2"><i class="layui-icon layui-icon-download-circle"></i>导出勾选数据</a></div>'
+        ,defaultToolbar: ['print', 'exports']
         ,height: 500
         ,page: false
         ,cols: [[
+            {type: 'checkbox', rowspan: 3, fixed: 'left'},
             {type: 'numbers', title: '序号', rowspan: 3, fixed: 'left'},
             {title: '1-1', colspan: 3, align: 'center'},
             {title: '1-2', colspan: 2},
@@ -37,10 +39,22 @@ layui.use(['form', 'table','soulTable'], function () {
             soulTable.render(this)
         }
     });
-    
-    layui.$('#export').on('click', function() {
-      soulTable.export(myTable);
-    })
+     table.on('toolbar(myTable)', function(obj){
+        if (obj.event === 'export') {
+            soulTable.export(myTable, {
+              filename: '导出所有数据.xlsx'
+            });
+        } else if (obj.event === 'export2') {
+           if (table.checkStatus('myTable').data.length > 0) {
+             soulTable.export(myTable, {
+               filename: '导出勾选数据.xlsx',
+               checked: true // 只导出勾选数据
+             });
+           } else {
+             layer.msg('勾选数据不能为空！');
+           }
+       }
+    });
 })
 </script>
 ```

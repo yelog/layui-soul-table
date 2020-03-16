@@ -2,7 +2,7 @@
  *
  * @name:  表格筛选扩展
  * @author: yelog
- * @version: v1.5.2
+ * @version: v1.5.3
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -2587,12 +2587,17 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             }
 
             // 制定显示列和顺序
-            var i,j,k, tempArray, cloneCol, columnsMap = [];
+            var i,j,k, tempArray, cloneCol, columnsMap = [], curRowUnShowCount;
             for (i = 0; i < cols.length; i++) {
+                curRowUnShowCount = 0;
                 for (j = 0; j < cols[i].length; j++) {
                     if (!cols[i][j].exportHandled) {
                         if (cols[i][j].rowspan > 1) {
-                            mergeArrays.push([numberToLetter(j+1)+(i+tableStartIndex), numberToLetter(j+1)+(i+parseInt(cols[i][j].rowspan) + tableStartIndex - 1)])
+                            if ((cols[i][j].field || cols[i][j].type==='numbers') && !cols[i][j].hide) {
+                                mergeArrays.push([numberToLetter(j+1 - curRowUnShowCount)+(i+tableStartIndex), numberToLetter(j+1 - curRowUnShowCount)+(i+parseInt(cols[i][j].rowspan) + tableStartIndex - 1)])
+                            } else {
+                                curRowUnShowCount++;
+                            }
                             cloneCol = this.deepClone(cols[i][j])
                             cloneCol.exportHandled = true;
                             k = i+1;
@@ -2602,7 +2607,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                             }
                         }
                         if (cols[i][j].colspan > 1) {
-                            mergeArrays.push([numberToLetter(j+1)+(i+tableStartIndex), numberToLetter(j+parseInt(cols[i][j].colspan))+(i+tableStartIndex)])
+                            mergeArrays.push([numberToLetter(j+1 -curRowUnShowCount)+(i+tableStartIndex), numberToLetter(j+parseInt(cols[i][j].colspan) - curRowUnShowCount)+(i+tableStartIndex)])
                             cloneCol = this.deepClone(cols[i][j])
                             cloneCol.exportHandled = true;
                             for (k = 1; k < cols[i][j].colspan; k++) {
@@ -2610,6 +2615,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                             }
                             j = j + cols[i][j].colspan - 1
                         }
+                    } else if (!((cols[i][j].field || cols[i][j].type==='numbers') && !cols[i][j].hide)) {
+                        curRowUnShowCount++;
                     }
                 }
             }

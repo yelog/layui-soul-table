@@ -2,7 +2,7 @@
  *
  * @name:  子表格扩展
  * @author: yelog
- * @version: v1.5.2
+ * @version: v1.5.3
  */
 layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
 
