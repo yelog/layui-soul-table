@@ -292,10 +292,11 @@ layui.use(['form', 'table','soulTable'], function () {
             {field: 'createTime', title: '录入时间', width: 165, sort:true},
         ]]
         ,rowEvent: function (obj) {
-            layer.msg('父表行单击行事件！')
-            obj.tr.css({'background':'#5FB878','color':'white'}).siblings().removeAttr('style')
+            // layer.msg('父表行单击行事件！并展开子表！')
+            // obj.tr.css({'background':'#5FB878','color':'white'}).siblings().removeAttr('style') // 设置当前行颜色
             console.log(obj.tr) //得到当前行元素对象
             console.log(obj.data) //得到当前行数据
+            obj.tr.find('.childTable').trigger('click'); // 触发展开/关闭当前行子表
             //obj.del(); //删除当前行
            //obj.update(fields) //修改当前行数据
         }
