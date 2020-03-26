@@ -751,7 +751,36 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                             }
                         });
 
-                        var newIndex = $this.index();
+						var newIndex = $this.index();
+						//前置事件
+						if (typeof myTable.rowDrag.before === 'function') {
+							if( newIndex !== index ) {
+								var cache = layui.table.cache[tableId]
+								// flag == false 取消拖拽
+								var flag = myTable.rowDrag.before.call(myTable, {
+										row: cache[index],
+										newIndex: newIndex,
+										oldIndex: index,
+										before:newIndex > index ? cache[newIndex]:cache[newInde - 1],
+										after:newIndex > index ? cache[newIndex + 1] : cache[newIndex],
+										cache: cache
+									})
+								if (!flag) { // 取消拖拽
+									if(index > newIndex){
+										$bodyTr.insertAfter($bodyTr.parent().find("tr").eq(index))
+									}
+									if(index < newIndex){
+										$bodyTr.insertBefore($bodyTr.parent().find("tr").eq(index))
+									}
+									//修正index
+									$bodyTr.parent().find("tr").each(function(index, item){
+										$(item).data('index', index);
+										$(item).attr('data-index', index);
+									})
+																
+								}
+							}							
+						}
                         if (newIndex !== index) { // 有位置变动
                             if (typeof myTable.rowDrag.done === 'function') {
                                 var cache = layui.table.cache[tableId],
