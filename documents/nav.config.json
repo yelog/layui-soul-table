@@ -45,6 +45,10 @@
           "name": "右侧固定列拖动列宽"
         },
         {
+          "path": "/basic/fixedScroll",
+          "name": "左右固定列支持滚动滚动"
+        },
+        {
           "path": "/basic/overflow",
           "name": "内容超出设置"
         }

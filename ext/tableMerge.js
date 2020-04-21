@@ -2,7 +2,7 @@
  *
  * @name:  子表格扩展
  * @author: yelog
- * @version: v1.5.3
+ * @version: v1.5.4
  */
 layui.define(['table'], function (exports) {
 

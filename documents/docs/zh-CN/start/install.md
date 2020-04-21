@@ -18,7 +18,7 @@
 // 自定义模块，这里只需要开放soulTable即可
 layui.config({
     base: 'ext/',   // 模块所在目录
-    version: 'v1.5.3' // 插件版本号
+    version: 'v1.5.4' // 插件版本号
 }).extend({                         
     soulTable: 'soulTable'  // 模块别名
 });

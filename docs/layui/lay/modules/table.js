@@ -1720,7 +1720,7 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
 
       that.layHeader.scrollLeft(scrollLeft);
       that.layTotal.scrollLeft(scrollLeft);
-      that.layFixed.find(ELEM_BODY).scrollTop(scrollTop);
+      that.layFixed.find(ELEM_BODY+':not(.soul-fixed-scroll)').scrollTop(scrollTop);
 
       layer.close(that.tipsIndex);
     });
