@@ -106,7 +106,8 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                                     children = child.children(data)
                                 }
                                 if (child.show === 2) { // 弹窗模式
-
+                                
+                                    child.layerOption ? (typeof child.layerOption.title === 'function' ? (child.layerOption.title = child.layerOption.title(data)) : null) : null;
                                     layer.open($.extend({type: 1, title: '子表', maxmin: true ,content: _this.getTables(this, data, child, myTable, children), area: '1000px', offset: '100px'}, child.layerOption || {}));
                                     _this.renderTable(this, data, child, myTable, children, icon);
 
