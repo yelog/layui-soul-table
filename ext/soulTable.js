@@ -885,12 +885,12 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         if (curColsOpts === false) {
                             return false
                         } else if (curColsOpts && curColsOpts.length>0) {
-                            genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, curColsOpts, $(this), options[name].box, options[name].tag, options[name].isBody);
+                            genePanel($('#soul-table-contextmenu-wrapper'), e.pageX, e.pageY, curColsOpts, $(this), options[name].box, options[name].tag, options[name].isBody);
                             return false
                         } else if (options[name].opts === false) {
                             return false
                         } else if (options[name].opts && options[name].opts.length>0) {
-                            genePanel($('#soul-table-contextmenu-wrapper'), e.clientX, e.clientY, options[name].opts, $(this), options[name].box, options[name].tag, options[name].isBody);
+                            genePanel($('#soul-table-contextmenu-wrapper'), e.pageX, e.pageY, options[name].opts, $(this), options[name].box, options[name].tag, options[name].isBody);
                             return false
                         }
                     })
