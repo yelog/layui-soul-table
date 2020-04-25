@@ -27,6 +27,11 @@
 
 
 ## 更新日志
+### **1.5.5** <small>`2020-04-25`</small>
+
+[PR] 右键菜单 合并 [陈培新](https://gitee.com/chanpeixin) 的 [修复右键菜单位置不正确问题](https://gitee.com/saodiyang/layui-soul-table/pulls/1)
+
+[PR] 子表 合并 [半夏](https://gitee.com/2720851545banxia) 的 [支持子表弹窗的 title 支持 function 传入](https://gitee.com/saodiyang/layui-soul-table/pulls/2)
 ### **1.5.4** <small>`2020-04-22`</small>
 
 [文档] 添加固定列滚动示例，并添加优化建议
