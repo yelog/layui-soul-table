@@ -2,7 +2,7 @@
  *
  * @name:  表格增强插件
  * @author: yelog
- * @version: v1.5.5
+ * @version: v1.5.6
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 

@@ -27,6 +27,10 @@
 
 
 ## 更新日志
+### **1.5.6** <small>`2020-04-26`</small>
+
+[修复] excel导出 合计行默认保留两位小数
+
 ### **1.5.5** <small>`2020-04-25`</small>
 
 [PR] 右键菜单 合并 [陈培新](https://gitee.com/chanpeixin) 的 [修复右键菜单位置不正确问题](https://gitee.com/saodiyang/layui-soul-table/pulls/1)

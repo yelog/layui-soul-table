@@ -2,7 +2,7 @@
  *
  * @name:  表格筛选扩展
  * @author: yelog
- * @version: v1.5.5
+ * @version: v1.5.6
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -2635,7 +2635,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                 if (JSON.stringify(totalRows) !== '{}') {
                     for (i = 0; i < data.length; i++) {
                         for (var key in totalRows) {
-                            totalRows[key] += Number(data[i][key])||0
+                            totalRows[key] = (parseFloat(totalRows[key]) + (parseFloat(data[i][key]) || 0)).toFixed(2)
                         }
                     }
                 }
