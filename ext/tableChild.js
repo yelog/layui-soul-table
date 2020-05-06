@@ -153,6 +153,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                                         }else{
                                             $this.parents('tr:eq(0)').after(newTr.join(''));
                                         }
+                                        layui.element.init('tab')
                                         _this.renderTable(this, data, child, myTable, children, icon);
                                         if ($fixedBody.length>0) {
                                             var $tr = $this.parents('tr:eq(0)').next(),
@@ -177,7 +178,10 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                                         }
                                         // 阻止事件冒泡
                                         $this.parents('tr:eq(0)').next().children('td').children('.layui-tab').children('.layui-tab-content').on('click', function (e) {
-                                            e.stopPropagation()
+                                            // 不阻止 tab 切换点击事件
+                                            if (!$(e.target.parentElement).hasClass('layui-tab-title')) {
+                                                e.stopPropagation()
+                                            }
                                         }).off('dblclick').on('dblclick', function (e) {
                                             e.stopPropagation()
                                         }).on('mouseenter', 'td', function (e) {
@@ -221,7 +225,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                 $tableBody = $tableMain.children('table'),
                 scrollWidth = 0,
                 i;
-            tables.push('<div class="layui-tab layui-tab-card" lay-filter="table-child-'+rowTableId+'" style="margin: 0;border: 0;box-shadow: none;');
+            tables.push('<div class="layui-tab layui-tab-card" lay-filter="table-child-tab-'+rowTableId+'" style="margin: 0;border: 0;box-shadow: none;');
             if (child.show === 2) {
                 tables.push('max-width: '+ ($tableBody.width()-2) +'px">')
             } else if (child.show === 3) {
@@ -282,7 +286,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
             tableChildren[rowTableId]=tables;
 
 
-            layui.element.on('tab(table-child-'+rowTableId+')', function(tabData){
+            layui.element.on('tab(table-child-tab-'+rowTableId+')', function(tabData){
                 if (child.lazy) {
                     var isRender = false; // 是否已经渲染
                     for(i=0; i<tableChildren[rowTableId].length; i++) {
