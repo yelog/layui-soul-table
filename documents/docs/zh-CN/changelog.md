@@ -27,6 +27,12 @@
 
 
 ## 更新日志
+### **1.5.8** <small>`2020-05-06`</small>
+
+[新增] 新增 `soulTable.slim.js` 可以独立使用左侧菜单 **【基本功能】** 中的功能，[soulTable 独立使用](#/zh-CN/component/start/install#1.-soultable-du-li-shi-yong) 
+
+[新增] 插件支持 `CDN` 访问 [安装/CDN](#/zh-CN/component/start/install#si-cdn)
+
 ### **1.5.6** <small>`2020-04-26`</small>
 
 [修复] excel导出 合计行默认保留两位小数

@@ -1,6 +1,7 @@
-## 独立使用
+## 单元格合并独立使用
 
 ### 通过模块化引入项目
+只依赖 `tableMerge.js` 一个文件
 ```js
 layui.config({
     base: 'ext/'

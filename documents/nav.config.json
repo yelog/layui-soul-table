@@ -1,12 +1,12 @@
 {
   "zh-CN": [
     {
-      "path": "/changelog",
-      "name": "更新日志"
-    },
-    {
-      "name": "开发指南",
+      "name": "基础说明",
       "children": [
+        {
+          "path": "/changelog",
+          "name": "更新日志"
+        },
         {
           "path": "/start/install",
           "name": "安装"

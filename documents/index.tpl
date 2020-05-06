@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="layui/css/layui.css">
     <link rel="stylesheet" href="codemirror/codemirror.css">
     <link rel="stylesheet" href="codemirror/darcula.css">
-    <link rel="stylesheet" href="soulTable.css" media="all"/>
+    <link rel="stylesheet" href="https://unpkg.com/layui-soul-table/docs/soulTable.css" media="all"/>
     <title>示例文档 | layui-soul-table</title>
     <meta name="description" content="layui-soul-table 为layui table 扩展的 表头筛选, 表格筛选, 子表, 父子表, 列拖拽, excel导出" />
     <style>
@@ -74,9 +74,13 @@
   // 自定义模块
       layui.config({
           base: 'ext/',   // 模块目录
-          version: 'v1.5.6'
+          version: 'v1.5.8'
       }).extend({                         // 模块别名
-          soulTable: 'soulTable'
+          soulTable: '{/}https://unpkg.com/layui-soul-table/docs/ext/soulTable',
+          tableChild: '{/}https://unpkg.com/layui-soul-table/docs/ext/tableChild',
+          tableMerge: '{/}https://unpkg.com/layui-soul-table/docs/ext/tableMerge',
+          tableFilter: '{/}https://unpkg.com/layui-soul-table/docs/ext/tableFilter',
+          excel: '{/}https://unpkg.com/layui-soul-table/docs/ext/excel'
       });
       var tableFilter;
       layui.use('tableFilter', function() {

@@ -1,6 +1,6 @@
 {
   "name": "layui-soul-table",
-  "version": "1.0.0",
+  "version": "1.5.8",
   "scripts": {
     "docs": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.docs.js",
     "build_js": "gulp build_js",
@@ -49,5 +49,37 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.2.0"
+  },
+  "files": [
+    "ext",
+    "soulTable.css",
+    "docs/soulTable.css",
+    "docs",
+    "font",
+    "img"
+  ],
+  "main": "docs/ext/vue-soul-ui.js",
+  "style": "docs/soulTable.css",
+  "unpkg": "docs/ext/soulTable.slim.js",
+  "jsdelivr": "docs/ext/soulTable.slim.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yelog/layui-soul-table.git"
+  },
+  "keywords": [
+    "layui",
+    "table",
+    "soul-table",
+    "soul"
+  ],
+  "author": "Yujie Yang <yelog@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yelog/layui-soul-table/issues"
+  },
+  "homepage": "https://saodiyang.gitee.io/layui-soul-table",
+  "description": "当前layui版本 `v2.5.6`",
+  "directories": {
+    "doc": "docs"
   }
 }

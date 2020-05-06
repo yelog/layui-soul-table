@@ -1,6 +1,7 @@
-## 独立使用
+## 子表独立使用
 
 ### 通过模块化引入项目
+只依赖 `tableChild.js` 一个文件
 ```js
 layui.config({
     base: 'ext/'
