@@ -4,6 +4,9 @@
 为 `layui table` 扩展的插件， 计划和目标（有好的想法/建议/BUG反馈，可以加入QQ群：<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3cbfbd2169afc3f4d11732101388941b0db5330a64755e68f27740b604409629"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="layui-使用交流" title="layui-使用交流"></a>）
 
 当前layui版本 `v2.5.6`
+<el-divider >有用的话，帮忙点个 star 吧</el-divider>
+
+开源地址: <el-link href="https://github.com/yelog/layui-soul-table" type="primary" target="_blank">[github]</el-link>      <el-link href="https://gitee.com/saodiyang/layui-soul-table" type="primary" style="margin-left: 20px;" target="_blank">[gitee]</el-link>
 
 </el-card>
 
@@ -27,9 +30,11 @@
 
 
 ## 更新日志
-### **1.5.8** <small>`2020-05-07`</small>
+### **1.5.9** <small>`2020-05-07`</small>
 
 [修复] 子表 修复子表三层及多层以上的 tab 切换无反应的问题
+
+[文档] 在线运行 所有示例支持直接在线运行
 
 ### **1.5.8** <small>`2020-05-06`</small>
 

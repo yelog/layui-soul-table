@@ -2,7 +2,7 @@
  *
  * @name:  表格增强插件-独立版本
  * @author: yelog
- * @version: v1.5.8
+ * @version: v1.5.9
  */
 layui.define(['table'], function (exports) {
 

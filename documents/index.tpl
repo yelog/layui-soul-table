@@ -14,12 +14,45 @@
         #runjsParent #runjs{
             display: none;
             height: 100%;
+            width: 100%
       }
-      #runjs .layui-row {
+      #runjs .runParent {
+        width: 100%;
         height: 100%;
+        display: flex;
+        position: relative;
       }
-      #runjs .layui-row>div{
-        height: 97%;
+      .editArea {
+        width: 50%;
+        position: relative;
+      }
+      .resize-handle {
+        display: none;
+        border-radius: 15px;
+        background: grey;
+        color: white;
+        text-align: center;
+        line-height: 30px;
+        font-size: 20px;
+        font-weight: 800;
+        cursor: col-resize;
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        z-index: 99999;
+        left: 100%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+      }
+      .resize-cover {
+        display: none;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 99998
+      }
+      .showArea {
+        flex: 1
       }
       #runjs .site-demo-btn {
             position: absolute;
@@ -47,18 +80,22 @@
     <div id="app"></div>
      <div id="runjsParent">
       <div id="runjs">
-        <div class="layui-row">
-          <div class="layui-col-xs6">
-            <textarea id="code"></textarea>
-            <div class="site-demo-btn">
-              <a type="button" class="layui-btn" id="LAY_demo_run">运行代码</a>
-            </div>
-          </div>
-          <div class="layui-col-xs6">
-            <iframe id="runjsDemo" src='runjs.html' >
+        <div class='runParent'>
+             <div class="editArea">
+                <textarea id="code"></textarea>
+                <div class="site-demo-btn">
+                  <a type="button" class="layui-btn" id="LAY_demo_run">运行代码</a>
+                </div>
+                <div class='resize-handle layui-icon layui-icon-screen-full'></div>
+              </div>
+              <div class="showArea">
+                <iframe id="runjsDemo" src='runjs.html' >
 
-            </iframe>
-          </div>
+                </iframe>
+              </div>
+              <div class='resize-cover'>
+
+              </div>
         </div>
       </div>
     </div>
@@ -74,7 +111,7 @@
   // 自定义模块
       layui.config({
           base: 'ext/',   // 模块目录
-          version: 'v1.5.8'
+          version: 'v1.5.9'
       }).extend({                         // 模块别名
           soulTable: 'soulTable'
       });
@@ -95,6 +132,101 @@
             ifr.contentWindow.document.body.innerHTML = "";
             ifr.contentWindow.document.write(code);
         })
+
+        // 在线运行 resize
+             var dict = {}, _BODY=$('body'), _DOC = $(document), _HANDLE = $('.resize-handle'), _COVER = $('.resize-cover');
+             $('.editArea').on('mousemove', function(e){
+                   var othis = $(this)
+                   ,oLeft = othis.offset().left
+                   ,pLeft = e.clientX - oLeft;
+                   dict.allowResize = othis.width() - pLeft <= 15; //是否处于拖拽允许区域
+                   _BODY.css('cursor', (dict.allowResize ? 'col-resize' : ''));
+                   _HANDLE.css('display', (dict.allowResize ? 'block' : 'none'))
+
+                 }).on('mouseleave', function(){
+                   var othis = $(this);
+                   if(dict.resizeStart) return;
+                   _BODY.css('cursor', '');
+                   _HANDLE.hide();
+                   _COVER.hide();
+                 }).on('mousedown', function(e){
+                   var othis = $(this);
+                   console.log(dict.allowResize);
+                   if(dict.allowResize){
+                     e.preventDefault();
+                     _COVER.show();
+                     _HANDLE.show();
+                     dict.resizeStart = true; //开始拖拽
+                     dict.offset = [e.clientX, e.clientY]; //记录初始坐标
+                     dict.ruleWidth = othis.width()
+                     dict.othis = othis
+                   }
+                 });
+
+                 //拖拽中
+                 _DOC.on('mousemove', function(e){
+                   if(dict.resizeStart){
+                     console.log('hel');
+                     e.preventDefault();
+                     if(dict.othis){
+                       var setWidth = dict.ruleWidth + e.clientX - dict.offset[0];
+                       dict.othis.css('width', setWidth + 'px');
+                       console.log(setWidth);
+                     }
+                   }
+                 }).on('mouseup', function(e){
+                   if(dict.resizeStart){
+                     dict = {};
+                     _BODY.css('cursor', '');
+                     _HANDLE.hide();
+                     _COVER.hide();
+                   }
+                 });
      })
+     function showRunJs(runJsTpl) {
+        layer.open({
+         type: 1,
+         title: 'soulTable 在线运行',
+         content: $('#runjs'),
+         maxmin: true,
+         area: ['90%', '90%'],
+         success: function () {
+           if (runJsTpl) {
+              $('#runjs textarea').val(runJsTpl)
+           } else {
+                layui.$.ajax({
+                   url: 'runjs.html',
+                   async: false,
+                   dataType: 'html',
+                   success: function(res) {
+                       $('#runjs textarea').val(res)
+                   }
+                })
+           }
+           $('#runjs .CodeMirror').remove();
+           var mixedMode = {
+             name: "htmlmixed",
+             scriptTypes: [{matches: /\/x-handlebars-template|\/x-mustache/i,
+               mode: null},
+               {matches: /(text|application)\/(x-)?vb(a|script)/i,
+                 mode: "vbscript"}]
+           };
+           window.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+             mode: mixedMode,
+             // 显示行号
+             lineNumbers:true,
+             // 括号匹配
+             matchBrackets:true,
+             theme: "darcula",
+             tabSize: 4,
+             selectionPointer: true
+           });
+           var ifr = document.getElementById("runjsDemo");
+           var code = window.editor.getValue();
+           ifr.contentWindow.document.body.innerHTML = "";
+           ifr.contentWindow.document.write(code);
+         }
+       })
+     }
   </script>
 </html>

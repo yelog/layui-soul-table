@@ -312,7 +312,7 @@
 
         </ul>
         <a class="github" href="https://github.com/yelog/layui-soul-table" target="_blank">
-          <img src="https://img.shields.io/github/watchers/yelog/layui-soul-table.svg">
+          <img src="https://img.shields.io/github/watchers/yelog/layui-soul-table.svg" alt="github">
           <img src="https://img.shields.io/github/stars/yelog/layui-soul-table.svg">
           <img src="https://img.shields.io/github/forks/yelog/layui-soul-table.svg">
         </a>
@@ -375,33 +375,7 @@ export default {
       this.langDropdownVisible = visible
     },
     runjs () {
-      layer.open({
-        type: 1,
-        title: 'soulTable 在线运行',
-        content: $('#runjs'),
-        maxmin: true,
-        area: ['90%', '90%'],
-        success: function () {
-          $('#runjs .CodeMirror').remove();
-          var mixedMode = {
-            name: "htmlmixed",
-            scriptTypes: [{matches: /\/x-handlebars-template|\/x-mustache/i,
-              mode: null},
-              {matches: /(text|application)\/(x-)?vb(a|script)/i,
-                mode: "vbscript"}]
-          };
-          window.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-            mode: mixedMode,
-            // 显示行号
-            lineNumbers:true,
-            // 括号匹配
-            matchBrackets:true,
-            theme: "darcula",
-            tabSize: 4,
-            selectionPointer: true
-          });
-        }
-      })
+      window.showRunJs()
     }
   },
 

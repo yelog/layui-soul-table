@@ -11,7 +11,6 @@ import title from './i18n/title'
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/styles/color-brewer.css'
 import './assets/styles/common.scss'
-import './assets/styles/fonts/style.css'
 
 Vue.use(Element)
 Vue.use(VueRouter)

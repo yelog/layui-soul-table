@@ -10,22 +10,22 @@
 .cm-s-darcula span.cm-number { color: #6897BB; }
 .cm-s-darcula span.cm-keyword { color: #CC7832; line-height: 1em; font-weight: bold; }
 .cm-s-darcula span.cm-def { color: #A9B7C6; font-style: italic; }
-.cm-s-darcula span.cm-variable { color: #A9B7C6; }
+.cm-s-darcula span.cm-variable { color: #9876AA; }
 .cm-s-darcula span.cm-variable-2 { color: #A9B7C6; }
 .cm-s-darcula span.cm-variable-3 { color: #9876AA; }
 .cm-s-darcula span.cm-type { color: #AABBCC; font-weight: bold; }
 .cm-s-darcula span.cm-property { color: #FFC66D; }
 .cm-s-darcula span.cm-operator { color: #A9B7C6; }
-.cm-s-darcula span.cm-string { color: #6A8759; }
-.cm-s-darcula span.cm-string-2 { color: #6A8759; }
-.cm-s-darcula span.cm-comment { color: #61A151; font-style: italic; }
+.cm-s-darcula span.cm-string { color: #A5C261; }
+.cm-s-darcula span.cm-string-2 { color: #A5C261; }
+.cm-s-darcula span.cm-comment { color: #808080; font-style: italic; }
 .cm-s-darcula span.cm-link { color: #CC7832; }
 .cm-s-darcula span.cm-atom { color: #CC7832; }
 .cm-s-darcula span.cm-error { color: #BC3F3C; }
-.cm-s-darcula span.cm-tag { color: #FFC66D; font-weight: bold;}
-.cm-s-darcula span.cm-attribute { color: #6897bb; }
+.cm-s-darcula span.cm-tag { color: #E8BF6A; font-weight: bold;}
+.cm-s-darcula span.cm-attribute { color: #BABABA; }
 .cm-s-darcula span.cm-qualifier { color: #6A8759; }
-.cm-s-darcula span.cm-bracket { color: #A9B7C6; }
+/*.cm-s-darcula span.cm-bracket { color: #A9B7C6; }*/
 .cm-s-darcula span.cm-builtin { color: #FF9E59; }
 .cm-s-darcula span.cm-special { color: #FF9E59; }
 

@@ -26,18 +26,18 @@
       <transition name="text-slide">
         <span v-show="hovering">{{ controlText }}</span>
       </transition>
-      <!--<el-tooltip effect="dark" :content="langConfig['tooltip-text']" placement="right">-->
-        <!--<transition name="text-slide">-->
-          <!--<el-button-->
-            <!--v-show="hovering || isExpanded"-->
-            <!--size="small"-->
-            <!--type="text"-->
-            <!--class="control-button"-->
-            <!--@click.stop="goCodepen">-->
-            <!--{{ langConfig['button-text'] }}-->
-          <!--</el-button>-->
-        <!--</transition>-->
-      <!--</el-tooltip>-->
+      <el-tooltip effect="dark" :content="langConfig['tooltip-text']" placement="right">
+        <transition name="text-slide">
+          <el-button
+            v-show="hovering || isExpanded"
+            size="small"
+            type="text"
+            class="control-button"
+            @click.stop="goCodepen">
+            {{ langConfig['button-text'] }}
+          </el-button>
+        </transition>
+      </el-tooltip>
     </div>
   </div>
 </template>
@@ -205,37 +205,35 @@
       goCodepen() {
         // since 2.6.2 use code rather than jsfiddle https://blog.codepen.io/documentation/api/prefill/
         const { script, html, style } = this.codepen;
-        const resourcesTpl = '<scr' + 'ipt src="//unpkg.com/vue/dist/vue.js"></scr' + 'ipt>' +
-        '\n<scr' + `ipt src="//unpkg.com/element-ui@${ version }/lib/index.js"></scr` + 'ipt>';
         let jsTpl = (script || '').replace(/export default/, 'var Main =').trim();
-        let htmlTpl = `${resourcesTpl}\n<div id="app">\n${html.trim()}\n</div>`;
-        let cssTpl = `@import url("//unpkg.com/element-ui@${ version }/lib/theme-chalk/index.css");\n${(style || '').trim()}\n`;
-        jsTpl = jsTpl
-          ? jsTpl + '\nvar Ctor = Vue.extend(Main)\nnew Ctor().$mount(\'#app\')'
-          : 'new Vue().$mount(\'#app\')';
-        const data = {
-          js: jsTpl,
-          css: cssTpl,
-          html: htmlTpl
-        };
-        const form = document.getElementById('fiddle-form') || document.createElement('form');
-        while (form.firstChild) {
-          form.removeChild(form.firstChild);
-        }
-        form.method = 'POST';
-        form.action = 'https://codepen.io/pen/define/';
-        form.target = '_blank';
-        form.style.display = 'none';
-
-        const input = document.createElement('input');
-        input.setAttribute('name', 'data');
-        input.setAttribute('type', 'hidden');
-        input.setAttribute('value', JSON.stringify(data));
-
-        form.appendChild(input);
-        document.body.appendChild(form);
-
-        form.submit();
+        let htmlTpl = html.trim()
+        const runJsTpl = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>在线调试</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="layui/css/layui.css" media="all"/>
+  <link rel="stylesheet" href="soulTable.css" media="all"/>
+  <scr` + `ipt type="text/javascript" src="layui/layui.js"></scr` + `ipt>
+</head>
+<body>
+`+htmlTpl+`
+<scr` + `ipt>
+  // 自定义模块
+  layui.config({
+    base: 'ext/',   // 模块目录
+    version: 'v1.5.9'
+  }).extend({             // 模块别名
+    soulTable: 'soulTable'
+  });
+  `+jsTpl+`
+</scr` + `ipt>
+</body>
+</html>
+`
+        $('#runjs textarea').val(runJsTpl)
+        window.showRunJs(runJsTpl)
       },
 
       scrollHandler() {
