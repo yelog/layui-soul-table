@@ -2,7 +2,7 @@
  *
  * @name:  表格增强插件
  * @author: yelog
- * @version: v1.5.9
+ * @version: v1.5.10
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 
@@ -114,7 +114,17 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 if (isHandle) {
                     var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
                     $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
-                        var curWidth = $(this).text().width(font);
+                        var curWidth = 0
+                        if ($(this).children().children() && $(this).children().children().length > 0) {
+                            $(this).children().contents().each(function () {
+                                curWidth += this.nodeType === 3 ? this.textContent.width(font)
+                                    : this.nodeType === 1 ? $(this).outerWidth(true) : 0
+                            })
+                        } else {
+                            curWidth = $(this).text().width(font);
+                        }
+
+                        // var curWidth = $(this).text().width(font);
                         if ( maxWidth <curWidth) {
                             maxWidth = curWidth
                         }

@@ -2,7 +2,7 @@
 
 ### 1. 默认开启双击列边适应列宽
 无需其他配置，只要引入 `soulTable.render(this)` 即可使用  
-双击列头右边的边线，将会根据此列内容进行自适应调整（即按照最宽的那个为准）
+双击列头右边的边线（右侧的固定列，双击左侧边线），将会根据此列内容进行自适应调整（即按照最宽的那个为准）
 
 :::demo
 ```html
@@ -21,13 +21,17 @@ layui.use(['form', 'table','soulTable'], function () {
         ,page: false
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
-            {field: 'title', title: '诗词', fixed: 'left', width: 200},
+            {field: 'title', title: '诗词', fixed: 'left', width: 100},
             {field: 'dynasty', title: '朝代', width: 100},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},
-            {field: 'heat', title: '点赞数', fixed: 'right', width: 112},
-            {field: 'createTime', title: '录入时间', fixed: 'right', width: 165},
+            {field: 'heat', title: '点赞数', width: 112},
+            {field: 'createTime', title: '录入时间', fixed: 'right', width: 100},
+            {title: '操作', width: 120, fixed: 'right', templet: function(row) {
+               return '<a class="layui-btn layui-btn-xs" >编辑</a>' +
+                '<a class="layui-btn layui-btn-danger layui-btn-xs">删除</a>'
+            }}
         ]]
         ,done: function () {
             soulTable.render(this)
@@ -69,13 +73,17 @@ layui.use(['form', 'table','soulTable'], function () {
         ,page: false
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
-            {field: 'title', title: '诗词', fixed: 'left', width: 200},
+            {field: 'title', title: '诗词', width: 200},
             {field: 'dynasty', title: '朝代', width: 100},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},
-            {field: 'heat', title: '点赞数', fixed: 'right', width: 112},
+            {field: 'heat', title: '点赞数', width: 112},
             {field: 'createTime', title: '录入时间', fixed: 'right', width: 165},
+            {title: '按钮+文字', width: 120, fixed: 'right', templet: function(row) {
+               return '<a class="layui-btn layui-btn-xs" >编辑</a>' +
+                '<a class="layui-btn layui-btn-danger layui-btn-xs">删除</a>' + 'abcdef'
+            }}
         ]]
         ,autoColumnWidth: {
             init: true

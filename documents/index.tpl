@@ -111,7 +111,7 @@
   // 自定义模块
       layui.config({
           base: 'ext/',   // 模块目录
-          version: 'v1.5.9'
+          version: 'v1.5.10'
       }).extend({                         // 模块别名
           soulTable: 'soulTable'
       });
@@ -151,7 +151,6 @@
                    _COVER.hide();
                  }).on('mousedown', function(e){
                    var othis = $(this);
-                   console.log(dict.allowResize);
                    if(dict.allowResize){
                      e.preventDefault();
                      _COVER.show();
@@ -166,12 +165,10 @@
                  //拖拽中
                  _DOC.on('mousemove', function(e){
                    if(dict.resizeStart){
-                     console.log('hel');
                      e.preventDefault();
                      if(dict.othis){
                        var setWidth = dict.ruleWidth + e.clientX - dict.offset[0];
                        dict.othis.css('width', setWidth + 'px');
-                       console.log(setWidth);
                      }
                    }
                  }).on('mouseup', function(e){

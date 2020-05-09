@@ -2,7 +2,7 @@
  *
  * @name:  表格筛选扩展
  * @author: yelog
- * @version: v1.5.9
+ * @version: v1.5.10
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
