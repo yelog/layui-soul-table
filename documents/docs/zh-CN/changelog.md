@@ -32,7 +32,9 @@
 ## 更新日志
 ### **1.5.10** <small>`2020-05-13`</small>
 
-[修复] 筛选 日期筛选昨天有逻辑错误 by [wenstelo](https://github.com/wenstelo) 提醒
+[修复] 筛选 日期筛选昨天有逻辑错误 [Issue89](https://github.com/yelog/layui-soul-table/issues/89)
+
+[修复] 拖拽 filed内有空格时定位不到dom的问题 [Issue87](https://github.com/yelog/layui-soul-table/issues/87)
 
 ### **1.5.10** <small>`2020-05-09`</small>
 

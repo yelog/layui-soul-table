@@ -297,7 +297,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         $cloneHead.after($leftTh);
 
                                         // 更新隐藏列顺序
-                                        $('#soul-columns' + tableId + '>li[data-value=' + field + ']').after($('#soul-columns' + tableId + '>li[data-value=' + field + ']').prev())
+                                        $('#soul-columns' + tableId + '>li[data-value="' + field + '"]').after($('#soul-columns' + tableId + '>li[data-value="' + field + '"]').prev())
 
                                         // 更新配置信息
                                         for (i = 0; i < myTable.cols.length; i++) {
@@ -322,7 +322,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                         $cloneHead.prev().before($rightTh);
 
                                         // 更新隐藏列顺序
-                                        $('#soul-columns' + tableId + '>li[data-value=' + field + ']').before($('#soul-columns' + tableId + '>li[data-value=' + field + ']').next())
+                                        $('#soul-columns' + tableId + '>li[data-value="' + field + '"]').before($('#soul-columns' + tableId + '>li[data-value="' + field + '"]').next())
 
                                         // 更新配置信息
                                         for (i = 0; i < myTable.cols.length; i++) {

@@ -99,7 +99,17 @@ layui.define(['table'], function (exports) {
                 if (isHandle) {
                     var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
                     $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
-                        var curWidth = $(this).text().width(font);
+                        var curWidth = 0
+                        if ($(this).children().children() && $(this).children().children().length > 0) {
+                            $(this).children().contents().each(function () {
+                                curWidth += this.nodeType === 3 ? this.textContent.width(font)
+                                    : this.nodeType === 1 ? $(this).outerWidth(true) : 0
+                            })
+                        } else {
+                            curWidth = $(this).text().width(font);
+                        }
+
+                        // var curWidth = $(this).text().width(font);
                         if ( maxWidth <curWidth) {
                             maxWidth = curWidth
                         }
@@ -272,7 +282,7 @@ layui.define(['table'], function (exports) {
                                         $cloneHead.after($leftTh);
 
                                         // 更新隐藏列顺序
-                                        $('#soul-columns' + tableId + '>li[data-value=' + field + ']').after($('#soul-columns' + tableId + '>li[data-value=' + field + ']').prev())
+                                        $('#soul-columns' + tableId + '>li[data-value="' + field + '"]').after($('#soul-columns' + tableId + '>li[data-value="' + field + '"]').prev())
 
                                         // 更新配置信息
                                         for (i = 0; i < myTable.cols.length; i++) {
@@ -297,7 +307,7 @@ layui.define(['table'], function (exports) {
                                         $cloneHead.prev().before($rightTh);
 
                                         // 更新隐藏列顺序
-                                        $('#soul-columns' + tableId + '>li[data-value=' + field + ']').before($('#soul-columns' + tableId + '>li[data-value=' + field + ']').next())
+                                        $('#soul-columns' + tableId + '>li[data-value="' + field + '"]').before($('#soul-columns' + tableId + '>li[data-value="' + field + '"]').next())
 
                                         // 更新配置信息
                                         for (i = 0; i < myTable.cols.length; i++) {
