@@ -1863,7 +1863,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                             status = true;
                             break;
                         case 'yesterday':
-                            status = item[field] && isBetween(dateVal,getToday()-1, getToday()-86400);
+                            status = item[field] && isBetween(dateVal,getToday()-86400, getToday()-1);
                             break;
                         case 'thisWeek':
                             status = item[field] && isBetween(dateVal,getFirstDayOfWeek(), getFirstDayOfWeek()+86400*7-1);
