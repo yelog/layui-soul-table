@@ -30,6 +30,10 @@
 
 
 ## 更新日志
+### **1.5.10** <small>`2020-05-17`</small>
+
+[注释] 压缩版 js 保留头部版本信息
+
 ### **1.5.10** <small>`2020-05-13`</small>
 
 [修复] 筛选 日期筛选昨天有逻辑错误 [Issue89](https://github.com/yelog/layui-soul-table/issues/89)

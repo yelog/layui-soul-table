@@ -2,6 +2,8 @@
  *
  * @name:  表格筛选扩展
  * @author: yelog
+ * @link: https://github.com/yelog/layui-soul-table
+ * @license: MIT
  * @version: v1.5.10
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {

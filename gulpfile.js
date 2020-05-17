@@ -3,6 +3,10 @@ const uglify = require('gulp-uglify')
 
 gulp.task('build_js', () => {
   return gulp.src('ext/*.js')
-    .pipe(uglify())
+    .pipe(uglify({
+        output: {
+            comments: 'some'
+        }
+    }))
     .pipe(gulp.dest('docs/ext'))
 })

@@ -2,6 +2,8 @@
  *
  * @name:  表格增强插件-独立版本
  * @author: yelog
+ * @link: https://github.com/yelog/layui-soul-table
+ * @license: MIT
  * @version: v1.5.10
  */
 layui.define(['table'], function (exports) {

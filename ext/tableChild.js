@@ -2,6 +2,8 @@
  *
  * @name:  子表格扩展
  * @author: yelog
+ * @link: https://github.com/yelog/layui-soul-table
+ * @license: MIT
  * @version: v1.5.10
  */
 layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
