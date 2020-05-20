@@ -21,18 +21,19 @@ layui.use(['form', 'table','soulTable'], function () {
             {type: 'checkbox', rowspan: 3, fixed: 'left'},
             {type: 'numbers', title: '序号', rowspan: 3, fixed: 'left'},
             {title: '1-1', colspan: 3, align: 'center'},
-            {title: '1-2', colspan: 2},
-            {field: 'heat', title: '点赞数', width: 112, rowspan: 3, sort:true},
+            {title: '1-2', colspan: 3},
             {field: 'createTime', title: '录入时间', rowspan: 3, width: 165, fixed: 'right'}
         ],[
             {title: '2-1', colspan: 2},
             {field: 'author', title: '作者', rowspan: 2, width: 165},
-            {title: '2-2', colspan: 2}
+            {title: '2-2', colspan: 2},
+            {title: '单独一列', colspan: 1, colGroup:true}
         ],[
             {field: 'title', title: '诗词', width: 200, sort: true},
             {field: 'dynasty', title: '朝代', width: 100, sort: true},
             {field: 'content', title: '内容', width: 123},
-            {field: 'type', title: '类型', width: 112}
+            {field: 'type', title: '类型', width: 112},
+            {field: 'heat', title: '点赞数', width: 112}
         ]]
         ,excel: {filename: '复杂表头导出.xlsx'}
         ,done: function () {
