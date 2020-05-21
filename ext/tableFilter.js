@@ -2624,14 +2624,23 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             }
             var columns = cols[cols.length-1]; // 获取真实列
 
+            // 处理数据
+            for (i = 0; i < data.length; i++) {
+                for (j = 0; j < columns.length; j++) {
+                    if ((columns[j].field || columns[j].type === 'numbers') && !columns[j].hide) {
+                        data[i][columns[j].key] = data[i][columns[j].field || columns[j]['LAY_TABLE_INDEX']]
+                    }
+                }
+            }
+
             // 处理合计行
             if (totalRow !== false && myTable.totalRow) {
                 var obj = {}, totalRows = {};
                 for (i = 0; i < columns.length; i++) {
                     if (columns[i].totalRowText) {
-                        obj[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = columns[i].totalRowText
+                        obj[columns[i].key] = columns[i].totalRowText
                     } else if (columns[i].totalRow) {
-                        totalRows[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = 0
+                        totalRows[columns[i].key] = 0
                     }
                 }
                 if (JSON.stringify(totalRows) !== '{}') {
@@ -2653,8 +2662,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                     for (j = 0; j < columns.length; j++) {
                         if (columns[j].field === customColumns[i]) {
                             tempCustomColumns.push(columns[j]);
-                            columnsMap[0][columns[j].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[j].field] = columns[j];
-                            tempArray[columns[j].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[j].field] = columns[j].title
+                            columnsMap[0][columns[j].key] = columns[j];
+                            tempArray[columns[j].key] = columns[j].title
                             break;
                         }
                     }
@@ -2667,8 +2676,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                     columnsMap[i] = {}
                     tempArray = {}
                     for (j = 0; j < cols[i].length; j++) {
-                        columnsMap[i][cols[i][j].type === 'numbers' ? 'LAY_TABLE_INDEX' : cols[cols.length-1][j].field] = cols[i][j];
-                        tempArray[cols[i][j].type === 'numbers' ? 'LAY_TABLE_INDEX' : cols[cols.length-1][j].field] = cols[i][j].title
+                        columnsMap[i][cols[cols.length-1][j].key] = cols[i][j];
+                        tempArray[cols[cols.length-1][j].key] = cols[i][j].title
                     }
                     data.splice(i, 0, tempArray)
                 }
@@ -2686,7 +2695,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                         tempArray = {}, jumpColsNum = 0;
                         for (j = 0; j < (addTop.data[i].length>columns.length?addTop.data[i].length:columns.length); j++) {
                             if ((columns[j].field || columns[j].type === 'numbers') && !columns[j].hide) {
-                                tempArray[columns[j] ? columns[j].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[j].field : j+''] = addTop.data[i][j - jumpColsNum] || ''
+                                tempArray[columns[j] ? columns[j].key : j+''] = addTop.data[i][j - jumpColsNum] || ''
                             } else {
                                 jumpColsNum++
                             }
@@ -2716,7 +2725,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                         tempArray = {}, jumpColsNum = 0;
                         for (j = 0; j < (addBottom.data[i].length>columns.length?addBottom.data[i].length:columns.length); j++) {
                             if ((columns[j].field || columns[j].type === 'numbers') && !columns[j].hide) {
-                                tempArray[columns[j] ? columns[j].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[j].field : j+''] = addBottom.data[i][j - jumpColsNum] || ''
+                                tempArray[columns[j] ? columns[j].key : j+''] = addBottom.data[i][j - jumpColsNum] || ''
                             } else {
                                 jumpColsNum++
                             }
@@ -2748,7 +2757,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                     if (columns[i].width) {
                         widths[String.fromCharCode(64 + parseInt(++index))] = columns[i].width
                     }
-                    showField[columns[i].type === 'numbers' ? 'LAY_TABLE_INDEX' : columns[i].field] = function (field, line, data, curIndex) {
+                    showField[columns[i].key] = function (field, line, data, curIndex) {
                         var bgColor = 'ffffff', color = '000000', family = 'Calibri', size = 12, cellType = 's',
                             bodyIndex = curIndex - (customColumns ? 1 : cols.length) - tableStartIndex + 1,
                             border = {
@@ -2869,7 +2878,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                                 typeof columnsMap[columnsMap.length - 1][field].templet === 'function' ?
                                     $('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').find(':input').length===0?$('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').text():$tableBody.children('tbody').children('tr[data-index='+bodyIndex+']').children('td[data-field="'+field+'"]').find(':input').val() || handleNull(line[field])
                                     : $('<div>'+laytpl($(columnsMap[columnsMap.length - 1][field].templet).html() || String(columnsMap[columnsMap.length - 1][field].templet)).render(line)+'</div>').find(':input').length===0?$('<div>'+laytpl($(columnsMap[columnsMap.length - 1][field].templet).html() || String(columnsMap[columnsMap.length - 1][field].templet)).render(line)+'</div>').text():$tableBody.children('tbody').children('tr[data-index='+bodyIndex+']').children('td[data-field="'+field+'"]').find(':input').val() || handleNull(line[field])
-                                : bodyIndex >=0 && field === 'LAY_TABLE_INDEX' ? bodyIndex+1 : handleNull(line[field]),// v 代表单元格的值
+                                : bodyIndex >=0 && columnsMap[columnsMap.length - 1][field].type === 'numbers' ? bodyIndex+1 : handleNull(line[field]),// v 代表单元格的值
                             s: {// s 代表样式
                                 alignment: {
                                     horizontal: columnsMap[bodyIndex<-1 ? curIndex - tableStartIndex + 1 : columnsMap.length - 1][field].align ? alignTrans[columnsMap[bodyIndex<-1 ? curIndex - tableStartIndex + 1 : columnsMap.length - 1][field].align] : 'top',
