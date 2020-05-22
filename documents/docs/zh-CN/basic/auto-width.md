@@ -56,6 +56,8 @@ layui.use(['form', 'table','soulTable'], function () {
 
 如果只是想在初始化时某些列自动列宽，则设置 `autoColumnWidth.init = ['title', 'author']` 即可，数组为 cols 中的 field
 
+如果想要禁用某个列自动调整列宽，则在指定列中设置 `autoWidth: false` 如下的 `录入时间` 的那一列
+
 :::demo
 ```html
 <table id="myTable2" lay-filter="myTable2"></table>
@@ -79,7 +81,7 @@ layui.use(['form', 'table','soulTable'], function () {
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},
             {field: 'heat', title: '点赞数', width: 112},
-            {field: 'createTime', title: '录入时间', fixed: 'right', width: 165},
+            {field: 'createTime', title: '录入时间', fixed: 'right', width: 100, autoWidth: false},
             {title: '按钮+文字', width: 120, fixed: 'right', templet: function(row) {
                return '<a class="layui-btn layui-btn-xs" >编辑</a>' +
                 '<a class="layui-btn layui-btn-danger layui-btn-xs">删除</a>' + 'abcdef'
@@ -104,7 +106,7 @@ layui.use(['form', 'table','soulTable'], function () {
 ```
 :::
 
-### 3. tab 示例
+### 3. 自动列宽 有tab 示例
 :::demo
 ```html
 <div class="layui-tab" lay-filter="myTab">
@@ -143,8 +145,12 @@ layui.use(['form', 'element', 'table','soulTable'], function () {
             {field: 'author', title: '作者1', width: 165 },
             {field: 'content', title: '内容1', width: 123},
             {field: 'type', title: '类型1', width: 112},
-            {field: 'heat', title: '点赞数1', fixed: 'right', width: 112},
+            {field: 'heat', title: '点赞数1', width: 112},
             {field: 'createTime', title: '录入时间1', fixed: 'right', width: 165},
+             {title: '操作', width: 120, fixed: 'right', templet: function(row) {
+                return '<a class="layui-btn layui-btn-xs" >编辑</a>' +
+                 '<a class="layui-btn layui-btn-danger layui-btn-xs">删除</a>'
+             }}
         ]]
         ,autoColumnWidth: {
             init: true
@@ -176,8 +182,12 @@ layui.use(['form', 'element', 'table','soulTable'], function () {
             {field: 'author', title: '作者2', width: 165 },
             {field: 'content', title: '内容2', width: 123},
             {field: 'type', title: '类型2', width: 112},
-            {field: 'heat', title: '点赞数2', fixed: 'right', width: 112},
+            {field: 'heat', title: '点赞数2', width: 112},
             {field: 'createTime', title: '录入时间2', fixed: 'right', width: 165},
+            {title: '操作', width: 120, fixed: 'right', templet: function(row) {
+                return '<a class="layui-btn layui-btn-xs" >编辑</a>' +
+                 '<a class="layui-btn layui-btn-danger layui-btn-xs">删除</a>'
+             }}
         ]]
         ,autoColumnWidth: {
             init: true
@@ -199,7 +209,7 @@ layui.use(['form', 'element', 'table','soulTable'], function () {
 ```
 :::
 
-### 5. 复杂表头
+### 4. 复杂表头
 
 :::demo
 ```html
@@ -251,7 +261,7 @@ layui.use(['form', 'table', 'soulTable'], function () {
 ```
 :::
 
-### 4. 关闭自动列宽
+### 5. 关闭自动列宽
 设置 `autoColumnWidth = false` 或 `autoColumnWidth.dblclick = false` 则会关闭双击自动列宽功能
 
 :::demo

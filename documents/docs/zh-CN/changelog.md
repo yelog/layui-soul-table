@@ -34,6 +34,10 @@
 
 [增强] 筛选 前端分页筛选后，保留勾选状态[复选框优化](#/zh-CN/component/filter/checkbox)
 
+[修复] 自动列宽 修复表格在隐藏时(如在 tab 页中)，计算列宽错误的问题
+
+[增强] 自动列宽 新增参数 `autoWidth` 用于禁止某列自动适应列宽 [初始化表格时自动调整列宽](#/zh-CN/component/basic/auto-width)
+
 ### **1.5.10** <small>`2020-05-21`</small>
 
 [修复] excel导出 支持重复列（field相同）

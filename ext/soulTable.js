@@ -14,11 +14,13 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
         $ = layui.$,
         table = layui.table,
         HIDE = 'layui-hide',
+        tables = {},
         isFirst = true; // 第一次加载表格
 
     // 封装方法
     var mod = {
         render: function (myTable) {
+            tables[myTable.id] = myTable
             var curTableSession = localStorage.getItem(location.pathname + location.hash + myTable.id);
 
             if (myTable.filter && myTable.filter.cache && isFirst && curTableSession) {
@@ -77,76 +79,86 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             });
         }
         , autoColumnWidth: function (myTable) {
-            var _this = this,
-                $table = $(myTable.elem),
-                th = $table.next().children('.layui-table-box').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
-                fixTh = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
-                $tableBodytr = $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr');
-            String.prototype.width = function(font) {
-                var f = font || $('body').css('font'),
-                    o = $('<div>' + this + '</div>')
-                        .css({'position': 'absolute', 'float': 'left', 'white-space': 'nowrap', 'visibility': 'hidden', 'font': f})
-                        .appendTo($('body')),
-                    w = o.width();
+            var _this = this;
+            if (typeof myTable === 'object') {
+                innerColumnWidth(_this, myTable)
+            } else if (typeof myTable === 'string') {
+                innerColumnWidth(_this, tables[myTable])
+            } else if (typeof myTable === 'undefined'){
+                layui.each(tables, function(){
+                    innerColumnWidth(_this, this)
+                });
+            }
+            function innerColumnWidth(_this, myTable) {
+                var $table = $(myTable.elem),
+                    th = $table.next().children('.layui-table-box').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
+                    fixTh = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
+                    $tableBodytr = $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr');
+                String.prototype.width = function(font) {
+                    var f = font || $('body').css('font'),
+                        o = $('<div>' + this + '</div>')
+                            .css({'position': 'absolute', 'float': 'left', 'white-space': 'nowrap', 'visibility': 'hidden', 'font': f})
+                            .appendTo($('body')),
+                        w = o.width();
 
-                o.remove();
-                return w;
-            }
-			if (typeof myTable.autoColumnWidth === 'undefined' || typeof myTable.autoColumnWidth.dblclick === 'undefined' || myTable.autoColumnWidth.dblclick) {
-                th.add(fixTh).on('dblclick', function(e){
-                	var othis = $(this),
-                        pLeft = e.clientX - othis.offset().left;
-                    handleColumnWidth(myTable, othis,  othis.parents('.layui-table-fixed-r').length>0 ? pLeft<=10 : othis.width() - pLeft<=10);
-                })
-			}
-			// 初始化表格后，自动调整所有列宽
-            if (myTable.autoColumnWidth && myTable.autoColumnWidth.init) {
-                th.add(fixTh).each(function (e) {
-                    if (!Array.isArray(myTable.autoColumnWidth.init) || myTable.autoColumnWidth.init.indexOf($(this).attr('data-field')) !== -1) {
-                        handleColumnWidth(myTable, $(this), true);
-                    }
-                })
-            }
-            function handleColumnWidth(myTable, othis, isHandle) {
-                var field = othis.data('field')
-                    ,key = othis.data('key')
-                if(othis.attr('colspan') > 1){
-                    return;
+                    o.remove();
+                    return w;
                 }
-                if (isHandle) {
-                    var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
-                    $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
-                        var curWidth = 0
-                        if ($(this).children().children() && $(this).children().children().length > 0) {
-                            $(this).children().contents().each(function () {
-                                curWidth += this.nodeType === 3 ? this.textContent.width(font)
-                                    : this.nodeType === 1 ? $(this).outerWidth(true) : 0
-                            })
-                        } else {
-                            curWidth = $(this).text().width(font);
-                        }
-
-                        // var curWidth = $(this).text().width(font);
-                        if ( maxWidth <curWidth) {
-                            maxWidth = curWidth
+                if (typeof myTable.autoColumnWidth === 'undefined' || typeof myTable.autoColumnWidth.dblclick === 'undefined' || myTable.autoColumnWidth.dblclick) {
+                    th.add(fixTh).on('dblclick', function(e){
+                        var othis = $(this),
+                            pLeft = e.clientX - othis.offset().left;
+                        handleColumnWidth(myTable, othis,  othis.parents('.layui-table-fixed-r').length>0 ? pLeft<=10 : othis.width() - pLeft<=10);
+                    })
+                }
+                // 初始化表格后，自动调整所有列宽
+                if (myTable.autoColumnWidth && myTable.autoColumnWidth.init) {
+                    th.add(fixTh).each(function (e) {
+                        var colKey = $(this).attr('data-key').split('-')
+                        if (myTable.cols[colKey[1]][colKey[2]].autoWidth !== false && (!Array.isArray(myTable.autoColumnWidth.init) || myTable.autoColumnWidth.init.indexOf($(this).attr('data-field')) !== -1)) {
+                            handleColumnWidth(myTable, $(this), true);
                         }
                     })
+                }
+                function handleColumnWidth(myTable, othis, isHandle) {
+                    var field = othis.data('field')
+                        ,key = othis.data('key')
+                    if(othis.attr('colspan') > 1){
+                        return;
+                    }
+                    if (isHandle) {
+                        var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
+                        $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
+                            var curWidth = 0
+                            if ($(this).children().children() && $(this).children().children().length > 0) {
+                                curWidth += $(this).children().html().width(font)
+                            } else {
+                                curWidth = $(this).text().width(font);
+                            }
 
-                    maxWidth +=32;
+                            // var curWidth = $(this).text().width(font);
+                            if ( maxWidth <curWidth) {
+                                maxWidth = curWidth
+                            }
+                        })
 
-                    _this.getCssRule(myTable, key, function(item){
-                        item.style.width = maxWidth+'px'
-                    });
-                    for (var i = 0; i < myTable.cols.length; i++) {
-                        for (var j = 0; j < myTable.cols[i].length; j++) {
-                            if (myTable.cols[i][j].field === field) {
-                                myTable.cols[i][j].width = maxWidth;
-                                break;
+                        maxWidth +=32;
+
+                        _this.getCssRule(myTable, key, function(item){
+                            item.style.width = maxWidth+'px'
+                        });
+                        for (var i = 0; i < myTable.cols.length; i++) {
+                            for (var j = 0; j < myTable.cols[i].length; j++) {
+                                if (myTable.cols[i][j].field === field) {
+                                    myTable.cols[i][j].width = maxWidth;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
+
 
         }
         /**
