@@ -30,7 +30,7 @@
 
 
 ## 更新日志
-### **1.5.10** <small>`2020-05-22`</small>
+### **1.5.11** <small>`2020-05-22`</small>
 
 [增强] 筛选 前端分页筛选后，保留勾选状态[复选框优化](#/zh-CN/component/filter/checkbox)
 
@@ -39,6 +39,8 @@
 [增强] 自动列宽 新增参数 `autoWidth` 用于禁止某列自动适应列宽 [初始化表格时自动调整列宽](#/zh-CN/component/basic/auto-width)
 
 [修复] 筛选 修复内置排序没有同步最新的分页信息，导致排序信息丢失的问题 [issue#91](https://github.com/yelog/layui-soul-table/issues/91)
+
+[修复] excel导出 修复指定列导出没有无视 `hide` 参数的问题
 
 ### **1.5.10** <small>`2020-05-21`</small>
 

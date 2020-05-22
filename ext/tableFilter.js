@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.10
+ * @version: v1.5.11
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -2643,7 +2643,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             // 处理数据
             for (i = 0; i < data.length; i++) {
                 for (j = 0; j < columns.length; j++) {
-                    if ((columns[j].field || columns[j].type === 'numbers') && !columns[j].hide) {
+                    if ((columns[j].field || columns[j].type === 'numbers') && (customColumns && Array.isArray(customColumns) || !columns[j].hide)) {
                         data[i][columns[j].key] = data[i][columns[j].field || columns[j]['LAY_TABLE_INDEX']]
                     }
                 }
@@ -2677,6 +2677,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                 for (i = 0; i < customColumns.length; i++) {
                     for (j = 0; j < columns.length; j++) {
                         if (columns[j].field === customColumns[i]) {
+                            columns[j].hide = false
                             tempCustomColumns.push(columns[j]);
                             columnsMap[0][columns[j].key] = columns[j];
                             tempArray[columns[j].key] = columns[j].title
