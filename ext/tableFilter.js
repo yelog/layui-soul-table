@@ -21,6 +21,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         bfColumnTimeOut,
         bfCond1TimeOut,
         isFilterReload = {},
+        SOUL_ROW_INDEX = 'SOUL_ROW_INDEX',
         cache = {},
         HIDE = 'layui-hide',
         maxId = 1,
@@ -157,6 +158,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             if (!initFilter || isFilterReload[myTable.id] || myTable.isSoulFrontFilter) {
                 isFilterReload[myTable.id] = false
                 myTable['isSoulFrontFilter'] = false
+                if (!myTable.url && myTable.page && myTable.data) {
+                    myTable.data.forEach(function (row) {
+                        cache[myTable.id][row[SOUL_ROW_INDEX]] = row
+                    })
+                }
                 this.bindFilterClick(myTable);
                 return;
             } else {
@@ -175,6 +181,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                 } else {
                     cache[myTable.id] = myTable.data || layui.table.cache[myTable.id]
                 }
+                // 给表格数据添加位置标志
+                cache[myTable.id].forEach(function (item, index) {
+                    item[SOUL_ROW_INDEX] = index
+                })
 
                 if (myTable.filter && myTable.filter.clearFilter) {
                     if (myTable.where && myTable.where.filterSos && JSON.parse(myTable.where.filterSos).length>0) {
@@ -204,8 +214,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                         $table.attr('lay-filter', tableId);
                     }
                     table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
-                        // 后台排序
+
                         if (myTable.url && myTable.page) {
+							// 后台分页
                             where_cache[myTable.id].field = obj.field;
                             where_cache[myTable.id].order = obj.type;
                             isFilterReload[myTable.id] = true;
@@ -217,6 +228,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                                 }
                             }));
                         } else if (!myTable.url && myTable.page) {
+                            // 前台分页
                             if(obj.type === 'asc'){ //升序
                                 cache[myTable.id] = layui.sort(cache[myTable.id], obj.field)
                             } else if(obj.type === 'desc'){ //降序
