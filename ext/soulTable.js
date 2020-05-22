@@ -158,8 +158,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     }
                 }
             }
-
-
         }
         /**
          * 左右拖拽调整列顺序、向上拖隐藏列
