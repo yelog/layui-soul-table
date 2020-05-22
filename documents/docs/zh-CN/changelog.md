@@ -38,6 +38,8 @@
 
 [增强] 自动列宽 新增参数 `autoWidth` 用于禁止某列自动适应列宽 [初始化表格时自动调整列宽](#/zh-CN/component/basic/auto-width)
 
+[修复] 筛选 修复内置排序没有同步最新的分页信息，导致排序信息丢失的问题 [issue#91](https://github.com/yelog/layui-soul-table/issues/91)
+
 ### **1.5.10** <small>`2020-05-21`</small>
 
 [修复] excel导出 支持重复列（field相同）

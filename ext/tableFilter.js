@@ -158,6 +158,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             if (!initFilter || isFilterReload[myTable.id] || myTable.isSoulFrontFilter) {
                 isFilterReload[myTable.id] = false
                 myTable['isSoulFrontFilter'] = false
+                // 同步选中状态
                 if (!myTable.url && myTable.page && myTable.data) {
                     myTable.data.forEach(function (row) {
                         cache[myTable.id][row[SOUL_ROW_INDEX]] = row
@@ -214,6 +215,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                         $table.attr('lay-filter', tableId);
                     }
                     table.on('sort(' + $table.attr('lay-filter') + ')', function (obj) {
+
+                        // 同步分页信息
+                        myTable.limit = table_cache[myTable.id].limit
 
                         if (myTable.url && myTable.page) {
 							// 后台分页
