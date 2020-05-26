@@ -34,6 +34,8 @@
 
 [修复] 筛选 修复下拉选择列表中 false 值不显示的问题
 
+[增强] overflow 支持表头和合计行 [第四点](#/zh-CN/component/basic/overflow)
+
 ### **1.5.11** <small>`2020-05-22`</small>
 
 [增强] 筛选 前端分页筛选后，保留勾选状态[复选框优化](#/zh-CN/component/filter/checkbox)

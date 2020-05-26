@@ -132,12 +132,10 @@ layui.use(['form', 'table','soulTable'], function () {
 ```
 :::
 
-### 4. 子表
-子表的超出也可以独立设置
-
+### 4. 支持表头和合计行
 :::demo
 ```html
-<table id="myTable4" lay-filter="myTable4"></table>
+<table id="myTable4" ></table>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
@@ -145,6 +143,47 @@ layui.use(['form', 'table','soulTable'], function () {
 
     table.render({
         elem: '#myTable4'
+        ,url: 'data-1.json'
+        ,toolbar: true
+        ,height: 500
+        ,totalRow: true
+        ,overflow: {
+            type: 'tips',
+            header: true, // 表头支持 overflow
+            total: true // 合计行支持 overflow
+        }
+        ,cols: [[
+            {type: 'radio', title: '##', fixed: 'left'},
+            {type: 'checkbox', title: '##', fixed: 'left'},
+            {field: 'title', title: '诗词--------------', width: 100, fixed: 'left', totalRowText: '合计------------'},
+            {field: 'content', title: '内容', width: 400},
+            {field: 'type', title: '类型', width: 112},
+            {field: 'heat', title: '点赞数', width: 75, totalRow: true},
+            {field: 'createTime', title: '录入时间',width: 165},
+        ]]
+        ,done: function () {
+            soulTable.render(this)
+        }
+    });
+})
+</script>
+```
+:::
+
+
+### 5. 子表
+子表的超出也可以独立设置
+
+:::demo
+```html
+<table id="myTable5" lay-filter="myTable5"></table>
+<script>
+layui.use(['form', 'table','soulTable'], function () {
+    var table = layui.table,
+        soulTable = layui.soulTable;
+
+    table.render({
+        elem: '#myTable5'
         ,url: 'data-1.json'
         ,height: 500
         ,page: false

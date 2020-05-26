@@ -812,7 +812,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 return;
             }
             var $table = $(myTable.elem),
+                layHeader = $table.next().find('.layui-table-header'),
                 layBody = $table.next().find('.layui-table-body'),
+                layTotal = $table.next().find('.layui-table-total'),
                 tooltipIndex,
                 hoverTime = options.hoverTime || 0,
                 tooltipTimeOut,
@@ -822,7 +824,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 maxWidth = options.maxWidth || 300;
 
             if (options.type === 'tips') {
-                layBody.off('mouseenter', 'td').on('mouseenter', 'td', function () {
+                layBody.off('mouseenter', 'td').off('mouseleave', 'td').on('mouseenter', 'td', function () {
                     var _this = this;
                     tooltipTimeOut = setTimeout(function () {
                         toopTip.call(_this)
@@ -830,6 +832,26 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }).on('mouseleave', 'td', function () {
                     toopTip.call(this, 'hide')
                 })
+                if (options.header) {
+                    layHeader.off('mouseenter', 'th').off('mouseleave', 'th').on('mouseenter', 'th', function () {
+                        var _this = this;
+                        tooltipTimeOut = setTimeout(function () {
+                            toopTip.call(_this)
+                        }, hoverTime)
+                    }).on('mouseleave', 'th', function () {
+                        toopTip.call(this, 'hide')
+                    })
+                }
+                if (options.total) {
+                    layTotal.off('mouseenter', 'td').off('mouseleave', 'td').on('mouseenter', 'td', function () {
+                        var _this = this;
+                        tooltipTimeOut = setTimeout(function () {
+                            toopTip.call(_this)
+                        }, hoverTime)
+                    }).on('mouseleave', 'td', function () {
+                        toopTip.call(this, 'hide')
+                    })
+                }
 
                 function toopTip(hide) {
                     clearTimeout(tooltipTimeOut);
@@ -859,6 +881,28 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                         elemCell.attr('title', $(this).text())
                     }
                 })
+                if (options.header) {
+                    layHeader.off('mouseenter', 'th').on('mouseenter', 'th', function () {
+                        var othis = $(this)
+                            ,elemCell = othis.children('.layui-table-cell');
+                        if(othis.data('off')) return;
+
+                        if(elemCell.prop('scrollWidth') > elemCell.outerWidth()) {
+                            elemCell.attr('title', $(this).text())
+                        }
+                    })
+                }
+                if (options.total) {
+                    layTotal.off('mouseenter', 'td').on('mouseenter', 'td', function () {
+                        var othis = $(this)
+                            ,elemCell = othis.children('.layui-table-cell');
+                        if(othis.data('off')) return;
+
+                        if(elemCell.prop('scrollWidth') > elemCell.outerWidth()) {
+                            elemCell.attr('title', $(this).text())
+                        }
+                    })
+                }
             }
 
         },
