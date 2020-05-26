@@ -34,11 +34,13 @@
 
 [修复] 筛选 修复下拉选择列表中 false 值不显示的问题
 
-[增强] overflow 支持表头和合计行 [第四点](#/zh-CN/component/basic/overflow)
+[增强] overflow 支持表头和合计行 [内容超出设置 第四点](#/zh-CN/component/basic/overflow)
 
-[增强] 自动列宽 支持同步合计行 [第二点](#/zh-CN/component/basic/auto-width)
+[增强] 自动列宽 支持同步合计行 [自适应列宽 第二点](#/zh-CN/component/basic/auto-width)
 
-[修复] excel导出 修复日期等特殊格式类型的单元格如果值为空，引起文件打开报错的问题 [第二点](#/zh-CN/component/excel/style)
+[修复] excel导出 修复日期等特殊格式类型的单元格如果值为空，引起文件打开报错的问题 [精确参数设置 第二点](#/zh-CN/component/excel/style)
+
+[增强] 行拖动 默认支持索引列同步 [拖拽行 第二点](#/zh-CN/component/basic/row-drag)
 
 ### **1.5.11** <small>`2020-05-22`</small>
 
