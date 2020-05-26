@@ -652,9 +652,21 @@ layui.define(['table'], function (exports) {
                 tableId = myTable.id,
                 isDraging = false,
                 trigger = myTable.rowDrag.trigger || 'row',
-                $trs = trigger === 'row' ? $tableBody.children('tbody').children('tr') : $tableBody.find(trigger);
+                syncNumber = myTable.rowDrag.numbers !== false,
+                numberColumnKey = null, numberStart = 0,
+                $trs = trigger === 'row' ? $tableBody.children('tbody').children('tr') : $tableBody.find(trigger),
+                i, j;
             if (trigger !== 'row') {
                 $tableBody.find(trigger).css('cursor', 'move')
+            }
+            for (i = 0; i < myTable.cols.length; i++) {
+                for (j = 0; j < myTable.cols[i].length; j++) {
+                    if (myTable.cols[i][j].type === 'numbers') {
+                        numberColumnKey = myTable.index + '-' + i + '-' + j;
+                        numberStart = parseInt($noFixedBody.find('td[data-key="'+numberColumnKey+'"]:first').text());
+                        break;
+                    }
+                }
             }
             $trs.on('mousedown', function (e) {
                 if (e.button !== 0) {
@@ -766,12 +778,24 @@ layui.define(['table'], function (exports) {
                             }
                         });
 
-                        var newIndex = $this.index();
+                        var newIndex = $this.index()
+
                         if (newIndex !== index) { // 有位置变动
+                            var cache = table.cache[tableId],
+                                row = cache.splice(index, 1)[0];
+                            cache.splice(newIndex , 0, row);
+                            if (numberColumnKey && syncNumber) {
+                                // 进行序号重排
+                                var sortedIndexs = [newIndex, index].sort()
+                                for (i = sortedIndexs[0]; i <= sortedIndexs[1]; i++) {
+                                    var curIndex = numberStart + i;
+                                    $fixedBody.find('td[data-key="' + numberColumnKey + '"]:eq('+i+')').children().html(curIndex)
+                                    $noFixedBody.find('td[data-key="' + numberColumnKey + '"]:eq('+i+')').children().html(curIndex)
+                                    cache[i][table.config.indexName] = curIndex - 1
+                                }
+                            }
                             if (typeof myTable.rowDrag.done === 'function') {
-                                var cache = layui.table.cache[tableId],
-                                    row = cache.splice(index, 1)[0];
-                                cache.splice(newIndex , 0, row);
+
                                 myTable.rowDrag.done.call(myTable, {
                                     row: row,
                                     newIndex: newIndex,
