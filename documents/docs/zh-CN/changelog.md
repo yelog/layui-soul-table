@@ -38,6 +38,8 @@
 
 [增强] 自动列宽 支持同步合计行 [第二点](#/zh-CN/component/basic/auto-width)
 
+[修复] excel导出 修复日期等特殊格式类型的单元格如果值为空，引起文件打开报错的问题 [第二点](#/zh-CN/component/excel/style)
+
 ### **1.5.11** <small>`2020-05-22`</small>
 
 [增强] 筛选 前端分页筛选后，保留勾选状态[复选框优化](#/zh-CN/component/filter/checkbox)
