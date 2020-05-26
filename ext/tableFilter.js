@@ -25,6 +25,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         cache = {},
         HIDE = 'layui-hide',
         maxId = 1,
+		UNHANDLED_VALUES = [undefined, '', null],
         where_cache = {},
         isFilterCache = {},
         table_cache = {},
@@ -864,7 +865,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                                                     }
                                                 })
                                                 for (i = 0; i < list.length; i++) {
-                                                    if (list[i]) {
+                                                    if (UNHANDLED_VALUES.indexOf(list[i]) === -1) {
                                                         var line = {};
                                                         line[key] = list[i];
                                                         ul.push('<li data-value="' + String(list[i]).toLowerCase() + '"><input type="checkbox" value="' + list[i] + '" title="' + ((columnsConfigs[j].templet && typeof columnsConfigs[j].templet === 'function' ? columnsConfigs[j].templet.call(this, line) : list[i]) + "").replace(/\"|\'/g, '\'') + '" lay-skin="primary" lay-filter="soulDropList' + tableId + '"></li>')
@@ -930,7 +931,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                                 var ul = [];
                                 ul.push("<ul class='" + key + "DropList' data-value='" + key + "'>");
                                 for (i = 0; i < list.length; i++) {
-                                    if (list[i]) {
+                                    if (UNHANDLED_VALUES.indexOf(list[i]) === -1) {
                                         var line = {};
                                         line[key] = list[i];
                                         ul.push('<li data-value="' + String(list[i]).toLowerCase() + '"><input type="checkbox" value="' + list[i] + '" title="' + ((columnsConfigs[j].templet && typeof columnsConfigs[j].templet === 'function' ? columnsConfigs[j].templet.call(this, line) : list[i]) + "").replace(/\"|\'/g, '\'') + '" lay-skin="primary" lay-filter="soulDropList' + tableId + '"></li>')
