@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.11
+ * @version: v1.5.12
  */
 layui.define(['table'], function (exports) {
 
@@ -78,7 +78,8 @@ layui.define(['table'], function (exports) {
                 var $table = $(myTable.elem),
                     th = $table.next().children('.layui-table-box').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
                     fixTh = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
-                    $tableBodytr = $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr');
+                    $tableBodytr = $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr'),
+                    $totalTr = $table.next().children('.layui-table-total').find('tr');
                 String.prototype.width = function(font) {
                     var f = font || $('body').css('font'),
                         o = $('<div>' + this + '</div>')
@@ -113,7 +114,7 @@ layui.define(['table'], function (exports) {
                     }
                     if (isHandle) {
                         var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
-                        $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
+                        $tableBodytr.children('td[data-key="'+key+'"]').each(function (index, elem) {
                             var curWidth = 0
                             if ($(this).children().children() && $(this).children().children().length > 0) {
                                 curWidth += $(this).children().html().width(font)
@@ -122,10 +123,17 @@ layui.define(['table'], function (exports) {
                             }
 
                             // var curWidth = $(this).text().width(font);
-                            if ( maxWidth <curWidth) {
+                            if ( maxWidth < curWidth) {
                                 maxWidth = curWidth
                             }
                         })
+                        if ($totalTr.length > 0) {
+                            var curWidth = $totalTr.children('td[data-key="'+ key +'"]').text().width(font)
+                            if ( maxWidth < curWidth) {
+                                maxWidth = curWidth
+                            }
+
+                        }
 
                         maxWidth +=32;
 
@@ -797,7 +805,9 @@ layui.define(['table'], function (exports) {
                 return;
             }
             var $table = $(myTable.elem),
+                layHeader = $table.next().find('.layui-table-header'),
                 layBody = $table.next().find('.layui-table-body'),
+                layTotal = $table.next().find('.layui-table-total'),
                 tooltipIndex,
                 hoverTime = options.hoverTime || 0,
                 tooltipTimeOut,
@@ -807,7 +817,7 @@ layui.define(['table'], function (exports) {
                 maxWidth = options.maxWidth || 300;
 
             if (options.type === 'tips') {
-                layBody.off('mouseenter', 'td').on('mouseenter', 'td', function () {
+                layBody.off('mouseenter', 'td').off('mouseleave', 'td').on('mouseenter', 'td', function () {
                     var _this = this;
                     tooltipTimeOut = setTimeout(function () {
                         toopTip.call(_this)
@@ -815,6 +825,26 @@ layui.define(['table'], function (exports) {
                 }).on('mouseleave', 'td', function () {
                     toopTip.call(this, 'hide')
                 })
+                if (options.header) {
+                    layHeader.off('mouseenter', 'th').off('mouseleave', 'th').on('mouseenter', 'th', function () {
+                        var _this = this;
+                        tooltipTimeOut = setTimeout(function () {
+                            toopTip.call(_this)
+                        }, hoverTime)
+                    }).on('mouseleave', 'th', function () {
+                        toopTip.call(this, 'hide')
+                    })
+                }
+                if (options.total) {
+                    layTotal.off('mouseenter', 'td').off('mouseleave', 'td').on('mouseenter', 'td', function () {
+                        var _this = this;
+                        tooltipTimeOut = setTimeout(function () {
+                            toopTip.call(_this)
+                        }, hoverTime)
+                    }).on('mouseleave', 'td', function () {
+                        toopTip.call(this, 'hide')
+                    })
+                }
 
                 function toopTip(hide) {
                     clearTimeout(tooltipTimeOut);
@@ -844,6 +874,28 @@ layui.define(['table'], function (exports) {
                         elemCell.attr('title', $(this).text())
                     }
                 })
+                if (options.header) {
+                    layHeader.off('mouseenter', 'th').on('mouseenter', 'th', function () {
+                        var othis = $(this)
+                            ,elemCell = othis.children('.layui-table-cell');
+                        if(othis.data('off')) return;
+
+                        if(elemCell.prop('scrollWidth') > elemCell.outerWidth()) {
+                            elemCell.attr('title', $(this).text())
+                        }
+                    })
+                }
+                if (options.total) {
+                    layTotal.off('mouseenter', 'td').on('mouseenter', 'td', function () {
+                        var othis = $(this)
+                            ,elemCell = othis.children('.layui-table-cell');
+                        if(othis.data('off')) return;
+
+                        if(elemCell.prop('scrollWidth') > elemCell.outerWidth()) {
+                            elemCell.attr('title', $(this).text())
+                        }
+                    })
+                }
             }
 
         },
