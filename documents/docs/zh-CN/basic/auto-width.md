@@ -72,15 +72,16 @@ layui.use(['form', 'table','soulTable'], function () {
         ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="reload">table.reload(\'tableId\')</a><a class="layui-btn layui-btn-normal layui-btn-sm" lay-event="resize">table.resize(\'tableId\')</a></div>'
         ,height: 500
         ,limit: 10
+        ,totalRow: true
         ,page: false
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
+            {field: 'dynasty', title: '朝代', width: 100, totalRowText: '合计------------'},
+            {field: 'heat', title: '点赞数', width: 112, totalRow: true},
             {field: 'title', title: '诗词', width: 200},
-            {field: 'dynasty', title: '朝代', width: 100},
             {field: 'author', title: '作者', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},
-            {field: 'heat', title: '点赞数', width: 112},
             {field: 'createTime', title: '录入时间', fixed: 'right', width: 100, autoWidth: false},
             {title: '按钮+文字', width: 120, fixed: 'right', templet: function(row) {
                return '<a class="layui-btn layui-btn-xs" >编辑</a>' +

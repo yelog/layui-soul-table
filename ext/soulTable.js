@@ -93,7 +93,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 var $table = $(myTable.elem),
                     th = $table.next().children('.layui-table-box').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
                     fixTh = $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-header').children('table').children('thead').children('tr').children('th'),
-                    $tableBodytr = $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr');
+                    $tableBodytr = $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr'),
+                    $totalTr = $table.next().children('.layui-table-total').find('tr');
                 String.prototype.width = function(font) {
                     var f = font || $('body').css('font'),
                         o = $('<div>' + this + '</div>')
@@ -128,7 +129,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     }
                     if (isHandle) {
                         var maxWidth = othis.text().width(othis.css('font'))+21, font = othis.css('font');
-                        $tableBodytr.children('td[data-field="'+field+'"]').each(function (index, elem) {
+                        $tableBodytr.children('td[data-key="'+key+'"]').each(function (index, elem) {
                             var curWidth = 0
                             if ($(this).children().children() && $(this).children().children().length > 0) {
                                 curWidth += $(this).children().html().width(font)
@@ -137,10 +138,17 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                             }
 
                             // var curWidth = $(this).text().width(font);
-                            if ( maxWidth <curWidth) {
+                            if ( maxWidth < curWidth) {
                                 maxWidth = curWidth
                             }
                         })
+                        if ($totalTr.length > 0) {
+                            var curWidth = $totalTr.children('td[data-key="'+ key +'"]').text().width(font)
+                            if ( maxWidth < curWidth) {
+                                maxWidth = curWidth
+                            }
+
+                        }
 
                         maxWidth +=32;
 

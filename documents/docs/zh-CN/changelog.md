@@ -36,6 +36,8 @@
 
 [增强] overflow 支持表头和合计行 [第四点](#/zh-CN/component/basic/overflow)
 
+[增强] 自动列宽 支持同步合计行 [第二点](#/zh-CN/component/basic/auto-width)
+
 ### **1.5.11** <small>`2020-05-22`</small>
 
 [增强] 筛选 前端分页筛选后，保留勾选状态[复选框优化](#/zh-CN/component/filter/checkbox)
