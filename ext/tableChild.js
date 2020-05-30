@@ -519,7 +519,7 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
                             for (k = 1; k < cols[i][j].colspan; k++) {
                                 cols[i].splice(j, 0, cloneCol)
                             }
-                            j = j + cols[i][j].colspan - 1
+                            j = j + parseInt(cols[i][j].colspan) - 1
                         }
                     }
                 }

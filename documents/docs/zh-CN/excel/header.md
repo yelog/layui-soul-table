@@ -20,7 +20,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,cols: [[
             {type: 'checkbox', rowspan: 3, fixed: 'left'},
             {type: 'numbers', title: '序号', rowspan: 3, fixed: 'left'},
-            {title: '1-1', colspan: 3, align: 'center'},
+            {title: '1-1', colspan: '3', align: 'center'},
             {title: '1-2', colspan: 3},
             {field: 'createTime', title: '录入时间', rowspan: 3, width: 165, fixed: 'right'}
         ],[

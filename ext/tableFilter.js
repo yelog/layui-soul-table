@@ -2632,7 +2632,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                             for (k = 1; k < cols[i][j].colspan; k++) {
                                 cols[i].splice(j, 0, cloneCol)
                             }
-                            j = j + cols[i][j].colspan - 1
+                            j = j + parseInt(cols[i][j].colspan) - 1
+
                         }
                     } else if (!((cols[i][j].field || cols[i][j].type==='numbers') && !cols[i][j].hide)) {
                         curRowUnShowCount++;
@@ -3081,7 +3082,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                             for (k = 1; k < cols[i][j].colspan; k++) {
                                 cols[i].splice(j, 0, cloneCol)
                             }
-                            j = j + cols[i][j].colspan - 1
+                            j = j + parseInt(cols[i][j].colspan) - 1
                         }
                     }
                 }
