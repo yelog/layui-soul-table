@@ -431,10 +431,16 @@ layui.define(['table' ,'element', 'form', 'laytpl'], function (exports) {
             // }
             $tr.next().remove()
             var tables = tableChildren[tableId + rowIndex];
-            if (layui.tableFilter) { //如果使用了筛选功能，怎同时清理筛选渲染的数据
+            if (layui.tableFilter) { //如果使用了筛选功能，同时清理筛选渲染的数据
                 layui.tableFilter.destroy(tables);
             }
+            if (layui.soulTable) { // 清除记忆
+                for (var i = 0; i < tableChildren[tableId + rowIndex].length; i++) {
+                    layui.soulTable.clearOriginCols(tableChildren[tableId + rowIndex][i].config.id)
+                }
+            }
             delete tableChildren[tableId + rowIndex]
+
         },
         cloneJSON: function (obj) {
             var JSON_SERIALIZE_FIX = {

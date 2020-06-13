@@ -38,6 +38,8 @@
 
 [添加] 记忆功能 支持 `soulTable.clearCache(tableId)` 手动执行清除 
 
+[修复] 记忆功能 支持在子表中开启记忆功能
+
 [修复] 筛选 修复底部筛选筛选错位问题 [基本筛选 注意](#/zh-CN/component/filter/basic)
 
 ### **1.5.12** <small>`2020-05-30`</small>

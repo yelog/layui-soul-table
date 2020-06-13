@@ -74,7 +74,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             this.fixFixedScroll(myTable);
         }
         , updateCols: function (myTable, cols) {
-            var i, j, lastKeyMap = {}, columnKey,
+            var i, j, lastKeyMap = {}, columnKey, newCols = [], col = [],
                 $table = $(myTable.elem),
                 $tableBox = $table.next().children('.layui-table-box'),
 				$fixedHead = $tableBox.children('.layui-table-fixed').children('.layui-table-header').children('table'),
@@ -92,6 +92,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             }
 
             for (i = 0; i < cols.length; i++) {
+                col = []
                 for (j = 0; j < cols[i].length; j++) {
                 	columnKey = myTable.index + '-' + cols[i][j].key;
                 	// 同步列宽
@@ -114,7 +115,12 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                             return;
                         }
                     }
+                    lastKeyMap[cols[i][j].key].fixed = cols[i][j].fixed;
+                    lastKeyMap[cols[i][j].key].width = cols[i][j].width;
+                    lastKeyMap[cols[i][j].key].hide = cols[i][j].hide;
+                    col.push(lastKeyMap[cols[i][j].key])
                 }
+                newCols.push(col)
             }
             $noFixedHead.children().children('tr').each(function () {
                 innerHandler(this, 'th')
@@ -138,7 +144,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
             }
 
-            myTable.cols = cols;
+            myTable.cols = newCols;
+
             tableFilter.resize(myTable)
         }
         /**
@@ -1446,8 +1453,12 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             }
             return newObj
         },
-        clearOriginCols: function () {
-            originCols = {}
+        clearOriginCols: function (tableId) {
+            if (tableId) {
+                delete originCols[tableId]
+            } else {
+                originCols = {}
+            }
         }
     }
 
