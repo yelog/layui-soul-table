@@ -10,6 +10,10 @@
         {
           "path": "/start/install",
           "name": "安装"
+        },
+        {
+          "path": "/start/config",
+          "name": "全局配置"
         }
       ]
     },

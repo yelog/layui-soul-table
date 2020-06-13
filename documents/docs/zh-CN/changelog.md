@@ -42,6 +42,8 @@
 
 [修复] 筛选 修复底部筛选筛选错位问题 [基本筛选 注意](#/zh-CN/component/filter/basic)
 
+[新增] 全局配置 支持修改默认配置 [全局配置](#/zh-CN/component/start/config)
+
 ### **1.5.12** <small>`2020-05-30`</small>
 
 [修复] excel导出 复杂表头 `colspan` 为字符串时计算错误的问题

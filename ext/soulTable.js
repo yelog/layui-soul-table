@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.12
+ * @version: v1.5.13
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 
@@ -15,15 +15,26 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
         table = layui.table,
         HIDE = 'layui-hide',
         tables = {},
-        originCols = {};
+        originCols = {},
+        defaultConfig = { // 默认配置开关
+            fixTotal: false, // 修复合计行固定列问题
+            drag: true, // 列拖动
+            rowDrag: false, // 行拖动
+            autoColumnWidth: true, // 自动列宽
+            contextmenu: false, // 右键菜单
+            fixResize: true, // 修改有固定列的拖动列宽的位置为左边线
+            overflow: false, // 自定义内容超出样式
+            fixFixedScroll: true, // 固定列支持鼠标滚轮滚动
+            filter: false  // 筛选及记忆相关
+        };
 
     // 封装方法
     var mod = {
         render: function (myTable) {
         	// 记录表格配置，方便直接通过 tableId 调用方法
             tables[myTable.id] = myTable
-
-            if (myTable.filter && myTable.filter.cache) {
+            var curConfig = $.extend({}, defaultConfig, myTable);
+            if (curConfig.filter && curConfig.filter.cache) {
                 var storeKey = location.pathname + location.hash + myTable.id;
                 var colsStr = this.deepStringify(myTable.cols);
                 // 记录表格列的原始配置
@@ -48,30 +59,37 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             tableMerge.render(myTable);
 
             // 修复合计栏固定列问题
-            if (myTable.fixTotal) {
+            if (curConfig.fixTotal) {
                 this.fixTotal(myTable)
             }
-            if (typeof myTable.drag === 'undefined' || myTable.drag) {
-                this.drag(myTable);
+            if (curConfig.drag) {
+                this.drag(myTable, curConfig.drag);
             }
-            if (myTable.rowDrag) {
-                this.rowDrag(myTable)
+            if (curConfig.rowDrag) {
+                this.rowDrag(myTable, curConfig.rowDrag)
             }
-            if (typeof myTable.autoColumnWidth === 'undefined' || myTable.autoColumnWidth) {
-                this.autoColumnWidth(myTable)
+            if (curConfig.autoColumnWidth) {
+                this.autoColumnWidth(myTable, curConfig.autoColumnWidth)
             }
 
-            this.contextmenu(myTable);
+            this.contextmenu(myTable, curConfig.contextmenu);
 
-            if (typeof myTable.fixResize === 'undefined' || myTable.fixResize) {
+            if (curConfig.fixResize) {
                 this.fixResizeRightFixed(myTable);
             }
 
-            if (myTable.overflow) {
-                this.overflow(myTable);
+            if (curConfig.overflow) {
+                this.overflow(myTable, curConfig.overflow);
             }
 
-            this.fixFixedScroll(myTable);
+            if (curConfig.fixFixedScroll) {
+                this.fixFixedScroll(myTable);
+            }
+        }
+        , config: function (configObj) {
+            if (typeof configObj === 'object') {
+                $.extend(true, defaultConfig, configObj);
+            }
         }
         , updateCols: function (myTable, cols) {
             var i, j, lastKeyMap = {}, columnKey, newCols = [], col = [],
@@ -166,7 +184,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
             });
         }
-        , autoColumnWidth: function (myTable) {
+        , autoColumnWidth: function (myTable, autoColumnWidthConfig) {
             var _this = this;
             if (typeof myTable === 'object') {
                 innerColumnWidth(_this, myTable)
@@ -193,7 +211,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     o.remove();
                     return w;
                 }
-                if (typeof myTable.autoColumnWidth === 'undefined' || typeof myTable.autoColumnWidth.dblclick === 'undefined' || myTable.autoColumnWidth.dblclick) {
+                if (typeof autoColumnWidthConfig === 'undefined' || typeof autoColumnWidthConfig.dblclick === 'undefined' || autoColumnWidthConfig.dblclick) {
                     th.add(fixTh).on('dblclick', function(e){
                         var othis = $(this),
                             pLeft = e.clientX - othis.offset().left;
@@ -201,10 +219,10 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                     })
                 }
                 // 初始化表格后，自动调整所有列宽
-                if (myTable.autoColumnWidth && myTable.autoColumnWidth.init) {
+                if (autoColumnWidthConfig && autoColumnWidthConfig.init) {
                     th.add(fixTh).each(function (e) {
                         var colKey = $(this).attr('data-key').split('-')
-                        if (myTable.cols[colKey[1]][colKey[2]].autoWidth !== false && (!Array.isArray(myTable.autoColumnWidth.init) || myTable.autoColumnWidth.init.indexOf($(this).attr('data-field')) !== -1)) {
+                        if (myTable.cols[colKey[1]][colKey[2]].autoWidth !== false && (!Array.isArray(autoColumnWidthConfig.init) || autoColumnWidthConfig.init.indexOf($(this).attr('data-field')) !== -1)) {
                             handleColumnWidth(myTable, $(this), true);
                         }
                     })
@@ -259,7 +277,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
          * 左右拖拽调整列顺序、向上拖隐藏列
          * @param myTable
          */
-        , drag: function (myTable) {
+        , drag: function (myTable, dragConfig) {
             if (myTable.cols.length>1) {
                 // 如果是复杂表头，则自动禁用拖动效果
                 return;
@@ -275,8 +293,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 $fixedTotalTable = $table.next().children('.layui-table-total').children('table.layui-table-total-fixed'),
                 $noFixedTotalTable = $table.next().children('.layui-table-total').children('table:eq(0)'),
                 tableId = myTable.id,
-                isSimple = myTable.drag === 'simple' || (myTable.drag && myTable.drag.type === 'simple'), // 是否为简易拖拽
-                toolbar = myTable.drag && myTable.drag.toolbar, // 是否开启工具栏
+                isSimple = dragConfig === 'simple' || (dragConfig && dragConfig.type === 'simple'), // 是否为简易拖拽
+                toolbar = dragConfig && dragConfig.toolbar, // 是否开启工具栏
                 isDraging = false, isStart = false;
 
             if (!$tableHead.attr('drag')) {
@@ -737,7 +755,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 })
             }
         },
-        rowDrag: function (myTable) {
+        rowDrag: function (myTable, rowDragConfig) {
             var _this = this,
                 $table = $(myTable.elem),
                 $tableBox = $table.next().children('.layui-table-box'),
@@ -746,8 +764,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
                 tableId = myTable.id,
                 isDraging = false,
-                trigger = myTable.rowDrag.trigger || 'row',
-                syncNumber = myTable.rowDrag.numbers !== false,
+                trigger = rowDragConfig.trigger || 'row',
+                syncNumber = rowDragConfig.numbers !== false,
                 numberColumnKey = null, numberStart = 0,
                 $trs = trigger === 'row' ? $tableBody.children('tbody').children('tr') : $tableBody.find(trigger),
                 i, j;
@@ -889,9 +907,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                                     cache[i][table.config.indexName] = curIndex - 1
                                 }
                             }
-                            if (typeof myTable.rowDrag.done === 'function') {
+                            if (typeof rowDragConfig.done === 'function') {
 
-                                myTable.rowDrag.done.call(myTable, {
+                                rowDragConfig.done.call(myTable, {
                                     row: row,
                                     newIndex: newIndex,
                                     oldIndex: index,
@@ -905,7 +923,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             })
         },
         fixTableRemember: function(myTable, dict) {
-            if (myTable.filter && myTable.filter.cache) {
+
+            if (typeof myTable.filter === 'undefined' ? (defaultConfig.filter && defaultConfig.filter.cache) : myTable.filter.cache) {
                 if (dict && dict.rule) {
                     myTable.cols[dict.rule.selectorText.split('-')[3]][dict.rule.selectorText.split('-')[4]].width = dict.rule.style.width.replace('px','');
                 }
@@ -932,14 +951,14 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 this.updateCols(tables[tableId], this.deepClone(originCols[tableId]))
             }
         },
-        overflow: function (myTable) {
+        overflow: function (myTable, overflowConfig) {
             var options = {};
-            if (typeof myTable.overflow === 'string') {
+            if (typeof overflowConfig === 'string') {
                 options = {
-                    type: myTable.overflow
+                    type: overflowConfig
                 }
-            } else if (typeof myTable.overflow === 'object') {
-                 options = myTable.overflow
+            } else if (typeof overflowConfig === 'object') {
+                 options = overflowConfig
             } else {
                 return;
             }
@@ -1039,7 +1058,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
         },
         // 右键菜单配置
-        contextmenu: function (myTable) {
+        contextmenu: function (myTable, contextmenuConfig) {
             var $table = $(myTable.elem),
                 $tableBox = $table.next().children('.layui-table-box'),
                 $tableHead = $.merge($tableBox.children('.layui-table-header').children('table'),$tableBox.children('.layui-table-fixed').children('.layui-table-header').children('table')),
@@ -1047,9 +1066,9 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
                 $totalTable = $table.next().children('.layui-table-total').children('table'),
                 tableId = myTable.id,
-                header = myTable.contextmenu ? myTable.contextmenu.header : '',
-                body = myTable.contextmenu ? myTable.contextmenu.body : '',
-                total = myTable.contextmenu ? myTable.contextmenu.total: '',
+                header = contextmenuConfig ? contextmenuConfig.header : '',
+                body = contextmenuConfig ? contextmenuConfig.body : '',
+                total = contextmenuConfig ? contextmenuConfig.total: '',
                 options = {header: {box: $tableHead, tag:'th', opts: header, cols:{}},
                     body: {box: $tableBody, tag:'td', opts: body, cols:{}, isBody: true},
                     total: {box: $totalTable, tag: 'td', opts: total, cols:{}}},
@@ -1066,7 +1085,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
                 }
             }
 
-            if (!myTable.contextmenu && !hasColsContext) {
+            if (!contextmenuConfig && !hasColsContext) {
                 return;
             }
 

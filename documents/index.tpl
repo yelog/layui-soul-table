@@ -111,14 +111,12 @@
   // 自定义模块
       layui.config({
           base: 'ext/',   // 模块目录
-          version: 'v1.5.12'
+          version: 'v1.5.13'
       }).extend({                         // 模块别名
           soulTable: 'soulTable'
       });
-      var tableFilter;
-      layui.use('tableFilter', function() {
-        tableFilter = layui.tableFilter,
-
+      layui.use('jquery', function() {
+        var $ = layui.$;
         layui.$.ajax({
             url: 'runjs.html',
             dataType: 'html',
