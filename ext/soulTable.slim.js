@@ -12,46 +12,127 @@ layui.define(['table'], function (exports) {
         table = layui.table,
         HIDE = 'layui-hide',
         tables = {},
-        isFirst = true; // 第一次加载表格
+        originCols = {};
 
     // 封装方法
     var mod = {
         render: function (myTable) {
+            // 记录表格配置，方便直接通过 tableId 调用方法
             tables[myTable.id] = myTable
-            var curTableSession = localStorage.getItem(location.pathname + location.hash + myTable.id);
 
-            if (myTable.filter && myTable.filter.cache && isFirst && curTableSession) {
-               myTable.cols = this.deepParse(curTableSession);
-               isFirst = false;
-               table.reload(myTable.id, myTable)
+            if (myTable.filter && myTable.filter.cache) {
+                var storeKey = location.pathname + location.hash + myTable.id;
+                var colsStr = this.deepStringify(myTable.cols);
+                // 记录表格列的原始配置
+                if (!originCols[myTable.id]) { // 只在第一次 render 时生效
+                    originCols[myTable.id] = this.deepClone(myTable.cols)
+
+                    var curTableSession = localStorage.getItem(storeKey);
+                    if (curTableSession && colsStr === localStorage.getItem('origin' + storeKey)) {
+                        this.updateCols(myTable, this.deepParse(curTableSession));
+                    } else {
+                        localStorage.setItem('origin' + storeKey, colsStr)
+                        localStorage.removeItem(storeKey)
+                    }
+                }
             } else {
-                // 修复合计栏固定列问题
-                if (myTable.fixTotal) {
-                    this.fixTotal(myTable)
-                }
-                if (typeof myTable.drag === 'undefined' || myTable.drag) {
-                    this.drag(myTable);
-                }
-                if (myTable.rowDrag) {
-                    this.rowDrag(myTable)
-                }
-                if (typeof myTable.autoColumnWidth === 'undefined' || myTable.autoColumnWidth) {
-                    this.autoColumnWidth(myTable)
-                }
-
-                this.contextmenu(myTable);
-
-                if (typeof myTable.fixResize === 'undefined' || myTable.fixResize) {
-                    this.fixResizeRightFixed(myTable);
-                }
-
-                if (myTable.overflow) {
-                    this.overflow(myTable);
-                }
-
-                this.fixFixedScroll(myTable);
+                // 如果没有开启记忆，则清除
+                this.clearCache(myTable);
             }
 
+            // 修复合计栏固定列问题
+            if (myTable.fixTotal) {
+                this.fixTotal(myTable)
+            }
+            if (typeof myTable.drag === 'undefined' || myTable.drag) {
+                this.drag(myTable);
+            }
+            if (myTable.rowDrag) {
+                this.rowDrag(myTable)
+            }
+            if (typeof myTable.autoColumnWidth === 'undefined' || myTable.autoColumnWidth) {
+                this.autoColumnWidth(myTable)
+            }
+
+            this.contextmenu(myTable);
+
+            if (typeof myTable.fixResize === 'undefined' || myTable.fixResize) {
+                this.fixResizeRightFixed(myTable);
+            }
+
+            if (myTable.overflow) {
+                this.overflow(myTable);
+            }
+
+            this.fixFixedScroll(myTable);
+        }
+        , updateCols: function (myTable, cols) {
+            var i, j, lastKeyMap = {}, columnKey,
+                $table = $(myTable.elem),
+                $tableBox = $table.next().children('.layui-table-box'),
+                $fixedHead = $tableBox.children('.layui-table-fixed').children('.layui-table-header').children('table'),
+                $tableHead = $.merge($tableBox.children('.layui-table-header').children('table'), $fixedHead),
+                $noFixedHead = $tableBox.children('.layui-table-header').children('table'),
+                $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table'),
+                $noFixedBody = $tableBox.children('.layui-table-body').children('table'),
+                $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody);
+
+            for (i = 0; i < myTable.cols.length; i++) {
+                for (j = 0; j < myTable.cols[i].length; j++) {
+                    myTable.cols[i][j]['oldPos'] = i + '-' +j
+                    lastKeyMap[myTable.cols[i][j].key] = myTable.cols[i][j]
+                }
+            }
+
+            for (i = 0; i < cols.length; i++) {
+                for (j = 0; j < cols[i].length; j++) {
+                    columnKey = myTable.index + '-' + cols[i][j].key;
+                    // 同步列宽
+                    if (cols[i][j].width && lastKeyMap[cols[i][j].key] !== cols[i][j].width) {
+                        this.getCssRule(myTable, columnKey, function (item) {
+                            item.style.width = (cols[i][j].width ? cols[i][j].width : 0) + 'px'
+                        })
+                    }
+                    // 同步隐藏
+                    if (lastKeyMap[cols[i][j].key].hide !== cols[i][j].hide) {
+                        $tableHead.find('th[data-key="' + columnKey + '"]')[cols[i][j].hide ? 'addClass' : 'removeClass']('layui-hide')
+                        $tableBody.find('td[data-key="' + columnKey + '"]')[cols[i][j].hide ? 'addClass' : 'removeClass']('layui-hide')
+                    }
+
+                    // 同步顺序
+                    if (lastKeyMap[cols[i][j].key].oldPos !== (i + '-' + j) || lastKeyMap[cols[i][j].key].fixed !== cols[i][j].fixed) {
+                        if (cols[i][j].fixed !== lastKeyMap[cols[i][j].key].fixed) {
+                            myTable.cols = cols;
+                            table.reload(myTable.id)
+                            return;
+                        }
+                    }
+                }
+            }
+            $noFixedHead.children().children('tr').each(function () {
+                innerHandler(this, 'th')
+            })
+            $noFixedBody.children().children('tr').each(function () {
+                innerHandler(this, 'td')
+            })
+            function innerHandler (_this, domName) {
+                for (i = 0; i < cols.length; i++) {
+                    for (j = 0; j < cols[i].length; j++) {
+                        columnKey = myTable.index + '-' + cols[i][j].key;
+                        var curKey = $(_this).children(domName + ':eq('+j+')').attr('data-key');
+                        if (curKey !== columnKey) {
+                            $(_this).children(domName + ':eq('+j+')').before($(_this).children(domName + '[data-key="'+columnKey+'"]'))
+                            if (cols[i][j].fixed) {
+                                var $curRow = (domName === 'th' ? $fixedHead : $fixedBody).children().children(domName === 'th' ? 'tr' : 'tr[data-index="'+$(_this).attr('data-index')+'"]')
+                                $curRow.children(domName + '[data-key="'+curKey+'"]').before($curRow.children(domName + '[data-key="'+columnKey+'"]'))
+                            }
+                        }
+                    }
+                }
+            }
+
+            myTable.cols = cols;
+            table.resize(myTable.id)
         }
         ,getCssRule: function(that, key, callback){
             var style = that.elem.next().find('style')[0]
@@ -138,7 +219,7 @@ layui.define(['table'], function (exports) {
                         maxWidth +=32;
 
                         _this.getCssRule(myTable, key, function(item){
-                            item.style.width = maxWidth+'px'
+                            item.style.width = maxWidth + 'px'
                         });
                         for (var i = 0; i < myTable.cols.length; i++) {
                             for (var j = 0; j < myTable.cols[i].length; j++) {
@@ -320,9 +401,7 @@ layui.define(['table'], function (exports) {
                                         tempCols = myTable.cols[x][y - 1];
                                         myTable.cols[x][y - 1] = myTable.cols[x][y];
                                         myTable.cols[x][y] = tempCols;
-                                        if (myTable.filter && myTable.filter.cache) {
-                                            localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
-                                        }
+                                        _this.fixTableRemember(myTable);
                                     } else if (rightMove) {
                                         $cloneHead.prev().before($rightTh);
 
@@ -345,9 +424,7 @@ layui.define(['table'], function (exports) {
                                         tempCols = myTable.cols[x][y + 1];
                                         myTable.cols[x][y + 1] = myTable.cols[x][y];
                                         myTable.cols[x][y] = tempCols;
-                                        if (myTable.filter && myTable.filter.cache) {
-                                            localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
-                                        }
+                                        _this.fixTableRemember(myTable);
                                     }
 
                                     $tableBody.find('td[data-key="' + key + '"][data-clone]').each(function () {
@@ -610,9 +687,7 @@ layui.define(['table'], function (exports) {
 
                                                     myTable.cols[targetPos.x].splice(targetPos.y, 0, curColumn)
 
-                                                    if (myTable.filter && myTable.filter.cache) {
-                                                        localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
-                                                    }
+                                                    _this.fixTableRemember(myTable);
                                                 }
                                                 table.reload(tableId)
                                             }
@@ -628,9 +703,7 @@ layui.define(['table'], function (exports) {
                                         $totalTable.find('tbody>tr>td[data-key="' + key + '"]').addClass(HIDE);
                                         // 同步配置
                                         curColumn['hide'] = true
-                                        if (myTable.filter && myTable.filter.cache) {
-                                            localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
-                                        }
+                                        _this.fixTableRemember(myTable);
                                         // 更新下拉隐藏
                                         $('#soul-columns' + tableId).find('li[data-value="' + field + '"]>input').prop('checked', false);
                                         table.resize(myTable.id)
@@ -814,7 +887,27 @@ layui.define(['table'], function (exports) {
                 if (dict && dict.rule) {
                     myTable.cols[dict.rule.selectorText.split('-')[3]][dict.rule.selectorText.split('-')[4]].width = dict.rule.style.width.replace('px','');
                 }
-                localStorage.setItem(location.pathname + location.hash + myTable.id, this.deepStringify(myTable.cols))
+                var storeKey = location.pathname + location.hash + myTable.id;
+                localStorage.setItem(storeKey, this.deepStringify(myTable.cols))
+            }
+        },
+        clearCache: function(myTable) {
+            if (!myTable) {
+                return;
+            }
+            var tableId;
+            if (typeof myTable === 'object') {
+                if (typeof myTable.config !== 'undefined') {
+                    tableId = myTable.config.id
+                } else {
+                    tableId = myTable.id
+                }
+            } else {
+                tableId = myTable
+            }
+            localStorage.removeItem(location.pathname + location.hash + tableId)
+            if (originCols[tableId]) {
+                this.updateCols(tables[tableId], this.deepClone(originCols[tableId]))
             }
         },
         overflow: function (myTable) {
@@ -824,7 +917,7 @@ layui.define(['table'], function (exports) {
                     type: myTable.overflow
                 }
             } else if (typeof myTable.overflow === 'object') {
-                 options = myTable.overflow
+                options = myTable.overflow
             } else {
                 return;
             }
@@ -1032,9 +1125,9 @@ layui.define(['table'], function (exports) {
                     if (typeof options[i].click === "function") {
                         (function (i) {
                             $parent.children('.soul-table-contextmenu:last').children('li[data-index="'+i+'"]').on('click', function () {
-                            var index = $this.parents('tr:eq(0)').data('index'),
-                                tr = box.find('tr[data-index="'+ index +'"]'),
-                                row = layui.table.cache[tableId][index];
+                                var index = $this.parents('tr:eq(0)').data('index'),
+                                    tr = box.find('tr[data-index="'+ index +'"]'),
+                                    row = layui.table.cache[tableId][index];
 
                                 options[i].click.call(myTable, {
                                     cell: $this,
@@ -1322,6 +1415,21 @@ layui.define(['table'], function (exports) {
                 return value;
             })||{};
         },
+        // 深度克隆-不丢失方法
+        deepClone: function (obj) {
+            var newObj = Array.isArray(obj) ? [] : {}
+            if (obj && typeof obj === "object") {
+                for (var key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        newObj[key] = (obj && typeof obj[key] === 'object') ? this.deepClone(obj[key]) : obj[key];
+                    }
+                }
+            }
+            return newObj
+        },
+        clearOriginCols: function () {
+            originCols = {}
+        }
     }
 
     // 输出

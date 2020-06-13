@@ -42,6 +42,16 @@ layui.use(['form', 'table','soulTable'], function () {
 </script>
 ```
 :::
-
+>**注意：**，如果开启底部筛选栏，会造成高度计算错误，造成错位的问题，需要在 `table.js` 中 找到 `resize` 方法
+>添加一行 `if (layui.tableFilter) { layui.tableFilter.resize(that.config)}`， 如下
+```js
+  Class.prototype.resize = function(){
+    var that = this;
+    that.fullSize(); //让表格铺满
+    that.setColsWidth(); //自适应列宽
+    that.scrollPatch(); //滚动条补丁
+    if (layui.tableFilter) { layui.tableFilter.resize(that.config)} // 这是要添加的那一行
+  };
+```
 ### API
 <table class="el-table el-table--border"><thead><tr><th>参数</th><th>类型</th><th colspan=4>说明</th></tr></thead><tbody><tr><td rowspan="2">filter</td><td>boolean</td><td colspan="3">true</td><td rowspan=2>默认值：false</td></tr><tr><td>object</td><td>type</td><td>date[yyyy-mm-dd hh:mm:ss]</td><td>目前做了时间类型优化（可以筛选昨天、本周、本月等） ，中括号内的格式要按照实际的数据格式进行调整。其他类型有好的想法可以进行交流扩展</td></tr></tbody></table>

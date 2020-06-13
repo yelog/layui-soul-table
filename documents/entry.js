@@ -48,7 +48,13 @@ router.beforeEach(async(to, from, next) => {
       config:{id: 'myTable3'}
     },{
       config:{id: 'myTable5'}
+    },{
+      config:{id: 'myTable6'}
     }])
+  }
+  // 单页面应用需要清除列配置记录，防止同名id造成的问题
+  if (layui.soulTable) {
+    layui.soulTable.clearOriginCols()
   }
   next()
 })

@@ -635,6 +635,7 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
     that.fullSize(); //让表格铺满
     that.setColsWidth(); //自适应列宽
     that.scrollPatch(); //滚动条补丁
+    if (layui.tableFilter) { layui.tableFilter.resize(that.config)}
   };
 
   //表格重载

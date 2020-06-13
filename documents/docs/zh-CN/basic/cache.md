@@ -3,11 +3,12 @@
 ### 1. 配置开启
 配置 `filter.cache = true` 开启，并在下拉菜单（`filter.items`） 中配置 清除缓存（`clearCache`）功能  
 
-如下，当**拖动列顺序**、**隐藏列**操作后，刷新页面，将会保留操作后的影响，通过 **下拉菜单>清除缓存** 恢复
+如下，当**拖动列顺序**、**隐藏列**操作后，刷新页面，将会保留操作后的影响，通过 `soulTable.clearCache(tableId)` 进行还原
 
 :::demo
 ```html
-<a class="layui-btn" id="reload" >重载</a>
+<a class="layui-btn layui-btn-sm" id="reload" ><i class="layui-icon layui-icon-refresh"></i>重载</a>
+<a class="layui-btn layui-btn-sm layui-btn-normal" id="clear" ><i class="layui-icon layui-icon-delete"></i>清除缓存</a>
 <table id="myTable" ></table>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
@@ -15,24 +16,24 @@ layui.use(['form', 'table','soulTable'], function () {
         soulTable = layui.soulTable,
         $ = layui.$;
 
-    table.render({
+    var myTable = table.render({
         elem: '#myTable'
         ,url: 'data-1.json'
         ,height: 500
         ,toolbar: true
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
-            {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
-            {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
-            {field: 'author', title: '作者', width: 165, filter: true},
-            {field: 'content', title: '内容', width: 123, filter: true},
-            {field: 'type', title: '类型', width: 112, sort:true, filter: true},
-            {field: 'heat', title: '点赞数', width: 112, sort:true},
+            {field: 'title', title: '诗词', fixed: 'left', filter: true, width: 200, sort: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true},
+            {field: 'author', title: '作者', width: 165},
+            {field: 'content', title: '内容', width: 123},
+            {field: 'type', title: '类型', width: 112, sort:true},
+            {field: 'heat', title: '点赞数', fixed: 'right', width: 112, sort:true},
             {field: 'createTime', title: '录入时间', width: 165, fixed: 'right', sort:true},
         ]]
         ,filter: {
-            items:['column','data','condition','editCondition','excel','clearCache'] // 加入了清除缓存按钮
-            ,cache: true 
+            items:['column','data','condition','editCondition','excel','clearCache'],
+            cache: true
         }
         ,done: function () {
             soulTable.render(this)
@@ -40,6 +41,10 @@ layui.use(['form', 'table','soulTable'], function () {
     });
     $('#reload').on('click', function() {
         table.reload('myTable')
+    })
+    $('#clear').on('click', function() {
+        soulTable.clearCache(myTable.config.id)
+        layer.msg('已还原！', {icon: 1, time: 1000})
     })
 })
 </script>

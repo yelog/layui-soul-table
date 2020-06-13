@@ -322,9 +322,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                             tempColumns[i]['hide'] = !data.elem.checked;
                         }
                     }
-                    _this.resize(myTable)
-                    if (myTable.filter && myTable.filter.cache) {
-                        localStorage.setItem(location.pathname + location.hash + myTable.id, _this.deepStringify(myTable.cols))
+                    if (layui.soulTable) {
+                        layui.soulTable.fixTableRemember(myTable)
                     }
                     $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr.childTr').children('td').attr('colspan', $table.next().children('.layui-table-box').children('.layui-table-header').find('thead>tr>th:visible').length)
                 });
@@ -768,8 +767,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                     e.stopPropagation();
                 }).on('click', function () {
                     $('#main-list' + tableId).hide();
-                    localStorage.removeItem(location.pathname + location.hash + myTable.id)
-                    layer.msg('清除成功！请刷新页面！', {icon: 1, time: 1000})
+                    if (layui.soulTable) {
+                        layui.soulTable.clearCache(myTable)
+                    }
+                    layer.msg('已还原！', {icon: 1, time: 1000})
                 });
 
                 $('#main-list' + tableId).on('mouseover', function (e) {
@@ -1528,10 +1529,6 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             //渲染底部筛选条件
             _this.renderBottomCondition(myTable);
 
-            $(window).on('resize', function () {
-                _this.resize(myTable)
-            })
-
             // 表头样式
             var where = where_cache[myTable.id]||{},
                 filterSos = JSON.parse(where.filterSos ? where.filterSos : '[]');
@@ -1566,30 +1563,31 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         , resize: function (myTable) {
             var _this = this,
                 $table = $(myTable.elem),
-                $tableMain = $table.next().children('.layui-table-box').children('.layui-table-main');
-            table.resize(myTable.id);
+                $tableBox = $table.next().children('.layui-table-box'),
+                $tableMain = $tableBox.children('.layui-table-main')
             // 减去底部筛选的高度
             if ($table.next().children('.soul-bottom-contion').length>0) {
-                // setTimeout(function () {
-                    $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', $table.next().children('.soul-bottom-contion').width()-$table.next().children('.soul-bottom-contion').children('.editCondtion').outerWidth());
+                $table.next().children('.soul-bottom-contion').children('.condition-items').css('width', $table.next().children('.soul-bottom-contion').width()-$table.next().children('.soul-bottom-contion').children('.editCondtion').outerWidth());
 
-                    var bodyHeight = $table.next().height() - $table.next().children('.soul-bottom-contion').outerHeight()
-                    if ($table.next().children('.layui-table-tool').length>0) {
-                        bodyHeight = bodyHeight - $table.next().children('.layui-table-tool').outerHeight();
-                    }
-                    if ($table.next().children('.layui-table-total').length>0) {
-                        bodyHeight = bodyHeight - $table.next().children('.layui-table-total').outerHeight();
-                    }
-                    if ($table.next().children('.layui-table-page').length>0) {
-                        bodyHeight = bodyHeight - $table.next().children('.layui-table-page').outerHeight();
-                    }
+                var bodyHeight = $table.next().height() - $table.next().children('.soul-bottom-contion').outerHeight()
+                if ($table.next().children('.layui-table-tool').length>0) {
+                    bodyHeight = bodyHeight - $table.next().children('.layui-table-tool').outerHeight();
+                }
+                if ($table.next().children('.layui-table-total').length>0) {
+                    bodyHeight = bodyHeight - $table.next().children('.layui-table-total').outerHeight();
+                }
+                if ($table.next().children('.layui-table-page').length>0) {
+                    bodyHeight = bodyHeight - $table.next().children('.layui-table-page').outerHeight();
+                }
 
-                    bodyHeight = bodyHeight - $table.next().children('.layui-table-box').children('.layui-table-header').outerHeight();
+                bodyHeight = bodyHeight - $table.next().children('.layui-table-box').children('.layui-table-header').outerHeight();
 
-                    $table.next().children('.layui-table-box').children('.layui-table-body').height(bodyHeight)
-                    var fixHeight = bodyHeight - _this.getScrollWidth($tableMain[0]), layMainTableHeight = $tableMain.children('table').height()
-                    $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').height(layMainTableHeight >= fixHeight ? fixHeight : 'auto')
-                // }, 300)
+                $table.next().children('.layui-table-box').children('.layui-table-body').height(bodyHeight)
+                var fixHeight = bodyHeight - _this.getScrollWidth($tableMain[0]), layMainTableHeight = $tableMain.children('table').height()
+                $table.next().children('.layui-table-box').children('.layui-table-fixed').children('.layui-table-body').height(layMainTableHeight >= fixHeight ? fixHeight : 'auto')
+
+                var scollWidth = $tableMain.width() - $tableMain.prop('clientWidth') //纵向滚动条宽度;
+                $tableBox.children('.layui-table-fixed-r').css('right', scollWidth - 1);
             }
         }
         /**
