@@ -55,7 +55,7 @@ layui.use(['form', 'table','soulTable'], function () {
                }
             }},
             {field: 'author', title: '作者', width: 165, templet: function(row) {
-              return changeAuthor(row.author)
+              return row.author + '_'
             } },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112, sort:true},
@@ -66,10 +66,6 @@ layui.use(['form', 'table','soulTable'], function () {
             soulTable.render(this)
         }
     });
-    
-    function changeAuthor(val) {
-        return val + "_"
-    }
     
     layui.$('#export').on('click', function() {
       soulTable.export(myTable, {
