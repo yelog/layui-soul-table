@@ -869,7 +869,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                                                     if (UNHANDLED_VALUES.indexOf(list[i]) === -1) {
                                                         var line = {};
                                                         line[key] = list[i];
-                                                        ul.push('<li data-value="' + String(list[i]).toLowerCase() + '"><input type="checkbox" value="' + list[i] + '" title="' + ((columnsConfigs[j].templet && typeof columnsConfigs[j].templet === 'function' ? columnsConfigs[j].templet.call(this, line) : list[i]) + "").replace(/\"|\'/g, '\'') + '" lay-skin="primary" lay-filter="soulDropList' + tableId + '"></li>')
+                                                        ul.push('<li data-value="' + String(list[i]).toLowerCase() + '"><input type="checkbox" value="' + list[i] + '" title="' + (_this.parseTempData(columnsConfigs[j], list[i], line, true)).replace(/\"|\'/g, '\'') + '" lay-skin="primary" lay-filter="soulDropList' + tableId + '"></li>')
                                                     }
                                                 }
                                                 break;
@@ -935,7 +935,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                                     if (UNHANDLED_VALUES.indexOf(list[i]) === -1) {
                                         var line = {};
                                         line[key] = list[i];
-                                        ul.push('<li data-value="' + String(list[i]).toLowerCase() + '"><input type="checkbox" value="' + list[i] + '" title="' + ((columnsConfigs[j].templet && typeof columnsConfigs[j].templet === 'function' ? columnsConfigs[j].templet.call(this, line) : list[i]) + "").replace(/\"|\'/g, '\'') + '" lay-skin="primary" lay-filter="soulDropList' + tableId + '"></li>')
+                                        ul.push('<li data-value="' + String(list[i]).toLowerCase() + '"><input type="checkbox" value="' + list[i] + '" title="' + (_this.parseTempData(columnsConfigs[j], list[i], line, true)).replace(/\"|\'/g, '\'') + '" lay-skin="primary" lay-filter="soulDropList' + tableId + '"></li>')
                                     }
                                 }
                                 ul.push("</ul>");
@@ -3086,6 +3086,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                 }
             }
             return cols[cols.length-1];
+        }
+        ,parseTempData: function(item3, content, tplData, text){ //表头数据、原始内容、表体数据、是否只返回文本
+            var str = item3.templet ? function(){
+                return typeof item3.templet === 'function'
+                    ? item3.templet(tplData)
+                    : laytpl($(item3.templet).html() || String(content)).render(tplData)
+            }() : content;
+            return text ? $('<div>'+ str +'</div>').text() : str;
         }
         ,cache: cache
     };

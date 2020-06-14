@@ -70,8 +70,8 @@
             ,page: false
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'},
-                {field: 'title', title: '诗词', fixed:'left', totalRowText: '合计', sort: true, filter: true},
-                {field: 'dynasty', title: '朝代', sort: true, filter: true, excel:function (d) {
+                {field: 'title', title: '诗词', width: 165 , fixed:'left', totalRowText: '合计', sort: true, filter: true},
+                {field: 'dynasty', title: '朝代', width: 165 , sort: true, filter: true, excel:function (d) {
                         var colors = {'清代':'01AAED', '唐代':'FFB800', '宋代':'FF5722','明代':'5FB878'};
                         return {
                             color: colors[d.dynasty]?'FFFFFF':'000000',
@@ -80,7 +80,7 @@
                     }},
                 {field: 'author', title: '作者', width: 165 , filter: true},
                 {field: 'type', title: '类型', width: 112,  filter: {split:','}, sort:true},
-            {field: 'content', title: '内容', width: 823, filter: true},
+                {field: 'content', title: '内容', width: 823, filter: true},
                 {field: 'heat', title: '点赞数', width: 112, totalRow: true,  filter: true, sort:true, excel:{cellType: 'n'}},
                 {field: 'createTime', title: '录入时间', width: 165, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true, excel:{cellType: 'd'}},
                 {title: '操作', width: 156, fixed: 'right', templet: '#bar'}
