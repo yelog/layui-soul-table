@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.13
+ * @version: v1.5.14
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -87,12 +87,15 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             if (typeof myTable === 'string') {
                 myTable = table_cache[myTable]
             }
-            if (!where_cache[myTable.id] || !where_cache[myTable.id].filterSos  || where_cache[myTable.id].filterSos === "{}") {
+            if (!where_cache[myTable.id] || !where_cache[myTable.id].filterSos  || where_cache[myTable.id].filterSos === "[]") {
                 return;
             }
-            delete where_cache[myTable.id]
+            where_cache[myTable.id].filterSos = "[]"
             this.soulReload(myTable, true)
-
+            console.log(table_cache[myTable.id])
+            if (table_cache[myTable.id].where && table_cache[myTable.id].where.filterSos && table_cache[myTable.id].where.filterSos !== "[]") {
+                table_cache[myTable.id].where.filterSos = "[]"
+            }
         },
         render: function (myTable) {
             var _this = this,

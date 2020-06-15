@@ -17,7 +17,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,height: 500
         ,limit: 20
         ,page: true
-        ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="refresh">重载</a></div>'
+        ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="refresh">重载</a><a class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</a></div>'
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
             {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
@@ -32,7 +32,7 @@ layui.use(['form', 'table','soulTable'], function () {
             soulTable.render(this)
         }
     });
-    
+
     search({});
     function search(data) {
         var loading = layer.load(2);
@@ -59,6 +59,10 @@ layui.use(['form', 'table','soulTable'], function () {
             // 清除所有筛选条件并重载表格
             // 参数: tableId
             search()
+        } else if (obj.event === 'clearFilter') {
+           // 清除所有筛选条件并重载表格
+           // 参数: tableId
+           soulTable.clearFilter('myTable')
         }
     });
 })
@@ -109,7 +113,8 @@ layui.use(['form', 'table','soulTable'], function () {
             id: 'myTable2'
             ,elem: '#myTable2'
             ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
-            ,height: 400 
+            ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</a></div>'
+            ,height: 500 
             ,limit: 20
             ,page: true
             ,cols: [[
@@ -131,6 +136,13 @@ layui.use(['form', 'table','soulTable'], function () {
                 where: data.field
             })
         })
+        table.on('toolbar(myTable2)', function(obj){
+            if (obj.event === 'clearFilter') {
+                // 清除所有筛选条件并重载表格
+                // 参数: tableId
+                soulTable.clearFilter('myTable2')
+            }
+        });
     })
 </script>
 ```
