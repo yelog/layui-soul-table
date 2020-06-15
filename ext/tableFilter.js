@@ -92,7 +92,6 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             }
             where_cache[myTable.id].filterSos = "[]"
             this.soulReload(myTable, true)
-            console.log(table_cache[myTable.id])
             if (table_cache[myTable.id].where && table_cache[myTable.id].where.filterSos && table_cache[myTable.id].where.filterSos !== "[]") {
                 table_cache[myTable.id].where.filterSos = "[]"
             }
