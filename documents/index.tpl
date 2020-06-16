@@ -115,16 +115,18 @@
       }).extend({                         // 模块别名
           soulTable: 'soulTable'
       });
-      layui.use('jquery', function() {
-        var $ = layui.$;
-        layui.$.ajax({
+      var $, layer;
+      layui.use(['jquery', 'layer'], function() {
+        $ = layui.$;
+        layer = layui.layer;
+        $.ajax({
             url: 'runjs.html',
             dataType: 'html',
             success: function(res) {
                 $('#runjs textarea').val(res)
             }
         })
-        layui.$('#LAY_demo_run').on('click', function() {
+        $('#LAY_demo_run').on('click', function() {
             var ifr = document.getElementById("runjsDemo");
             var code = window.editor.getValue();
             ifr.contentWindow.document.body.innerHTML = "";
@@ -189,7 +191,7 @@
            if (runJsTpl) {
               $('#runjs textarea').val(runJsTpl)
            } else {
-                layui.$.ajax({
+                $.ajax({
                    url: 'runjs.html',
                    async: false,
                    dataType: 'html',
