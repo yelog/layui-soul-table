@@ -53,25 +53,32 @@ layui.use(['form', 'table','soulTable'], function () {
 
 
 ### 2. 拖动列宽 记忆开启
-如果想要拖拽列宽也实现`记忆`，重载和刷新浏览器也不会恢复，则可以通过修改源码的方式实现, `lay/modules/table.js:1403`
-
-添加一行 `if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict)}`, 上下文如下
+如果想要拖拽列宽也实现`记忆`，重载和刷新浏览器也不会恢复，则可以通过修改源码的方式实现, 在 `lay/modules/table.js` 中找到如下代码，添加一行 `if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict)}`, 上下文如下
 
 ```js
 //拖拽中
-_DOC.on('mousemove', function(e){
-  if(dict.resizeStart){
-    if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict)} //这是要添加的那一行
+_DOC.on('mousemove', function (e) {
+  if (dict.resizeStart) {
     e.preventDefault();
-    if(dict.rule){
+    if (dict.rule) {
       var setWidth = dict.ruleWidth + e.clientX - dict.offset[0];
-      if(setWidth < dict.minWidth) setWidth = dict.minWidth;
+      if (setWidth < dict.minWidth) setWidth = dict.minWidth;
       dict.rule.style.width = setWidth + 'px';
       layer.close(that.tipsIndex);
     }
     resizing = 1
   }
-})
+}).on('mouseup', function (e) {
+  if (dict.resizeStart) {
+    if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict) } //这是要添加的那一行
+    dict = {};
+    _BODY.css('cursor', '');
+    that.scrollPatch();
+  }
+  if (resizing === 2) {
+    resizing = null;
+  }
+});
 ```
 
 ### 3.工具栏列显示隐藏 记忆开启
