@@ -255,7 +255,7 @@ layui.define(['table'], function (exports) {
                 tableId = myTable.id,
                 isSimple = myTable.drag === 'simple' || (myTable.drag && myTable.drag.type === 'simple'), // 是否为简易拖拽
                 toolbar = myTable.drag && myTable.drag.toolbar, // 是否开启工具栏
-                isDraging = false, isStart = false;
+                isDragging = false, isStart = false;
 
             if (!$tableHead.attr('drag')) {
                 $tableHead.attr('drag', true);
@@ -308,7 +308,7 @@ layui.define(['table'], function (exports) {
                             $('body').on('mousemove', function (e) {
                                 if (isStart && $cloneHead) {
                                     $tableBox.removeClass('no-left-border');
-                                    if (!isDraging) {
+                                    if (!isDragging) {
                                         if (toolbar) {
                                             $dragBar.attr('data-type', isFixed || 'none')
                                             $dragBar.addClass('active')
@@ -349,7 +349,7 @@ layui.define(['table'], function (exports) {
                                             }
                                         }
                                     }
-                                    isDraging = true;
+                                    isDragging = true;
                                     var x, y, i, j, tempCols,
                                         left = e.clientX - disX, // 计算当前被移动列左侧位置应该哪里
                                         $leftTh = $cloneHead.prev().prev(),
@@ -476,14 +476,14 @@ layui.define(['table'], function (exports) {
                                 $('body').off('mousemove').off('mouseup')
                                 if (isStart && $cloneHead) {
                                     isStart = false;
-                                    if (isDraging) {
+                                    if (isDragging) {
                                         if (curColumn.type !== 'checkbox') {
                                             $that.on('click', function (e) {
                                                 e.stopPropagation();
                                             });
                                         }
 
-                                        isDraging = false;
+                                        isDragging = false;
                                         $tableBox.removeClass('no-left-border')
                                         $this.removeClass('isDrag').css({
                                             'position': 'relative',
@@ -723,7 +723,7 @@ layui.define(['table'], function (exports) {
                 $noFixedBody = $tableBox.children('.layui-table-body').children('table'),
                 $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody),
                 tableId = myTable.id,
-                isDraging = false,
+                isDragging = false,
                 trigger = myTable.rowDrag.trigger || 'row',
                 syncNumber = myTable.rowDrag.numbers !== false,
                 numberColumnKey = null, numberStart = 0,
@@ -756,8 +756,8 @@ layui.define(['table'], function (exports) {
 
                 $('body').on('mousemove', function (e) {
 
-                    if (!isDraging) {
-                        isDraging = true;
+                    if (!isDragging) {
+                        isDragging = true;
                         // 设置鼠标样式
                         // $table.next().find('style').append('.layui-table-view .layui-table td{cursor: move;}.layui-table tr{transition: none}')
                         var style = $table.next().find('style')[0],
@@ -830,8 +830,8 @@ layui.define(['table'], function (exports) {
                 }).on('mouseup', function (e) {
                     $('body').off('mousemove').off('mouseup');
 
-                    if (isDraging) {
-                        isDraging = false;
+                    if (isDragging) {
+                        isDragging = false;
 
                         $tableBox.removeClass('noselect'); // 取消禁止选中文本
                         $bodyTr.css({'position': 'inherit','z-index': 'inherit'});
