@@ -50,6 +50,31 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       'lastWeek': '上周',
       'thisMonth': '本月',
       'thisYear': '今年'
+    },
+    defaultFilterItems = ['column', 'data', 'condition', 'editCondition', 'excel'],
+    itemsMap = {
+      'column': 'soul-column',
+      'data': 'soul-dropList',
+      'condition': 'soul-condition',
+      'editCondition': 'soul-edit-condition',
+      'excel': 'soul-export',
+      'clearCache': 'soul-clear-cache',
+    },
+    modeMapItems = {
+      'in': 'data',
+      'condition': 'condition',
+      'date': 'condition',
+    },
+    revertMode = {
+      'data': {
+        'mode': 'condition',
+        'type': 'eq',
+        'value': '',
+      },
+      'condition': {
+        'mode': 'in',
+        'values': [],
+      },
     };
 
   // 封装方法
@@ -105,7 +130,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         $fixedRigthTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
         tableId = myTable.id,
         columns = _this.getCompleteCols(myTable.cols),
-        filterItems = myTable.filter ? myTable.filter.items || ['column', 'data', 'condition', 'editCondition', 'excel'] : ['column', 'data', 'condition', 'editCondition', 'excel'],
+        filterItems = myTable.filter ? myTable.filter.items || defaultFilterItems : defaultFilterItems,
         needFilter = false, // 是否存在筛选列需要进行初始化
         initFilter = false, // 是否为第一次筛选
         mainExcel = typeof myTable.excel === 'undefined' || ((myTable.excel && (typeof myTable.excel.on === 'undefined' || myTable.excel.on)) ? myTable.excel : false),
@@ -118,21 +143,21 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             initFilter = true;
             if ($tableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').length > 0) {
               $tableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').hide()
-              $tableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-column="' + columns[i].field + '" lay-sort="' + $tableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').attr('lay-sort') + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+              $tableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-items="' + (columns[i].filter.items ? columns[i].filter.items.join(',') : '') + '" data-column="' + columns[i].field + '" lay-sort="' + $tableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').attr('lay-sort') + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
             } else {
-              $tableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="soul-table-filter layui-inline" data-column="' + columns[i].field + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+              $tableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="soul-table-filter layui-inline" data-items="' + (columns[i].filter.items ? columns[i].filter.items.join(',') : '') + '" data-column="' + columns[i].field + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
             }
             if ($fixedLeftTableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').length > 0) {
               $fixedLeftTableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').hide()
-              $fixedLeftTableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-column="' + columns[i].field + '" lay-sort="' + $fixedLeftTableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').attr('lay-sort') + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+              $fixedLeftTableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-items="' + (columns[i].filter.items ? columns[i].filter.items.join(',') : '') + '" data-column="' + columns[i].field + '" lay-sort="' + $fixedLeftTableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').attr('lay-sort') + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
             } else {
-              $fixedLeftTableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="soul-table-filter layui-inline" data-column="' + columns[i].field + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+              $fixedLeftTableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="soul-table-filter layui-inline" data-items="' + (columns[i].filter.items ? columns[i].filter.items.join(',') : '') + '" data-column="' + columns[i].field + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
             }
             if ($fixedRigthTableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').length > 0) {
               $fixedRigthTableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').hide()
-              $fixedRigthTableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-column="' + columns[i].field + '" lay-sort="' + $fixedRigthTableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').attr('lay-sort') + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+              $fixedRigthTableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="layui-table-sort soul-table-filter layui-inline" data-items="' + (columns[i].filter.items ? columns[i].filter.items.join(',') : '') + '" data-column="' + columns[i].field + '" lay-sort="' + $fixedRigthTableHead.find('th[data-field="' + columns[i].field + '"]').children().children('.layui-table-sort').attr('lay-sort') + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
             } else {
-              $fixedRigthTableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="soul-table-filter layui-inline" data-column="' + columns[i].field + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
+              $fixedRigthTableHead.find('th[data-field="' + columns[i].field + '"]').children().append('<span class="soul-table-filter layui-inline" data-items="' + (columns[i].filter.items ? columns[i].filter.items.join(',') : '') + '" data-column="' + columns[i].field + '" ' + (typeof columns[i].filter.split === 'undefined' ? '' : 'data-split="' + columns[i].filter.split + '"') + '><i class="soul-icon soul-icon-filter"></i><i class="soul-icon soul-icon-filter-asc"></i><i class="soul-icon soul-icon-filter-desc"></i></span>')
             }
           }
         }
@@ -267,11 +292,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         soulFilterList.push('<div id="soul-filter-list' + tableId + '"><form action="" class="layui-form" lay-filter="orm"><ul id="main-list' + tableId + '" style="display: none">');
         soulFilterList.push('<li class="soul-sort" data-value="asc" ><i class="soul-icon soul-icon-asc"></i> 升序排列 </li>');
         soulFilterList.push('<li class="soul-sort" data-value="desc"  style="border-bottom: 1px solid #e6e6e6"><i class="soul-icon soul-icon-desc"></i> 降序排列 </li>');
-        for (i = 0; i < filterItems.length; i++) {
-          if (filterItems[i] === 'excel' && !mainExcel) {
+        for (i = 0; i < defaultFilterItems.length; i++) {
+          if (defaultFilterItems[i] === 'excel' && !mainExcel) {
             continue
           }
-          soulFilterList.push(filterItemsHtml[filterItems[i]]);
+          soulFilterList.push(filterItemsHtml[defaultFilterItems[i]]);
         }
         soulFilterList.push('</ul><ul id="soul-columns' + tableId + '" style="display: none;">');
 
@@ -507,7 +532,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             var fieldMap = {};
             for (i = 0; i < columns.length; i++) {
               if (columns[i].field) {
-                fieldMap[columns[i]['field']] = columns[i]['title']
+                fieldMap[columns[i]['field']] = columns[i]
               }
             }
             // 查询条件
@@ -525,7 +550,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                   value = filterSo.children[i].value;
                 conditionHtml.push('<tr data-id="' + id + '">');
                 if (i === 0) {
-                  conditionHtml.push('<td class="soul-condition-title">' + fieldMap[field] + '</td>')
+                  conditionHtml.push('<td class="soul-condition-title">' + fieldMap[field].title + '</td>')
                 } else {
                   conditionHtml.push(
                     '<td>' +
@@ -545,7 +570,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
               }
             } else {
               conditionHtml.push('<tr data-id="" data-type="eq" data-value="">'
-                + '<td class="soul-condition-title">' + fieldMap[field] + '</td>'
+                + '<td class="soul-condition-title">' + fieldMap[field].title + '</td>'
                 + '<td style="width: 110px;"><div class="layui-block" >' + selectStr
                 + '</div></td>'
                 + '<td style="width: 110px;"><div class="layui-block" ><input class="layui-input value" placeholder="值" /></div></td>'
@@ -728,7 +753,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
               } else {
                 id = $(obj).parents('tr:eq(0)').data('id');
                 if ($(obj).parents('tr:eq(0)').index() === 0) {
-                  $(obj).parents('table:eq(0)').find('tr:eq(1)>td:eq(0)').html(fieldMap[field]).addClass('soul-condition-title')
+                  $(obj).parents('table:eq(0)').find('tr:eq(1)>td:eq(0)').html(fieldMap[field].title).addClass('soul-condition-title')
                 }
                 $(obj).parents('tr:eq(0)').remove()
               }
@@ -824,13 +849,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       }
 
       if ($tableHead.find('.soul-table-filter').length > 0) {
-        var columnField = [];
+        var columnField = [], mainDataSwitch = filterItems.indexOf('data') !== -1;
         $tableHead.find('.soul-table-filter').each(function (index, elem) {
-          if ($(this).data('column')) {
+          if ($(this).data('column') && (mainDataSwitch ? (!$(this).data('items') || $(this).data('items').split(',').indexOf('data') !== -1) : $(this).data('items').split(',').indexOf('data') !== -1)) {
             columnField.push($(this).data('column'));
           }
         });
-        if (filterItems.indexOf('data') !== -1) {
+        if (columnField.length > 0) {
           if (typeof myTable.url !== 'undefined' && myTable.page) {
             var datas = JSON.parse(JSON.stringify(myTable.where)), url = myTable.url;
             datas['columns'] = JSON.stringify(columnField);
@@ -966,7 +991,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         where = where_cache[myTable.id] || {},
         tableFilterTypes = where.tableFilterType ? JSON.parse(where.tableFilterType) : {},
         filterSos = where.filterSos ? JSON.parse(where.filterSos) : [],
-        filterBoard = [], fieldMap = {}, firstColumn,
+        filterBoard = [], fieldMap = {}, firstColumn, curItems,
+        filterItems = myTable.filter ? myTable.filter.items || defaultFilterItems : defaultFilterItems,
         columns = _this.getCompleteCols(myTable.cols),
         i;
       for (i = 0; i < columns.length; i++) {
@@ -974,7 +1000,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
           if (!firstColumn) {
             firstColumn = columns[i]
           }
-          fieldMap[columns[i]['field']] = columns[i]['title']
+          curItems = columns[i].filter.items || filterItems;
+          fieldMap[columns[i]['field']] = {
+            title: columns[i].title,
+            items: curItems
+          }
         }
       }
       filterBoard.push('<div class="soul-edit-out">')
@@ -1016,19 +1046,19 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         // }
         switch (mode) {
           case 'in':
-            filterBoard.push('<div class="layui-firebrick item-field">' + (fieldMap[field]) + '</div>');
+            filterBoard.push('<div class="layui-firebrick item-field">' + (fieldMap[field].title) + '</div>');
             filterBoard.push('<div class="layui-deeppink item-type" >筛选数据</div>');
             filterBoard.push('<div class="layui-blueviolet item-value">共' + (filterSo.values ? filterSo.values.length : 0) + '条数据</div>');
             filterBoard.push('<div class="layui-red delete-item"><i class="layui-icon layui-icon-close-fill"></i></div>');
             break;
           case 'date':
-            filterBoard.push('<div class="layui-firebrick item-field">' + (fieldMap[field]) + '</div>');
+            filterBoard.push('<div class="layui-firebrick item-field">' + (fieldMap[field].title) + '</div>');
             filterBoard.push('<div class="layui-deeppink item-type">选择日期</div>');
             filterBoard.push('<div class="layui-blueviolet item-value">' + (filterSo.type === 'specific' ? filterSo.value || '请选择' : dateTimeItems[filterSo.type]) + '</div>');
             filterBoard.push('<div class="layui-red delete-item"><i class="layui-icon layui-icon-close-fill"></i></div>');
             break;
           case 'condition':
-            filterBoard.push('<div class="layui-firebrick item-field">' + (fieldMap[field]) + '</div>');
+            filterBoard.push('<div class="layui-firebrick item-field">' + (fieldMap[field].title) + '</div>');
             filterBoard.push('<div class="layui-deeppink item-type">' + conditionChangeItems[filterSo.type] + '</div>');
             if (type !== 'null' && type !== 'notNull') {
               filterBoard.push('<div class="layui-blueviolet item-value">' + (typeof filterSo.value === 'undefined' || filterSo.value === '' ? '请输入...' : filterSo.value) + '</div>');
@@ -1134,10 +1164,15 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
           left = $(obj).offset().left,
           field = $(obj).parent().data('field');
 
+        $('#soul-bf-type' + tableId + ' li').hide()
         if (tableFilterTypes[field] && tableFilterTypes[field].indexOf('date') === 0) {
           $('#soul-bf-type' + tableId + ' li[data-mode=date]').show()
-        } else {
-          $('#soul-bf-type' + tableId + ' li[data-mode=date]').hide()
+        }
+        if (fieldMap[field].items.indexOf('data') !== -1) {
+          $('#soul-bf-type' + tableId + ' li[data-mode=in]').show()
+        }
+        if (fieldMap[field].items.indexOf('condition') !== -1) {
+          $('#soul-bf-type' + tableId + ' li[data-mode=condition]').show()
         }
 
         $('#soul-bf-type' + tableId).find('li.soul-bf-selected').removeClass('soul-bf-selected')
@@ -1291,7 +1326,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             filterBoard.push('<li data-id="' + filterSo.id + '" data-field="' + filterSo.field + '" data-mode="' + filterSo.mode + '" data-type="' + filterSo.type + '" data-value="' + filterSo.value + '" data-prefix="' + filterSo.prefix + '" class="last">');
             filterBoard.push('<div><table><tbody><tr><td data-type="top"></td></tr><tr><td data-type="bottom"></td></tr></tbody></table></div>');
             filterBoard.push('<div><input type="checkbox" name="switch" lay-filter="soul-edit-switch" lay-skin="switch" lay-text="与|或" checked></div>')
-            filterBoard.push('<div class="layui-firebrick item-field">' + fieldMap[filterSo.field] + '</div>');
+            filterBoard.push('<div class="layui-firebrick item-field">' + fieldMap[filterSo.field].title + '</div>');
             filterBoard.push('<div class="layui-deeppink item-type">等于</div>');
             filterBoard.push('<div class="layui-blueviolet item-value">请输入...</div>');
             filterBoard.push('<div class="layui-red delete-item"><i class="layui-icon layui-icon-close-fill"></i></div>');
@@ -1458,6 +1493,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         $fixedLeftTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-l').children('.layui-table-header').children('table'),
         $fixedRigthTableHead = $table.next().children('.layui-table-box').children('.layui-table-fixed-r').children('.layui-table-header').children('table'),
         tableId = myTable.id,
+        filterItems = myTable.filter ? myTable.filter.items || defaultFilterItems : defaultFilterItems,
         mainListTimeOut;
 
       // 显示筛选框
@@ -1475,6 +1511,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       });
 
       function showFilter($that) {
+        var curItems = $that.data('items') ? $that.data('items').split(',') : filterItems
         _this.hideColumns(myTable, false);
         _this.hideDropList(myTable, false);
         _this.hideCondition(myTable, false);
@@ -1489,11 +1526,17 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         $('#soul-columns' + tableId + ' li[data-key=' + $that.parents('th').data('key').split('-')[2] + '] [type=checkbox]').attr('disabled', true);
         // }
 
+        $('#main-list' + tableId + ' > li').hide()
         // 是否显示排序框
         if ($that.hasClass('layui-table-sort')) {
           $('#main-list' + tableId + ' .soul-sort').show()
-        } else {
-          $('#main-list' + tableId + ' .soul-sort').hide()
+        }
+        for (var i = 0; i < curItems.length; i++) {
+          $('#main-list' + tableId + ' .' + itemsMap[curItems[i]]).show()
+          if ($('#main-list' + tableId + ' .' + itemsMap[curItems[i]]).index() !== (i + 2)) {
+            $('#main-list' + tableId + '>li:eq("' + (i + 2) + '")').before($('#main-list' + tableId + ' .' + itemsMap[curItems[i]]))
+
+          }
         }
         if (mainListTimeOut) {
           clearTimeout(mainListTimeOut)
@@ -2078,7 +2121,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       if (!first) {
         bcHtml.push('<div class="item-prefix layui-red">' + (isOr ? '或' : '与') + '</div> ');
       }
-      bcHtml.push('<div class="item-field layui-firebrick">' + fieldMap[field] + '</div> ');
+      bcHtml.push('<div class="item-field layui-firebrick">' + fieldMap[field].title + '</div> ');
       bcHtml.push('<div class="item-type layui-deeppink">');
       switch (filterSo.mode) {
         case 'in':
@@ -2123,12 +2166,18 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         $table = $(myTable.elem),
         tableId = myTable.id,
         $bottomCondition = $table.next().children('.soul-bottom-contion'),
-        fieldMap = {}, bcHtml = [],
-        filterItems = myTable.filter ? myTable.filter.items || ['column', 'data', 'condition', 'editCondition', 'excel'] : ['column', 'data', 'condition', 'editCondition', 'excel'],
+        fieldMap = {}, bcHtml = [], curItems,
+        filterItems = myTable.filter ? myTable.filter.items || defaultFilterItems : defaultFilterItems,
         columns = _this.getCompleteCols(myTable.cols);
       for (var i = 0; i < columns.length; i++) {
         if (columns[i].field && columns[i].filter) {
-          fieldMap[columns[i]['field']] = columns[i]['title']
+          curItems = columns[i].filter.items || filterItems;
+          if (curItems.indexOf('data') !== -1 || curItems.indexOf('condition') !== -1) {
+            fieldMap[columns[i]['field']] = {
+              title: columns[i].title,
+              items: curItems
+            }
+          }
         }
       }
 
@@ -2155,7 +2204,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       if ($('#soul-bf-column' + tableId).length === 0) {
         bcHtml.push('<div id="soul-bf-column' + tableId + '" style="display: none;"><ul>')
         for (var field in fieldMap) {
-          bcHtml.push('<li data-field="' + field + '">' + fieldMap[field] + '</li>')
+          bcHtml.push('<li data-field="' + field + '">' + fieldMap[field].title + '</li>')
         }
         bcHtml.push('</ul></div>')
       }
@@ -2163,14 +2212,10 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       // 3. 条件选择
       if ($('#soul-bf-type' + tableId).length === 0) {
         bcHtml.push('<div id="soul-bf-type' + tableId + '" style="display: none;"><ul>')
-        if (filterItems.indexOf('data') !== -1) {
-          bcHtml.push('<li data-value="in" data-mode="in">筛选数据</li>')
-        }
-        if (filterItems.indexOf('condition') !== -1) {
-          bcHtml.push('<li data-value="all" data-mode="date">选择日期</li>')
-          for (var key in conditionChangeItems) {
-            bcHtml.push('<li data-value="' + key + '" data-mode="condition">' + conditionChangeItems[key] + '</li>')
-          }
+        bcHtml.push('<li data-value="in" data-mode="in">筛选数据</li>')
+        bcHtml.push('<li data-value="all" data-mode="date">选择日期</li>')
+        for (var key in conditionChangeItems) {
+          bcHtml.push('<li data-value="' + key + '" data-mode="condition">' + conditionChangeItems[key] + '</li>')
         }
         bcHtml.push('</ul></div>')
       }
@@ -2245,16 +2290,20 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         _this.hideColumns(myTable);
         _this.hideBfColumn(myTable);
         _this.hideBfPrefix(myTable);
-        var top = $(this).offset().top - $('#soul-bf-type' + tableId).outerHeight() - 10,
-          left = $(this).offset().left,
-          field = $(this).parent().data('field');
-
+        var field = $(this).parent().data('field')
+        $('#soul-bf-type' + tableId + ' li').hide()
         if (tableFilterTypes[field] && tableFilterTypes[field].indexOf('date') === 0) {
           $('#soul-bf-type' + tableId + ' li[data-mode=date]').show()
-        } else {
-          $('#soul-bf-type' + tableId + ' li[data-mode=date]').hide()
+        }
+        if (fieldMap[field].items.indexOf('data') !== -1) {
+          $('#soul-bf-type' + tableId + ' li[data-mode=in]').show()
+        }
+        if (fieldMap[field].items.indexOf('condition') !== -1) {
+          $('#soul-bf-type' + tableId + ' li[data-mode=condition]').show()
         }
 
+        var top = $(this).offset().top - $('#soul-bf-type' + tableId).outerHeight() - 10,
+          left = $(this).offset().left;
         $('#soul-bf-type' + tableId).find('li.soul-bf-selected').removeClass('soul-bf-selected')
         switch ($(this).parent().data('mode')) {
           case 'in':
@@ -2408,16 +2457,31 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             id: $(this).parent().parent().data('id'),
             field: newField
           }
-          // 重置values值
-          if (mode === 'in') {
-            $.extend(filterSo, {
-              values: []
-            })
-          } else if (mode === 'date' && !(_this.startsWith(tableFilterTypes[newField], 'date'))) {
-            $.extend(filterSo, {
-              mode: 'in',
-              values: []
-            })
+          if (fieldMap[newField].items.indexOf(modeMapItems[mode]) === -1) {
+            $.extend(filterSo, $.extend({}, revertMode[modeMapItems[mode]],
+              revertMode[modeMapItems[mode]].mode === 'condition' && _this.startsWith(tableFilterTypes[newField], 'date')
+                ? {
+                  mode: 'date',
+                  type: 'all'
+                } : {}))
+          } else {
+            // 重置values值
+            if (mode === 'in') {
+              $.extend(filterSo, {
+                values: []
+              })
+            } else if (mode === 'date' && !(_this.startsWith(tableFilterTypes[newField], 'date'))) {
+              $.extend(filterSo, {
+                mode: 'condition',
+                type: 'eq',
+                value: ''
+              })
+            } else if (mode !== 'date' && _this.startsWith(tableFilterTypes[newField], 'date')) {
+              $.extend(filterSo, {
+                mode: 'date',
+                type: 'all'
+              })
+            }
           }
           // 如果是头部条件，选择列是清除
           if (group) {
@@ -2429,10 +2493,18 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
           _this.updateWhere(myTable, filterSo);
 
           if ($('.soul-edit-out').length > 0) {
-            $('.soul-edit-out li[data-id="' + filterSo.id + '"]').data(filterSo).children('.item-field').html(fieldMap[newField]);
-            if (filterSo.mode === 'in' || (mode === 'date' && filterSo.mode !== 'date')) {
+            $('.soul-edit-out li[data-id="' + filterSo.id + '"]').data(filterSo).children('.item-field').html(fieldMap[newField].title);
+            if (filterSo.mode === 'in') {
               $('.soul-edit-out li[data-id="' + filterSo.id + '"]').children('.item-type').html('筛选数据')
               $('.soul-edit-out li[data-id="' + filterSo.id + '"]').children('.item-value').html('共0条数据')
+            } else if (mode !== filterSo.mode) {
+              if (filterSo.mode === 'date') {
+                $('.soul-edit-out li[data-id="' + filterSo.id + '"]').children('.item-type').html('选择日期')
+                $('.soul-edit-out li[data-id="' + filterSo.id + '"]').children('.item-value').html(dateTimeItems[filterSo.type])
+              } else if (filterSo.mode === 'condition') {
+                $('.soul-edit-out li[data-id="' + filterSo.id + '"]').children('.item-type').html(conditionChangeItems[filterSo.type])
+                $('.soul-edit-out li[data-id="' + filterSo.id + '"]').children('.item-value').html(filterSo.value === '' ? '请输入...' : filterSo.value)
+              }
             }
           }
 
