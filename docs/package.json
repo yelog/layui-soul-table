@@ -1,6 +1,6 @@
 {
   "name": "layui-soul-table",
-  "version": "1.5.14",
+  "version": "1.5.15",
   "scripts": {
     "docs": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.docs.js",
     "build_js": "gulp build_js",

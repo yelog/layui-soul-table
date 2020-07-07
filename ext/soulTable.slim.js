@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.14
+ * @version: v1.5.15
  */
 layui.define(['table'], function (exports) {
 
@@ -188,8 +188,9 @@ layui.define(['table'], function (exports) {
                     })
                 }
                 function handleColumnWidth(myTable, othis, isHandle) {
-                    var field = othis.data('field')
-                        ,key = othis.data('key')
+                    var key = othis.data('key')
+                      , keyArray = key.split('-')
+                      , curKey = keyArray.length === 3 ? keyArray[1] + '-' + keyArray[2] : ''
                     if(othis.attr('colspan') > 1){
                         return;
                     }
@@ -223,7 +224,7 @@ layui.define(['table'], function (exports) {
                         });
                         for (var i = 0; i < myTable.cols.length; i++) {
                             for (var j = 0; j < myTable.cols[i].length; j++) {
-                                if (myTable.cols[i][j].field === field) {
+                                if (myTable.cols[i][j].key === curKey) {
                                     myTable.cols[i][j].width = maxWidth;
                                     break;
                                 }

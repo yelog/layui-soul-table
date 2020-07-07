@@ -83,7 +83,7 @@ layui.use(['form', 'table','soulTable'], function () {
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112},
             {field: 'createTime', title: '录入时间', fixed: 'right', width: 100, autoWidth: false},
-            {title: '按钮+文字', width: 120, fixed: 'right', templet: function(row) {
+            {title: '按钮+文字', fixed: 'right', templet: function(row) {
                return '<a class="layui-btn layui-btn-xs" >编辑</a>' +
                 '<a class="layui-btn layui-btn-danger layui-btn-xs">删除</a>' + 'abcdef'
             }}
