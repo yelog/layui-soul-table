@@ -307,7 +307,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             soulFilterList.push('<li class="layui-hide"><input type="checkbox" title="' + columns[i].title + '" /></li>')
             continue;
           }
-          soulFilterList.push('<li data-value="' + columns[i].field + '" data-key="' + i + '"><input type="checkbox" value="' + (columns[i].field || i) + '" title="' + columns[i].title + '" data-fixed="' + (columns[i].fixed || "") + '" lay-skin="primary" lay-filter="changeColumns' + tableId + '" ' + (columns[i].hide ? '' : 'checked') + '></li>');
+          soulFilterList.push('<li data-value="' + columns[i].field + '" data-key="' + i + '"><input type="checkbox" value="' + (myTable.index + '-' + columns[i].key) + '" title="' + columns[i].title + '" data-fixed="' + (columns[i].fixed || "") + '" lay-skin="primary" lay-filter="changeColumns' + tableId + '" ' + (columns[i].hide ? '' : 'checked') + '></li>');
 
           //存储过滤数据的类型
           if (columns[i].filter && columns[i].filter.type) {
@@ -331,26 +331,16 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         var liClick = true;
         form.on('checkbox(changeColumns' + tableId + ')', function (data) {
           liClick = false;
+          var columnkey = data.value
           if (data.elem.checked) {
-            $table.next().children('.layui-table-box').children('.layui-table-header').find('thead>tr>th[data-field=' + data.value + ']').removeClass(HIDE);
-            $table.next().children('.layui-table-box').children('.layui-table-body').find('tbody>tr>td[data-field=' + data.value + ']').removeClass(HIDE);
-            $table.next().children('.layui-table-total').find('tbody>tr>td[data-field=' + data.value + ']').removeClass(HIDE);
-            if ($(data.elem).data('fixed')) {
-              $table.next().children('.layui-table-box').children('.layui-table-fixed-' + $(data.elem).data('fixed').substr(0, 1)).find('[data-field=' + data.value + ']').removeClass(HIDE);
-            }
-
+            $table.next().find('[data-key=' + columnkey + ']').removeClass(HIDE);
           } else {
-            $table.next().children('.layui-table-box').children('.layui-table-header').find('thead>tr>th[data-field=' + data.value + ']').addClass(HIDE);
-            $table.next().children('.layui-table-box').children('.layui-table-body').find('tbody>tr>td[data-field=' + data.value + ']').addClass(HIDE);
-            $table.next().children('.layui-table-total').find('tbody>tr>td[data-field=' + data.value + ']').addClass(HIDE);
-            if ($(data.elem).data('fixed')) {
-              $table.next().children('.layui-table-box').children('.layui-table-fixed-' + $(data.elem).data('fixed').substr(0, 1)).find('[data-field=' + data.value + ']').addClass(HIDE);
-            }
+            $table.next().find('[data-key=' + columnkey + ']').addClass(HIDE);
           }
           // 同步配置
           var tempColumns = [].concat.apply([], myTable.cols)
           for (i = 0; i < tempColumns.length; i++) {
-            if (tempColumns[i].field && tempColumns[i].field === data.value) {
+            if (tempColumns[i].field && tempColumns[i].field === columnkey) {
               tempColumns[i]['hide'] = !data.elem.checked;
             }
           }
@@ -358,6 +348,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             layui.soulTable.fixTableRemember(myTable)
           }
           $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr.childTr').children('td').attr('colspan', $table.next().children('.layui-table-box').children('.layui-table-header').find('thead>tr>th:visible').length)
+          table.resize(tableId)
         });
         $('#soul-columns' + tableId + '>li[data-value]').on('click', function () {
           if (!$(this).find(':checkbox').is(':disabled')) { //disabled禁止点击

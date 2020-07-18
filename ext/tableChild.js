@@ -152,7 +152,7 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
 
                   if ($this.hasClass(icon[1])) {
                     var newTr = [];
-                    newTr.push('<tr class="noHover childTr"><td colspan="' + $tableHead.find('th:visible').length + '"  style="cursor: inherit; padding: 0; width: ' + $this.parents('tr:eq(0)').width() + 'px">');
+                    newTr.push('<tr class="noHover childTr"><td colspan="' + $tableHead.find('th:visible').length + '"  style="cursor: inherit; padding: 0;">');
                     newTr.push(_this.getTables(this, data, child, myTable, children));
                     newTr.push('</td></tr>');
 
@@ -228,8 +228,10 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
     getTables: function (_this, data, child, myTable, children) {
       var tables = [],
         $table = $(myTable.elem),
+        $tableBox = $table.next().children('.layui-table-box'),
         tableId = myTable.id,
         rowTableId = tableId + $(_this).parents('tr:eq(0)').data('index'),
+        $tableHead = $tableBox.children('.layui-table-header').children('table'),
         $tableMain = $table.next().children('.layui-table-box').children('.layui-table-body'),
         $tableBody = $tableMain.children('table'),
         scrollWidth = 0,
@@ -245,10 +247,12 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
           //不限制宽度
           tables.push('">')
         } else {
+          // 如果有滚动条
           if ($tableMain.prop('scrollHeight') + (children.length > 0 ? children[0].height : 0) > $tableMain.height()) {
             scrollWidth = this.getScrollWidth();
           }
-          tables.push('max-width: ' + ($tableMain.width() - 1 - scrollWidth) + 'px">')
+          var maxWidth = $tableMain.width() - 1 - scrollWidth;
+          tables.push('max-width: ' + (maxWidth > $tableHead.width() ? $tableHead.width() : maxWidth) + 'px">')
         }
       }
       if (child.show !== 3 && (typeof child.childTitle === 'undefined' || child.childTitle)) {
