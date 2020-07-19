@@ -6,6 +6,10 @@
 :::demo
 ```html
 <table id="myTable" lay-filter="myTable"></table>
+<script type="text/html" id="toolbar">
+    <a class="layui-btn layui-btn-sm" lay-event="refresh">重载</a>
+    <a class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</a>
+</script>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
@@ -17,7 +21,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,height: 500
         ,limit: 20
         ,page: true
-        ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="refresh">重载</a><a class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</a></div>'
+        ,toolbar: '#toolbar'
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
             {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
@@ -103,6 +107,9 @@ layui.use(['form', 'table','soulTable'], function () {
     </div>
 </div>
 <table id="myTable2" lay-filter="myTable2"></table>
+<script type="text/html" id="toolbar2">
+  <a class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</a>
+</script>
 <script>
     layui.use(['form', 'table','soulTable'], function () {
         var table = layui.table,
@@ -113,7 +120,7 @@ layui.use(['form', 'table','soulTable'], function () {
             id: 'myTable2'
             ,elem: '#myTable2'
             ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
-            ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</a></div>'
+            ,toolbar: '#toolbar2'
             ,height: 500 
             ,limit: 20
             ,page: true

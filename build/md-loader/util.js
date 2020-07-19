@@ -1,5 +1,6 @@
 const { compileTemplate } = require('@vue/component-compiler-utils')
 const compiler = require('vue-template-compiler')
+var escape = require('escape-html');
 
 function stripScript(content) {
   const result = content.match(/<(script)>([\s\S]+)<\/\1>/)
@@ -20,6 +21,25 @@ function stripTemplate(content) {
   return content.replace(/<(script|style)[\s\S]+<\/\1>/g, '').trim()
 }
 
+// 编写例子时不一定有 template。所以采取的方案是剔除其他的内容
+function stripTpl(content) {
+  content = content.trim()
+  if (!content) {
+    return content
+  }
+  const matches = content.match(/<(script)[\s\S]+?<\/\1>/g, '')
+  if (matches && matches.length>0) {
+    const result = []
+    for (let i = 0; i < matches.length; i++) {
+      if (matches[i].indexOf('text/html') !== -1) {
+        result.push(matches[i])
+      }
+    }
+    return result.join('')
+  }
+  return ''
+}
+
 function pad(source) {
   return source
     .split(/\r?\n/)
@@ -27,7 +47,7 @@ function pad(source) {
     .join('\n')
 }
 
-function genInlineComponentText(template, script) {
+function genInlineComponentText(template, script, tpl) {
   // https://github.com/vuejs/vue-loader/blob/423b8341ab368c2117931e909e2da9af74503635/lib/loaders/templateLoader.js#L46
   const finalOptions = {
     source: `<div>${template}</div>`,
@@ -57,6 +77,8 @@ function genInlineComponentText(template, script) {
   if (script) {
     script = `export default {
       mounted () {
+        var tpl = '${escape(tpl.replace(/\n/g, '--enter--'))}'
+          layui.$('#commonTpl').append(HTMLDecode(tpl.replace(/--enter--/g, '\\n')))
         ${script}
       }
     }`
@@ -80,5 +102,6 @@ module.exports = {
   stripScript,
   stripStyle,
   stripTemplate,
+  stripTpl,
   genInlineComponentText
 }

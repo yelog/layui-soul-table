@@ -69,13 +69,89 @@
         height: 100%;
         border: none;
       }
+      #commonTpl {
+        display: none
+      }
     </style>
   </head>
   <body>
+  <script src="layui/layui.js"></script>
     <script>
       if (!window.Promise) {
         document.write('<script src="//cdn.jsdelivr.net/npm/es6-promise@4.1.1/dist/es6-promise.min.js"><\/script><script>ES6Promise.polyfill()<\/script>')
       }
+      // 自定义模块
+        layui.config({
+            base: 'ext/',   // 模块目录
+            version: 'v1.5.15'
+        }).extend({                         // 模块别名
+            soulTable: 'soulTable'
+        });
+        var $, layer;
+        layui.use(['jquery', 'layer'], function() {
+          $ = layui.$;
+          layer = layui.layer;
+          $.ajax({
+                url: 'runjs.html',
+                dataType: 'html',
+                success: function(res) {
+                    $('#runjs textarea').val(res)
+                }
+            })
+            $('#LAY_demo_run').on('click', function() {
+                var ifr = document.getElementById("runjsDemo");
+                var code = window.editor.getValue();
+                ifr.contentWindow.document.body.innerHTML = "";
+                ifr.contentWindow.document.write(code);
+            })
+
+        // 在线运行 resize
+         var dict = {}, _BODY=$('body'), _DOC = $(document), _HANDLE = $('.resize-handle'), _COVER = $('.resize-cover');
+         $('.editArea').on('mousemove', function(e){
+               var othis = $(this)
+               ,oLeft = othis.offset().left
+               ,pLeft = e.clientX - oLeft;
+               dict.allowResize = othis.width() - pLeft <= 15; //是否处于拖拽允许区域
+               _BODY.css('cursor', (dict.allowResize ? 'col-resize' : ''));
+               _HANDLE.css('display', (dict.allowResize ? 'block' : 'none'))
+
+             }).on('mouseleave', function(){
+               var othis = $(this);
+               if(dict.resizeStart) return;
+               _BODY.css('cursor', '');
+               _HANDLE.hide();
+               _COVER.hide();
+             }).on('mousedown', function(e){
+               var othis = $(this);
+               if(dict.allowResize){
+                 e.preventDefault();
+                 _COVER.show();
+                 _HANDLE.show();
+                 dict.resizeStart = true; //开始拖拽
+                 dict.offset = [e.clientX, e.clientY]; //记录初始坐标
+                 dict.ruleWidth = othis.width()
+                 dict.othis = othis
+               }
+             });
+
+             //拖拽中
+             _DOC.on('mousemove', function(e){
+               if(dict.resizeStart){
+                 e.preventDefault();
+                 if(dict.othis){
+                   var setWidth = dict.ruleWidth + e.clientX - dict.offset[0];
+                   dict.othis.css('width', setWidth + 'px');
+                 }
+               }
+             }).on('mouseup', function(e){
+               if(dict.resizeStart){
+                 dict = {};
+                 _BODY.css('cursor', '');
+                 _HANDLE.hide();
+                 _COVER.hide();
+               }
+             });
+      })
     </script>
     <div id="app"></div>
      <div id="runjsParent">
@@ -99,7 +175,8 @@
         </div>
       </div>
     </div>
-    <script src="layui/layui.js"></script>
+    <div id="commonTpl"></div>
+
     <script src="codemirror/codemirror.js"></script>
     <script src="codemirror/selection-pointer.js"></script>
     <script src="codemirror/xml.js"></script>
@@ -108,78 +185,13 @@
     <script src="codemirror/htmlmixed.js"></script>
   </body>
   <script>
-  // 自定义模块
-      layui.config({
-          base: 'ext/',   // 模块目录
-          version: 'v1.5.15'
-      }).extend({                         // 模块别名
-          soulTable: 'soulTable'
-      });
-      var $, layer;
-      layui.use(['jquery', 'layer'], function() {
-        $ = layui.$;
-        layer = layui.layer;
-        $.ajax({
-            url: 'runjs.html',
-            dataType: 'html',
-            success: function(res) {
-                $('#runjs textarea').val(res)
-            }
-        })
-        $('#LAY_demo_run').on('click', function() {
-            var ifr = document.getElementById("runjsDemo");
-            var code = window.editor.getValue();
-            ifr.contentWindow.document.body.innerHTML = "";
-            ifr.contentWindow.document.write(code);
-        })
-
-        // 在线运行 resize
-             var dict = {}, _BODY=$('body'), _DOC = $(document), _HANDLE = $('.resize-handle'), _COVER = $('.resize-cover');
-             $('.editArea').on('mousemove', function(e){
-                   var othis = $(this)
-                   ,oLeft = othis.offset().left
-                   ,pLeft = e.clientX - oLeft;
-                   dict.allowResize = othis.width() - pLeft <= 15; //是否处于拖拽允许区域
-                   _BODY.css('cursor', (dict.allowResize ? 'col-resize' : ''));
-                   _HANDLE.css('display', (dict.allowResize ? 'block' : 'none'))
-
-                 }).on('mouseleave', function(){
-                   var othis = $(this);
-                   if(dict.resizeStart) return;
-                   _BODY.css('cursor', '');
-                   _HANDLE.hide();
-                   _COVER.hide();
-                 }).on('mousedown', function(e){
-                   var othis = $(this);
-                   if(dict.allowResize){
-                     e.preventDefault();
-                     _COVER.show();
-                     _HANDLE.show();
-                     dict.resizeStart = true; //开始拖拽
-                     dict.offset = [e.clientX, e.clientY]; //记录初始坐标
-                     dict.ruleWidth = othis.width()
-                     dict.othis = othis
-                   }
-                 });
-
-                 //拖拽中
-                 _DOC.on('mousemove', function(e){
-                   if(dict.resizeStart){
-                     e.preventDefault();
-                     if(dict.othis){
-                       var setWidth = dict.ruleWidth + e.clientX - dict.offset[0];
-                       dict.othis.css('width', setWidth + 'px');
-                     }
-                   }
-                 }).on('mouseup', function(e){
-                   if(dict.resizeStart){
-                     dict = {};
-                     _BODY.css('cursor', '');
-                     _HANDLE.hide();
-                     _COVER.hide();
-                   }
-                 });
-     })
+     function HTMLDecode(text) {
+     var temp = document.createElement("div");
+     temp.innerHTML = text;
+     var output = temp.innerText || temp.textContent;
+     temp = null;
+     return output;
+     }
      function showRunJs(runJsTpl) {
         layer.open({
          type: 1,

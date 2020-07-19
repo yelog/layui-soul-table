@@ -4,6 +4,9 @@
 :::demo 通过 `filter: true` 开启筛选
 ```html
 <table id="myTable" lay-filter="myTable"></table>
+<script type="text/html" id="toolbar">
+    <a class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</a>
+</script>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
@@ -14,7 +17,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,id: 'myTable'
         ,url: 'data.json'
         ,height: 500
-        ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="clearFilter">清除所有筛选条件</a></div>'
+        ,toolbar: '#toolbar'
         ,page: false
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},

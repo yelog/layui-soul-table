@@ -21,6 +21,7 @@
     "cross-env": "^5.2.0",
     "css-loader": "^3.0.0",
     "element-ui": "^2.10.1",
+    "escape-html": "^1.0.3",
     "file-loader": "^4.0.0",
     "gulp": "^4.0.2",
     "gulp-uglify": "^3.0.2",

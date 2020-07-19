@@ -38,6 +38,7 @@ const router = new VueRouter({
 })
 router.beforeEach(async(to, from, next) => {
   if (layui.tableFilter) {
+    layui.$('#commonTpl').html('')
     layui.tableFilter.destroy([{
       config:{id: 'myTable'}
     },{

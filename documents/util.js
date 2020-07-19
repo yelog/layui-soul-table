@@ -13,5 +13,15 @@ export function stripTemplate(content) {
   if (!content) {
     return content;
   }
-  return content.replace(/<(script|style)[\s\S]+<\/\1>/g, '').trim();
+  const tplScripts = content.match(/<(script)[\s\S]+?<\/\1>/g)
+  content = content.replace(/<(script|style)[\s\S]+?<\/\1>/g, '').trim()
+  if (tplScripts && tplScripts.length>0) {
+    for (let i = 0; i < tplScripts.length; i++) {
+      if (tplScripts[i].indexOf('text/html') !== -1) {
+        content += '\n' + tplScripts[i].trim()
+      }
+    }
+  }
+
+  return content.trim();
 }
