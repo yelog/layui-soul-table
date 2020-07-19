@@ -22,7 +22,7 @@
 // 自定义模块，这里只需要开放soulTable即可
 layui.config({
     base: 'static/modules/',   // 第三方模块所在目录
-    version: 'v1.5.15' // 插件版本号
+    version: 'v1.5.16' // 插件版本号
 }).extend({                         
     soulTable: 'soulTable/soulTable',
     tableChild: 'soulTable/tableChild',
@@ -50,7 +50,7 @@ table.render({
 // 自定义模块，这里只需要开放soulTable即可
 layui.config({
     base: 'static/modules/',   // 第三方模块所在目录
-    version: 'v1.5.15' // 插件版本号
+    version: 'v1.5.16' // 插件版本号
 }).extend({                         
     soulTable: 'soulTable/soulTable.slim'
 });
@@ -81,7 +81,7 @@ table.render({
 ```js
 layui.config({
     base: 'static/modules/',   // 使用CDN的话，这个就没有用了，如果有其他第三方的的插件，则配置其地址
-    version: 'v1.5.15' // 插件版本号
+    version: 'v1.5.16' // 插件版本号
 }).extend({                         
     soulTable: '{/}https://cdn.jsdelivr.net/npm/layui-soul-table/docs/ext/soulTable',
     tableChild: '{/}https://cdn.jsdelivr.net/npm/layui-soul-table/docs/ext/tableChild',
@@ -104,7 +104,7 @@ excel: '{/}https://unpkg.com/layui-soul-table/docs/ext/excel'
 ```js
 layui.config({
     base: 'static/modules/',   // 使用CDN的话，这个就没有用了，如果有其他第三方的的插件，则配置其地址
-    version: 'v1.5.15' // 插件版本号
+    version: 'v1.5.16' // 插件版本号
 }).extend({                         
     soulTable: '{/}https://cdn.jsdelivr.net/npm/layui-soul-table/docs/ext/soulTable.slim'
 });
@@ -114,7 +114,7 @@ layui.config({
 ```js
 layui.config({
     base: 'static/modules/',   // 使用CDN的话，这个就没有用了，如果有其他第三方的的插件，则配置其地址
-    version: 'v1.5.15' // 插件版本号
+    version: 'v1.5.16' // 插件版本号
 }).extend({                         
     tableChild: '{/}https://cdn.jsdelivr.net/npm/layui-soul-table/docs/ext/tableChild',
 });

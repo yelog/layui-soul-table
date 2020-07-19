@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.15
+ * @version: v1.5.16
  */
 layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
 
@@ -99,13 +99,67 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
               $(this).children('td:eq(' + curIndex + ')').find('.childTable').on('click', function (e) {
                 layui.stope(e)
                 var rowIndex = $(this).parents('tr:eq(0)').data('index'),
+                  tableId = myTable.id,
                   key = $(this).parents('td:eq(0)').data('key'),
                   $this = $noFixedBody.children('tbody').children('tr[data-index=' + rowIndex + ']').children('td[data-key="' + key + '"]').find('.childTable:eq(0)'),
                   $fixedThis = $fixedBody.find('tr[data-index=' + rowIndex + ']').children('td[data-key="' + key + '"]').find('.childTable:eq(0)'),
-                  data = table.cache[myTable.id][rowIndex],
+                  data = table.cache[tableId][rowIndex],
                   children = child.children,
                   isTpl = false,
-                  tplContent = '';
+                  tplContent = '',
+                  tr = $tableBody.children('tbody').children('tr[data-index="' + rowIndex + '"]'),
+                  obj = {
+                    data: data,
+                    tr: tr,
+                    del: function () {
+                      table.cache[tableId][rowIndex] = [];
+                      _this.destroyChildren(rowIndex, myTable, icon)
+                      tr.remove();
+                      table.resize(tableId);
+                    },
+                    update: function (fields) {
+                      fields = fields || {};
+                      layui.each(fields, function (key, value) {
+                        if (key in data) {
+                          var templet, td = tr.children('td[data-field="' + key + '"]');
+                          data[key] = value;
+                          table.eachCols(tableId, function (i, item2) {
+                            if (item2.field == key && item2.templet) {
+                              templet = item2.templet;
+                            }
+                          });
+                          td.children('.layui-table-cell').html(function () {
+                            return templet ? function () {
+                              return typeof templet === 'function'
+                                ? templet(data)
+                                : laytpl($(templet).html() || value).render(data)
+                            }() : value;
+                          }());
+                          td.data('content', value);
+                        }
+                      });
+                    },
+                    close: function () {
+                      _this.destroyChildren(rowIndex, myTable, icon)
+                      table.resize(tableId);
+                    }
+
+                  };
+                if ($this.hasClass(icon[1])) {
+                  if (typeof child.childClose === 'function') {
+                    if (child.childClose(obj) === false) {
+                      return;
+                    }
+                  }
+                } else {
+                  // 展开事件
+                  if (typeof child.childOpen === 'function') {
+                    if (child.childOpen(obj) === false) {
+                      return;
+                    }
+                  }
+                }
+
                 if (typeof children === 'function') {
                   children = children(data)
                 }
@@ -123,10 +177,17 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
                     maxmin: true,
                     content: _this.getTables(this, data, child, myTable, children, isTpl, tplContent),
                     area: '1000px',
-                    offset: '100px'
+                    offset: '100px',
+                    cancel: function () {
+                      if (typeof child.childClose === 'function') {
+                        if (child.childClose(obj) === false) {
+                          return;
+                        }
+                      }
+                    }
                   }, child.layerOption || {}));
 
-                  if (!templet) {
+                  if (!isTpl) {
                     _this.renderTable(this, data, child, myTable, children, icon);
                   }
 

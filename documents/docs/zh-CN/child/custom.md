@@ -71,7 +71,7 @@ layui.use(['form', 'table','soulTable'], function () {
 ```
 :::
 
-### 多入口 + 复杂表头
+### 2.多入口 + 复杂表头
 
 :::demo
 ```html

@@ -311,11 +311,6 @@
           </li>
 
         </ul>
-        <a class="github" href="https://github.com/yelog/layui-soul-table" target="_blank">
-          <img src="https://img.shields.io/github/watchers/yelog/layui-soul-table.svg" alt="github">
-          <img src="https://img.shields.io/github/stars/yelog/layui-soul-table.svg">
-          <img src="https://img.shields.io/github/forks/yelog/layui-soul-table.svg">
-        </a>
       </div>
     </header>
   </div>
