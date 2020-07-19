@@ -171,6 +171,10 @@
           "name": "懒加载"
         },
         {
+          "path": "/child/custom",
+          "name": "自定义展开内容"
+        },
+        {
           "path": "/child/alone",
           "name": "独立使用"
         }

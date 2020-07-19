@@ -114,6 +114,7 @@ const webpackConfig = {
         from: 'codemirror',
         to: 'codemirror'
       },
+      {from: 'images', to: 'images'},
       {
         from: 'layui',
         to: 'layui'

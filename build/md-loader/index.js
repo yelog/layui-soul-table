@@ -2,6 +2,7 @@ const {
   stripScript,
   stripTemplate,
   stripTpl,
+  stripStyle,
   genInlineComponentText
 } = require('./util')
 const md = require('./config')
@@ -15,6 +16,7 @@ module.exports = function(source) {
   const endTagLen = endTag.length
 
   let componenetsString = ''
+  let style = ''
   let id = 0 // demo 的 id
   const output = [] // 输出的内容
   let start = 0 // 字符串开始位置
@@ -27,6 +29,7 @@ module.exports = function(source) {
     const commentContent = content.slice(commentStart + startTagLen, commentEnd)
     const html = stripTemplate(commentContent)
     const script = stripScript(commentContent)
+    style += stripStyle(commentContent)
     const tpl = stripTpl(commentContent)
     const demoComponentContent = genInlineComponentText(html, script, tpl)
     const demoComponentName = `element-demo${id}`
@@ -64,7 +67,6 @@ module.exports = function(source) {
     start = content.indexOf('</script>') + '</script>'.length
     pageScript = content.slice(0, start)
   }
-
   output.push(content.slice(start))
   return `
     <template>
@@ -73,5 +75,8 @@ module.exports = function(source) {
       </section>
     </template>
     ${pageScript}
+    <style lang="scss">
+    ${style}
+    </style>
   `
 }

@@ -180,14 +180,14 @@ layui.use(['form', 'table','soulTable'], function () {
                         var childId = this.id; // 通过 this 对象获取当前子表的id
                         
                         if (obj.event === 'childEdit') {
-                            layer.confirm('修改成功！调用<span style="color: #FF5722">行对象</span>修改当前行数据', {icon: 3}, function(index) {
+                            layer.confirm('确定要修改吗？调用<span style="color: #FF5722">行对象</span>修改当前行数据', {icon: 3}, function(index) {
                                layer.close(index)
                                obj.update({
                                   title: '我被修改了！'
                                })
                            })
                         } else if (obj.event === 'childDel') {
-                            layer.confirm('删除成功! 调用<span style="color: #FF5722">table.reload(childId)</span>来重载子表', {icon: 3}, function(index) {
+                            layer.confirm('确定要删除吗？调用<span style="color: #FF5722">table.reload(childId)</span>来重载子表', {icon: 3}, function(index) {
                                layer.close(index)
                                table.reload(childId)
                             })

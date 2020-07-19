@@ -229,6 +229,9 @@
   });
   `+jsTpl+`
 </scr` + `ipt>
+<style>
+`+ style +`
+</style>
 </body>
 </html>
 `
