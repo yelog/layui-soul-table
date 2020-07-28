@@ -165,6 +165,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       table_cache[myTable.id] = myTable // 缓存table配置
       isFilterCache[myTable.id] = needFilter;
       if (!needFilter) {
+        // 缓存所有数据
+        if (myTable.url && !myTable.page) {
+          // 修复不分页时，前端筛选后，data不为空，造成所有数据丢失的问题
+          cache[myTable.id] = layui.table.cache[myTable.id]
+        } else {
+          cache[myTable.id] = myTable.data || layui.table.cache[myTable.id]
+        }
         return;
       } //如果没筛选列，直接退出
 
@@ -2602,7 +2609,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         }
       })
 
-      var data = JSON.parse(JSON.stringify(myTable.data || layui.table.cache[myTable.id])),
+      var data = JSON.parse(JSON.stringify(myTable.data || cache[myTable.id])),
         showField = {},
         widths = {},
         mergeArrays = [], // 合并配置
@@ -2623,10 +2630,27 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         totalRow = typeof curExcel.totalRow === 'undefined' ? mainExcel.totalRow : curExcel.totalRow,
         type = filename.substring(filename.lastIndexOf('.') + 1, filename.length),
         tableStartIndex = mainExcel.add && mainExcel.add.top && Array.isArray(mainExcel.add.top.data) ? mainExcel.add.top.data.length + 1 : 1,  //表格内容从哪一行开始
-        bottomLength = mainExcel.add && mainExcel.add.bottom && Array.isArray(mainExcel.add.bottom.data) ? mainExcel.add.bottom.data.length : 0;// 底部自定义行数
+        bottomLength = mainExcel.add && mainExcel.add.bottom && Array.isArray(mainExcel.add.bottom.data) ? mainExcel.add.bottom.data.length : 0,// 底部自定义行数
+        i, j, k;
 
-      if (checked) { // 获取选中行数据
-        data = table.checkStatus(myTable.id).data;
+      if (curExcel.data){
+        if(Array.isArray(curExcel.data)) {
+          data = curExcel.data
+        } else {
+          console.error('导出指定数据 data 不符合数组格式', curExcel.data)
+          layer.close(loading)
+          return;
+        }
+      } else if (checked) { // 获取选中行数据
+        // data = table.checkStatus(myTable.id).data;
+        data = []
+        if (cache[myTable.id] && cache[myTable.id].length > 0) {
+          for (i = 0; i < cache[myTable.id].length; i++) {
+            if (cache[myTable.id][i][table.config.checkName]) {
+              data.push(cache[myTable.id][i])
+            }
+          }
+        }
       } else if (curPage) {
         data = layui.table.cache[myTable.id]
       } else if (myTable.url && myTable.page) {
@@ -2685,7 +2709,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       }
 
       // 制定显示列和顺序
-      var i, j, k, tempArray, cloneCol, columnsMap = [], curRowUnShowCount;
+      var tempArray, cloneCol, columnsMap = [], curRowUnShowCount;
       for (i = 0; i < cols.length; i++) {
         curRowUnShowCount = 0;
         for (j = 0; j < cols[i].length; j++) {

@@ -31,6 +31,13 @@
 
 ## 更新日志
 
+### **1.5.17** <small>`2020-07-28`</small>
+
+[修复] excel导出 `checked: true` 前端分页会导出其他页勾选的数据 [调用方法导出](#/zh-CN/component/excel/func)
+
+[新增] excel导出 支持自定义数据导出 `data: []` [调用方法导出](#/zh-CN/component/excel/func)
+
+
 ### **1.5.16** <small>`2020-07-19`</small>
 
 [文档] 修复 layui 的 `tpl` 写法与 vue 渲染冲突的问题的
