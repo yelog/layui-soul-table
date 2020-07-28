@@ -71,7 +71,7 @@ layui.use(['form', 'table','soulTable'], function () {
 ```
 :::
 
-### 2.多入口 + 复杂表头
+### 2.多入口 + 复杂表头 + 固定列
 
 :::demo
 ```html
@@ -116,7 +116,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,url: 'data-1.json'
         ,page: false
         ,cols: [[
-            {title: '父表信息', width: 100, rowspan: 3, children: '#expandAll2'},
+            {title: '父表信息', width: 100, rowspan: 3, fixed: 'left', children: '#expandAll2'},
             {title: '1-1', colspan: 3, align: 'center'},
             {title: '1-2', colspan: 2},
             {field: 'heat', title: '点赞数', rowspan: 3, sort:true},

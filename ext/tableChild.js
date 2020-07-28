@@ -254,7 +254,7 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
                       var $tr = $this.parents('tr:eq(0)').next(),
                         height = $tr.children('td').height(),
                         $patchDiv = '<div class="soul-table-child-patch" style="height: ' + height + 'px"></div>';
-                      $tr.children('td').children('.layui-tab-card').css({
+                      $tr.children('td').children('.soul-table-child-wrapper').css({
                         position: 'absolute',
                         top: 0,
                         width: '100%',
@@ -313,9 +313,9 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
         scrollWidth = 0,
         i;
       if (isTpl) {
-        tables.push('<div style="margin: 0;border: 0;box-shadow: none;');
+        tables.push('<div class="soul-table-child-wrapper" style="margin: 0;border: 0;box-shadow: none;');
       } else {
-        tables.push('<div class="layui-tab layui-tab-card" lay-filter="table-child-tab-' + rowTableId + '" style="margin: 0;border: 0;box-shadow: none;');
+        tables.push('<div class="layui-tab layui-tab-card soul-table-child-wrapper" lay-filter="table-child-tab-' + rowTableId + '" style="margin: 0;border: 0;box-shadow: none;');
       }
       if (child.show === 2) {
         tables.push('max-width: ' + ($tableBody.width() - 2) + 'px">')

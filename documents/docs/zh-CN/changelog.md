@@ -37,6 +37,8 @@
 
 [新增] excel导出 支持自定义数据导出 `data: []` [调用方法导出](#/zh-CN/component/excel/func)
 
+[修复] 子表 有固定列时自定义内容布局错乱的问题 [2.多入口 + 复杂表头 + 固定列](#/zh-CN/component/child/custom)
+
 
 ### **1.5.16** <small>`2020-07-19`</small>
 
