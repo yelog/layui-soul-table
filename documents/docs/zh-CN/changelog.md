@@ -33,6 +33,10 @@
 
 ### **1.5.17** <small>`2020-07-28`</small>
 
+[修复] 显示/隐藏列 layui显示/隐藏列 和 记忆功能 没有相互同步的问题
+
+### **1.5.17** <small>`2020-07-28`</small>
+
 [修复] excel导出 `checked: true` 前端分页会导出其他页勾选的数据 [调用方法导出](#/zh-CN/component/excel/func)
 
 [新增] excel导出 支持自定义数据导出 `data: []` [调用方法导出](#/zh-CN/component/excel/func)

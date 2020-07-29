@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.16
+ * @version: v1.5.17
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 
@@ -167,7 +167,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
       myTable.cols = newCols;
 
-      tableFilter.resize(myTable)
+      table.resize(myTable.id)
     }
     /**
      * excel表格导出

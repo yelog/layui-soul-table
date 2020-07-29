@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.16
+ * @version: v1.5.17
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -345,10 +345,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             $table.next().find('[data-key=' + columnkey + ']').addClass(HIDE);
           }
           // 同步配置
-          var tempColumns = [].concat.apply([], myTable.cols)
-          for (i = 0; i < tempColumns.length; i++) {
-            if (tempColumns[i].field && tempColumns[i].field === columnkey) {
-              tempColumns[i]['hide'] = !data.elem.checked;
+          for (i = 0; i < myTable.cols.length; i++) {
+            for (j = 0; j < myTable.cols[i].length; j++) {
+              if ((myTable.index + '-' + myTable.cols[i][j].key) === columnkey) {
+                myTable.cols[i][j]['hide'] = !data.elem.checked
+              }
             }
           }
           if (layui.soulTable) {
@@ -406,6 +407,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
           if (columnsTimeOut) {
             clearTimeout(columnsTimeOut)
           }
+          columns = _this.getCompleteCols(myTable.cols)
+          for (i = 0; i < columns.length; i++) {
+            $('#soul-columns' + tableId).find('li[data-value="' + columns[i].field + '"]>input').prop('checked', !columns[i].hide);
+          }
+          form.render('checkbox', 'orm');
           $('#soul-columns' + tableId).show();
           var left, animate;
           if ($(this).parent().offset().left + $(this).parent().width() + $('#soul-columns' + tableId).width() < document.body.clientWidth) {

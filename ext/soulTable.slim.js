@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.16
+ * @version: v1.5.17
  */
 layui.define(['table'], function (exports) {
 
@@ -159,7 +159,7 @@ layui.define(['table'], function (exports) {
             }
 
             myTable.cols = newCols;
-
+            table.resize(myTable.id)
         }
         , getCssRule: function (that, key, callback) {
             var style = that.elem.next().find('style')[0]

@@ -19,7 +19,7 @@ layui.use(['form', 'table','soulTable'], function () {
     var myTable = table.render({
         elem: '#myTable'
         ,url: 'data-1.json'
-        ,height: 500
+        ,height: 400
         ,toolbar: true
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
