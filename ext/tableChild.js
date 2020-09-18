@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.17
+ * @version: v1.5.18
  */
 layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
 
@@ -12,6 +12,7 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
     table = layui.table,
     laytpl = layui.laytpl,
     tableChildren = {},
+    HIDE = 'layui-hide',
     ELEM_HOVER = 'soul-table-hover';
 
   // 封装方法
@@ -47,18 +48,40 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
       }
       // 绑定一下主表事件
       if ($table.parents('.childTr').length === 0) {
+        // 行单击事件
         if (typeof myTable.rowEvent === 'function') {
           table.on('row(' + $table.attr('lay-filter') + ')', function (obj) {
-            var index = $(this).data('index');
-            obj.tr = $tableBody.children('tbody').children('tr[data-index="' + index + '"]');
-            myTable.rowEvent(obj);
+            myTable.rowEvent(_this.commonMember.call(this, _this, myTable, obj));
           })
         }
+        // 行双击事件
         if (typeof myTable.rowDoubleEvent === 'function') {
           table.on('rowDouble(' + $table.attr('lay-filter') + ')', function (obj) {
-            var index = $(this).data('index');
-            obj.tr = $tableBody.children('tbody').children('tr[data-index="' + index + '"]');
-            myTable.rowDoubleEvent(obj);
+            myTable.rowDoubleEvent(_this.commonMember.call(this, _this, myTable, obj));
+          })
+        }
+        // 绑定 checkbox 事件
+        if (typeof myTable.checkboxEvent === 'function') {
+          table.on('checkbox(' + $table.attr('lay-filter') + ')', function (obj) {
+            myTable.checkboxEvent(_this.commonMember.call(this, _this, myTable, obj));
+          })
+        }
+        // 绑定 edit 事件
+        if (typeof myTable.editEvent === 'function') {
+          table.on('edit(' + $table.attr('lay-filter') + ')', function (obj) {
+            myTable.editEvent(_this.commonMember.call(this, _this, myTable, obj));
+          })
+        }
+        // 绑定 tool 事件
+        if (typeof myTable.toolEvent === 'function') {
+          table.on('tool(' + $table.attr('lay-filter') + ')', function (obj) {
+            myTable.toolEvent(_this.commonMember.call(this, _this, myTable, obj));
+          })
+        }
+        // 绑定 toolbar 事件
+        if (typeof myTable.toolbarEvent === 'function') {
+          table.on('toolbar(' + $table.attr('lay-filter') + ')', function (obj) {
+            myTable.toolbarEvent(_this.commonMember.call(this, _this, myTable, obj));
           })
         }
       }
@@ -468,38 +491,37 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
         // 绑定 checkbox 事件
         if (typeof param.checkboxEvent === 'function') {
           table.on('checkbox(' + childTableId + ')', function (obj) {
-            param.checkboxEvent(obj, pobj)
+            param.checkboxEvent(_that.commonMember.call(this, _that, param, obj), pobj)
           })
         }
         // 绑定 edit 事件
         if (typeof param.editEvent === 'function') {
           table.on('edit(' + childTableId + ')', function (obj) {
-            obj.oldValue = $(this).prev().text();
-            param.editEvent(obj, pobj)
+            param.editEvent(_that.commonMember.call(this, _that, param, obj), pobj)
           })
         }
         // 绑定 tool 事件
         if (typeof param.toolEvent === 'function') {
           table.on('tool(' + childTableId + ')', function (obj) {
-            param.toolEvent(obj, pobj)
+            param.toolEvent(_that.commonMember.call(this, _that, param, obj), pobj)
           })
         }
         // 绑定 toolbar 事件
         if (typeof param.toolbarEvent === 'function') {
           table.on('toolbar(' + childTableId + ')', function (obj) {
-            param.toolbarEvent(obj, pobj)
+            param.toolbarEvent(_that.commonMember.call(this, _that, param, obj), pobj)
           })
         }
         // 绑定单击行事件
         if (typeof param.rowEvent === 'function') {
           table.on('row(' + childTableId + ')', function (obj) {
-            param.rowEvent(obj, pobj)
+            param.rowEvent(_that.commonMember.call(this, _that, param, obj), pobj)
           })
         }
         // 绑定双击行事件
         if (typeof param.rowDoubleEvent === 'function') {
           table.on('rowDouble(' + childTableId + ')', function (obj) {
-            param.rowDoubleEvent(obj, pobj)
+            param.rowDoubleEvent(_that.commonMember.call(this, _that, param, obj), pobj)
           })
         }
         return thisTableChild;
@@ -654,6 +676,90 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
           : laytpl($(item3.children).html() || String(content)).render(tplData)
       }() : content;
       return text ? $('<div>' + str + '</div>').text() : str;
+    },
+    commonMember: function (_this, myTable, sets) {
+      var othis = $(this)
+        , tableId = myTable.id
+        , $table = $(myTable.elem)
+        , $tableBox = $table.next().children('.layui-table-box')
+        , $fixedBody = $tableBox.children('.layui-table-fixed').children('.layui-table-body').children('table')
+        , $tableBody = $.merge($tableBox.children('.layui-table-body').children('table'), $fixedBody)
+        , index = othis[0].tagName === 'TR' ? $(this).data('index') : othis.parents('tr:eq(0)').data('index')
+        , tr = $tableBody.children('tbody').children('tr[data-index="' + index + '"]')
+        , data = table.cache[tableId] || [];
+
+
+      data = data[index] || {};
+
+      return $.extend(sets, {
+        tr: tr //行元素
+        , oldValue: othis.prev() ? othis.prev().text() : null
+        , del: function () { //删除行数据
+          table.cache[tableId][index] = [];
+          tr.remove();
+          _this.scrollPatch(myTable);
+        }
+        , update: function (fields) { //修改行数据
+          fields = fields || {};
+          layui.each(fields, function (key, value) {
+            if (key in data) {
+              var templet, td = tr.children('td[data-field="' + key + '"]');
+              data[key] = value;
+              table.eachCols(tableId, function (i, item2) {
+                if (item2.field == key && item2.templet) {
+                  templet = item2.templet;
+                }
+              });
+              td.children('.layui-table-cell').html(_this.parseTempData({
+                templet: templet
+              }, value, data));
+              td.data('content', value);
+            }
+          });
+        }
+      });
+    },
+    scrollPatch: function (myTable) {
+      var $table = $(myTable.elem),
+        layHeader = $table.next().children('.layui-table-box').children('.layui-table-header'),
+        layTotal = $table.next().children('.layui-table-total'),
+        layMain = $table.next().children('.layui-table-box').children('.layui-table-main'),
+        layFixed = $table.next().children('.layui-table-box').children('.layui-table-fixed'),
+        layFixRight = $table.next().children('.layui-table-box').children('.layui-table-fixed-r'),
+        layMainTable = layMain.children('table'),
+        scollWidth = layMain.width() - layMain.prop('clientWidth'),
+        scollHeight = layMain.height() - layMain.prop('clientHeight'),
+        outWidth = layMainTable.outerWidth() - layMain.width() //表格内容器的超出宽度
+
+        //添加补丁
+        , addPatch = function (elem) {
+          if (scollWidth && scollHeight) {
+            elem = elem.eq(0);
+            if (!elem.find('.layui-table-patch')[0]) {
+              var patchElem = $('<th class="layui-table-patch"><div class="layui-table-cell"></div></th>'); //补丁元素
+              patchElem.find('div').css({
+                width: scollWidth
+              });
+              elem.find('tr').append(patchElem);
+            }
+          } else {
+            elem.find('.layui-table-patch').remove();
+          }
+        }
+
+      addPatch(layHeader);
+      addPatch(layTotal);
+
+      //固定列区域高度
+      var mainHeight = layMain.height()
+        , fixHeight = mainHeight - scollHeight;
+      layFixed.find('.layui-table-body').css('height', layMainTable.height() >= fixHeight ? fixHeight : 'auto');
+
+      //表格宽度小于容器宽度时，隐藏固定列
+      layFixRight[outWidth > 0 ? 'removeClass' : 'addClass'](HIDE);
+
+      //操作栏
+      layFixRight.css('right', scollWidth - 1);
     }
   };
 

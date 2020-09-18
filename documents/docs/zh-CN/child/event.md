@@ -308,7 +308,11 @@ layui.use(['form', 'table','soulTable'], function () {
                     ,checkboxEvent: function(obj, pobj) {
                         // obj 子表当前行对象
                         // pobj 父表当前行对象
-                        layer.msg('子表checkbox事件，当前是否选中：' + obj.checked)
+                        if (obj.type === 'all') {
+                            layer.msg('父表全选，是否选中：' + obj.checked)
+                        } else if (obj.type === 'one'){
+                            layer.msg('父表 checkbox 事件，是否选中：' + obj.checked)
+                        }
                     }
                     ,editEvent: function(obj, pobj) {
                       // obj 子表当前行对象
@@ -342,12 +346,21 @@ layui.use(['form', 'table','soulTable'], function () {
 :::
 
 ### 2.父表的行点击事件
-由于 layui 的行点击事件中获取的 `obj.tr` 没有精确获取，导致有子表的时候，`obj.tr` 还会包含子表的对应行对象。这时如果操作 `obj.tr` 则会影响子表
+由于 layui 的行事件中获取的 `obj.tr` 没有精确获取，导致有子表的时候，`obj.tr` 还会包含子表的对应行对象。这时如果操作 `obj.tr` 则会影响子表
 
-为了解决这个问题， 给父表也提供了 `rowEvent` 和 `rowDoubleEvent` 事件，可以正常调用, 和 layui 原生一样
+为了解决这个问题， 给父表也提供了 `rowEvent` 、 `rowDoubleEvent` 、 `toolEvent` 、 `toolbarEvent` 、`checkboxEvent` 和 `editEvent` 事件，可以正常调用, 和 layui 原生一样
+
+打开控制台，更好地观察事件的触发情况
 :::demo
 ```html
 <table id="myTable2" lay-filter="myTable2"></table>
+<script type="text/html" id="toolbar">
+  <a class="layui-btn  layui-btn-sm" lay-event="reload">重载</a>
+</script>
+<script type="text/html" id="tool">
+  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
@@ -357,8 +370,10 @@ layui.use(['form', 'table','soulTable'], function () {
         elem: '#myTable2'
         ,url: 'data-1.json'
         ,height: 500
+        ,toolbar: '#toolbar'
         ,page: false
         ,cols: [[
+            {type: 'checkbox'},
             {title: '#', width: 50, children:[
                 {
                     title: '表格一'
@@ -382,38 +397,98 @@ layui.use(['form', 'table','soulTable'], function () {
             ]},
             {field: 'title', title: '诗词', width: 200, sort: true},
             {field: 'dynasty', title: '朝代', width: 100, sort: true},
-            {field: 'author', title: '作者', width: 165 },
+            {field: 'author', title: '作者（可编辑）', edit: 'text', width: 165 },
             {field: 'content', title: '内容', width: 123},
             {field: 'type', title: '类型', width: 112, sort:true},
             {field: 'heat', title: '点赞数', width: 112, sort:true},
             {field: 'createTime', title: '录入时间', width: 165, sort:true},
+            {fixed: 'right', width:150, align:'center', toolbar: '#tool'}
         ]]
+        ,checkboxEvent: function (obj) {
+            if (obj.type === 'all') {
+                layer.msg('父表全选，是否选中：' + obj.checked)
+            } else if (obj.type === 'one'){
+                layer.msg('父表 checkbox 事件，是否选中：' + obj.checked)
+            }
+        }
+        ,editEvent: function (obj) {
+           layer.msg(obj.oldValue + " 已成功改为：" + obj.value);
+        }
+        ,toolbarEvent: function (obj) {
+            // obj 当前行对象
+            if (obj.event === 'reload') {
+                table.reload(this.id)
+                layer.msg('重载成功！')
+            }
+        }
         ,rowEvent: function (obj) {
-            // layer.msg('父表行单击行事件！并展开子表！')
-            // obj.tr.css({'background':'#5FB878','color':'white'}).siblings().removeAttr('style') // 设置当前行颜色
-            console.log(obj.tr) //得到当前行元素对象
-            console.log(obj.data) //得到当前行数据
-            obj.tr.find('.childTable').trigger('click'); // 触发展开/关闭当前行子表
-            //obj.del(); //删除当前行
-           //obj.update(fields) //修改当前行数据
+            obj.tr.css({'background':'#5FB878','color':'white'}).siblings().removeAttr('style') // 设置当前行颜色
+            console.log('[父表行单击事件] 当前行对象:', obj.tr) //得到当前行元素对象
+            console.log('[父表行单机事件] 当前行数据:', obj.data) //得到当前行数据
+            // obj.tr.find('.childTable').trigger('click'); // 触发展开/关闭当前行子表
+            // obj.del(); //删除当前行
+            // obj.update(fields) //修改当前行数据
         }
         ,rowDoubleEvent: function (obj) {
-            layer.msg('父表行双击行事件！')
             obj.tr.css({'background':'#FF5722','color':'white'}).siblings().removeAttr('style')
-            console.log(obj.tr) //得到当前行元素对象
-            console.log(obj.data) //得到当前行数据
+            console.log('[父表行双击行事件] 当前行对象:', obj.tr) //得到当前行元素对象
+            console.log('[父表行双击事件] 当前行数据:', obj.data) //得到当前行数据
             //obj.del(); //删除当前行
             //obj.update(fields) //修改当前行数据
+        },
+        toolEvent: function (obj) {
+            var layEvent = obj.event, // 获取 lay-event 对应的值
+                tr = obj.tr, // 获取当前行 的 dom 对象（如果有的话）
+                data = obj.data; // 当前行数据
+            console.log('[父表tool事件] 当前行对象:', tr)
+            console.log('[父表tool事件] 当前行数据:', data)
+            if (layEvent === 'edit') {
+               //同步更新缓存对应的值
+               obj.update({
+                 author: '123'
+                 ,title: 'xxx'
+               }); 
+               layer.msg('更新成功！')
+            } else if (layEvent === 'del') {
+               layer.confirm('真的删除行么', function(index){
+                 obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                 layer.close(index);
+                 //向服务端发送删除指令
+               }); 
+            }
         }
         ,done: function () {
             soulTable.render(this)
         }
     });
+    
+    table.on('tool(myTable2)', function (obj){
+        console.log('tool')
+        var data = obj.data; //获得当前行数据
+          var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+          var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+         
+          if(layEvent === 'del'){ //删除
+            layer.confirm('真的删除行么', function(index){
+              obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+              layer.close(index);
+              //向服务端发送删除指令
+            });
+          } else if(layEvent === 'edit'){ //编辑
+            //do something
+            
+            //同步更新缓存对应的值
+            obj.update({
+              author: '123'
+              ,title: 'xxx'
+            });
+          }
+    })
+
 })
 </script>
 ```
 :::
-
 
 ### 3.子表重载 reload
 
