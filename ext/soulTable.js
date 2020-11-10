@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.18
+ * @version: v1.5.19
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 

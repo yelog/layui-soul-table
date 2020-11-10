@@ -47,7 +47,7 @@ myTable.reload({
         var myTable = table.render({
             id: 'myTable'
             ,elem: '#myTable'
-            ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
+            ,url: 'https://soultable.saodiyang.com/layui-soul-table-java/poetry/dataGrid'
             ,height: 400 
             ,limit: 20
             ,page: true
@@ -117,7 +117,7 @@ myTable.reload({
         var myTable2 = table.render({
             id: 'myTable2'
             ,elem: '#myTable2'
-            ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
+            ,url: 'https://soultable.saodiyang.com/layui-soul-table-java/poetry/dataGrid'
             ,height: 400 
             ,limit: 20
             ,page: true

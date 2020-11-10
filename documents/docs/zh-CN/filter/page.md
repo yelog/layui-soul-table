@@ -119,7 +119,7 @@ layui.use(['form', 'table','soulTable'], function () {
         table.render({
             id: 'myTable2'
             ,elem: '#myTable2'
-            ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
+            ,url: 'https://soultable.saodiyang.com/layui-soul-table-java/poetry/dataGrid'
             ,toolbar: '#toolbar2'
             ,height: 500 
             ,limit: 20

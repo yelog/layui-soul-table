@@ -31,6 +31,10 @@
 
 ## 更新日志
 
+### **1.5.19** <small>`2020-11-10`</small>
+
+[文档] 文档 api 接口迁移服务器
+
 ### **1.5.18** <small>`2020-09-18`</small>
 
 [新增] 子表 父表的绑定事件 `xxEvent` 扩充了所有事件，如 `row` 、 `tool` 、`toolbar` 等，详情请看[事件监听,第二点](#/zh-CN/component/child/event)

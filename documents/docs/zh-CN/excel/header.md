@@ -100,7 +100,7 @@ layui.use(['form', 'table','soulTable'], function () {
 
     var myTable2 = table.render({
         elem: '#myTable2'
-        ,url: 'https://soultable.saodiyang.com/back/poetry/dataGrid'
+        ,url: 'https://soultable.saodiyang.com/layui-soul-table-java/poetry/dataGrid'
         ,height: 500
         ,limit: 20
         ,page: true
