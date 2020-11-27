@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.19
+ * @version: v1.5.20
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -2781,6 +2781,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       }
 
       if (customColumns && Array.isArray(customColumns)) {
+        // 自定义表头
         var tempCustomColumns = [];
         tempArray = {};
         mergeArrays = []; // 重置表头合并列
@@ -2791,7 +2792,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
               columns[j].hide = false
               tempCustomColumns.push(columns[j]);
               columnsMap[0][columns[j].key] = columns[j];
-              tempArray[columns[j].key] = columns[j].title
+              tempArray[columns[j].key] = $('<div>'+columns[j].title+'</div>').text()
               break;
             }
           }
@@ -2805,7 +2806,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
           tempArray = {}
           for (j = 0; j < cols[i].length; j++) {
             columnsMap[i][cols[cols.length - 1][j].key] = cols[i][j];
-            tempArray[cols[cols.length - 1][j].key] = cols[i][j].title
+            tempArray[cols[cols.length - 1][j].key] = $('<div>'+cols[i][j].title+'</div>').text()
           }
           data.splice(i, 0, tempArray)
         }

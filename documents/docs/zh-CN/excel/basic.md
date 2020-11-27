@@ -31,7 +31,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,height: 500
         ,page: false
         ,cols: [[
-            {type: 'numbers', title: '序号', fixed: 'left'},
+            {type: 'numbers', title: '<div style="color: red">序号</div>', fixed: 'left'},
             {field: 'title', title: '诗词', width: 200, sort: true},
             {field: 'dynasty', title: '朝代', width: 100, sort: true},
             {field: 'author', title: '作者', width: 165 },
