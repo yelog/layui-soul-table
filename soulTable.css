@@ -706,7 +706,7 @@
 }
 .soul-table-contextmenu {
     position: absolute;
-    z-index: 999999;
+    z-index: 2147483647;
     list-style: none;
     margin: 0;
     padding: 0;
