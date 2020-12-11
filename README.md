@@ -76,7 +76,7 @@ table.render({
 ```
 ## 详细介绍
 ### 一、支持使用的几种情况
-[demo](http://img.soultable.xiangzhangshugongyi.com) 中都有示例
+[demo](https://saodiyang.gitee.io/layui-soul-table) 中都有示例
 1. 前端不分页
 即 `page:false` 
 
