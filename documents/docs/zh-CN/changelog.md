@@ -31,6 +31,10 @@
 
 ## 更新日志
 
+### **1.5.21** <small>`2020-12-11`</small>
+
+[新增] 新增 `soulTable.suspend` 方法，用于暂停/恢复某个功能特性，参考[列拖拽](#/zh-CN/component/basic/drag)第一示例中的switch方法
+
 ### **1.5.20** <small>`2020-12-01`</small>
 
 [修复] 右键菜单 设置 z-index 为最大值，修复被弹窗遮盖的问题

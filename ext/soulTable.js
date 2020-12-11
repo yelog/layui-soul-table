@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.5.20
+ * @version: v1.5.21
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 
@@ -60,6 +60,11 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
       tableChild.render(myTable);
       tableMerge.render(myTable);
 
+      // 初始化暂停配置
+      this.suspendConfig[myTable.id] = {
+        drag: false,
+        rowDrag: false
+      }
       // 修复合计栏固定列问题
       if (curConfig.fixTotal) {
         this.fixTotal(myTable)
@@ -337,7 +342,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
           $(this).find('span:first,.laytable-cell-checkbox')
             .css('cursor', 'move')
             .on('mousedown', function (e) {
-              if (e.button !== 0) {
+              // 暂停或者非鼠标左键都不执行
+              if (_this.suspendConfig[tableId].drag || e.button !== 0) {
                 return;
               }
               e.preventDefault();
@@ -796,7 +802,8 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
         }
       }
       $trs.on('mousedown', function (e) {
-        if (e.button !== 0) {
+        // 被暂停 或者 不是鼠标左键 则取消拖拽效果
+        if (_this.suspendConfig[tableId].rowDrag || e.button !== 0) {
           return;
         }
         var $this = trigger === 'row' ? $(this) : $(this).parents('tr:eq(0)'),
@@ -1504,6 +1511,16 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
       } else {
         originCols = {}
       }
+    },
+    suspendConfig: {},
+    /**
+     * 暂停某个特性
+     * @param tableId
+     * @param type 暂停的类型，支持 'drag' 'rowDrag'
+     * @param value true/false
+     */
+    suspend: function (tableId, type, value) {
+      this.suspendConfig[tableId][type] = value
     }
   }
 

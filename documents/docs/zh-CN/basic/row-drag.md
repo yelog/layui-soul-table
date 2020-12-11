@@ -7,15 +7,22 @@
 :::demo
 ```html
 <table id="myTable" ></table>
+<script type="text/html" id="myBar">
+    <div>
+        行拖拽: <input type="checkbox" lay-skin="switch" lay-filter="rowDragSwitch" lay-text="启用|暂停" checked>
+    </div>
+</script>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
     var table = layui.table,
+        form = layui.form,
         soulTable = layui.soulTable;
 
-    table.render({
+    var myTable = table.render({
+        id: 'myTable',
         elem: '#myTable'
         ,url: 'data-1.json'
-        ,toolbar: true
+        ,toolbar: '#myBar'
         ,height: 500
         ,rowDrag: {/*trigger: 'row',*/ done: function(obj) {
             // 完成时（松开时）触发
@@ -40,6 +47,9 @@ layui.use(['form', 'table','soulTable'], function () {
         ,done: function () {
             soulTable.render(this)
         }
+    });
+    form.on('switch(rowDragSwitch)', function(data){
+      soulTable.suspend('myTable', 'rowDrag', !data.elem.checked)
     });
 })
 </script>
