@@ -1326,8 +1326,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             }
 
             _this.updateWhere(myTable, filterSo);
-
-            filterBoard.push('<li data-id="' + filterSo.id + '" data-field="' + filterSo.field + '" data-mode="' + filterSo.mode + '" data-type="' + filterSo.type + '" data-value="' + filterSo.value + '" data-prefix="' + filterSo.prefix + '" class="last">');
+            var filterSoJson = JSON.parse(where_cache[myTable.id].filterSos);
+            
+            filterBoard.push('<li data-id="' + (filterSoJson[filterSoJson.length].id+2)  + '" data-field="' + filterSo.field + '" data-mode="' + filterSo.mode + '" data-type="' + filterSo.type + '" data-value="' + filterSo.value + '" data-prefix="' + filterSo.prefix + '" class="last">');
             filterBoard.push('<div><table><tbody><tr><td data-type="top"></td></tr><tr><td data-type="bottom"></td></tr></tbody></table></div>');
             filterBoard.push('<div><input type="checkbox" name="switch" lay-filter="soul-edit-switch" lay-skin="switch" lay-text="与|或" checked></div>')
             filterBoard.push('<div class="layui-firebrick item-field">' + fieldMap[filterSo.field].title + '</div>');
