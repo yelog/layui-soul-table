@@ -988,6 +988,13 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       }
 
       this.bindFilterClick(myTable);
+      
+      // 根据上次缓存筛选条件中的id最大值做完maxId
+      var cacheFilterSos = where_cache[myTable.id].filterSos;
+      if (cacheFilterSos != null && typeof cacheFilterSos != 'undefined' && $.trim(cacheFilterSos) != ''){
+          maxId = Math.max.apply(Math,JSON.parse(where_cache[myTable.id].filterSos).map(item => { return item.id })) + 2
+      }
+      
     },
     showConditionBoard: function (myTable) {
       var _this = this,
