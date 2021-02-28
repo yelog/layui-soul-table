@@ -24,7 +24,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
     SOUL_ROW_INDEX = 'SOUL_ROW_INDEX',
     cache = {},
     HIDE = 'layui-hide',
-    maxId = 1,
+    maxId = 0,
     UNHANDLED_VALUES = [undefined, '', null],
     where_cache = {},
     isFilterCache = {},
@@ -2007,7 +2007,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       return isOr ? show || status : show && status;
     }
     , getDifId: function () {
-      return maxId++;
+      return ++maxId;
     }
     , showDate: function (myTable, field, filterSo, animate, top, left, type, refresh) {
       var _this = this,
