@@ -24,7 +24,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
     SOUL_ROW_INDEX = 'SOUL_ROW_INDEX',
     cache = {},
     HIDE = 'layui-hide',
-    maxId = 0,
+    maxId = 1,
     UNHANDLED_VALUES = [undefined, '', null],
     where_cache = {},
     isFilterCache = {},
@@ -989,10 +989,28 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
 
       this.bindFilterClick(myTable);
       
-      // 根据上次缓存筛选条件中的id最大值做完maxId
+      // 根据上次缓存筛选条件中的id最大值作为maxId
       var cacheFilterSos = where_cache[myTable.id].filterSos;
-      if (cacheFilterSos != null && typeof cacheFilterSos != 'undefined' && $.trim(cacheFilterSos) != ''){
-          maxId = Math.max.apply(Math,JSON.parse(where_cache[myTable.id].filterSos).map(item => { return item.id })) + 2
+      if (!isNullOrUndefined(cacheFilterSos)){
+          maxId = findMaxId(JSON.parse(where_cache[myTable.id].filterSos), []) + 1
+      }
+
+      // 递归遍历筛选条件，并获取id的最大值
+      function findMaxId(json, array){
+          if (!(isNullOrUndefined(json) || json.length==0) ){
+              for(var i=0;i<json.length;i++){
+                  if (!isNullOrUndefined(json[i].id)){
+                      array.push(json[i].id);
+                  }
+                  if (!isNullOrUndefined(json[i].children)){
+                      findMaxId(json[i].children, array);
+                      return array.sort(function(a,b){return b-a;}) [0];
+                  }
+              }
+          }          
+      }
+      function isNullOrUndefined(str){
+          return typeof str == 'undefined' || str == null || $.trim(str) == '';
       }
       
     },
@@ -2007,7 +2025,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       return isOr ? show || status : show && status;
     }
     , getDifId: function () {
-      return ++maxId;
+      return maxId++;
     }
     , showDate: function (myTable, field, filterSo, animate, top, left, type, refresh) {
       var _this = this,
