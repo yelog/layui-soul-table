@@ -35,6 +35,8 @@
 
 [文档] layui 升级到 `2.6.7`
 
+[文档] 兼容修复新版 `layer.open` 调用 iframe 时 `layer.use` 不执行的问题
+
 
 ### **1.5.21** <small>`2020-12-11`</small>
 
