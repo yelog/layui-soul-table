@@ -34,10 +34,18 @@ soulTable.export(myTable, {
 ```html
 <table id="myTable" lay-filter="myTable" ></table>
 <script type="text/html" id="myToolbar">
-<button class="layui-btn layui-btn-primary layui-btn-sm" lay-event="export"><i class="layui-icon layui-icon-download-circle"></i>导出所有页数据</button>
-<button class="layui-btn layui-btn-primary layui-btn-sm" lay-event="exportOnePage"><i class="layui-icon layui-icon-download-circle"></i>导出当前页数据</button>
-<button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="export2"><i class="layui-icon layui-icon-download-circle"></i>导出勾选数据</button>
-<button class="layui-btn layui-btn-sm" lay-event="export3"><i class="layui-icon layui-icon-download-circle"></i>导出自定义数据</button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" lay-event="export">
+        <i class="layui-icon layui-icon-download-circle"></i>导出所有页数据
+    </button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm" lay-event="exportOnePage">
+        <i class="layui-icon layui-icon-download-circle"></i>导出当前页数据
+    </button>
+    <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="export2">
+        <i class="layui-icon layui-icon-download-circle"></i>导出勾选数据
+    </button>
+    <button class="layui-btn layui-btn-sm" lay-event="export3">
+        <i class="layui-icon layui-icon-download-circle"></i>导出自定义数据
+    </button>
 </script>
 <script>
 layui.use(['form', 'table','soulTable'], function () {
