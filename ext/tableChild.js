@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.6.0
+ * @version: v1.6.1
  */
 layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
 
@@ -101,8 +101,8 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
             }
 
             if (child.isChild && typeof child.isChild === 'function') {
-              $tableBody.find('tr').find('td[data-key$="' + child.key + '"]>div').each(function (index) {
-                if (child.isChild(layui.table.cache[tableId][index])) {
+              $tableBody.find('tr').find('td[data-key$="' + child.key + '"]>div').each(function () {
+                if (child.isChild(layui.table.cache[tableId][$(this).parents('tr:eq(0)').data('index')])) {
                   if (child.field) {
                     $(this).prepend('<i style="cursor: pointer" class="childTable ' + icon[0] + '"></i>');
                   } else {

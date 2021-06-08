@@ -22,7 +22,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,height: 500
         ,page: false
         ,cols: [[
-            {title: '#', width: 50, isChild: function(row){return row.dynasty === '宋代'}, children:[
+            {title: '#', width: 50, fixed: 'left', isChild: function(row){return row.dynasty === '宋代'}, children:[
                 {
                     title: '表格一'
                     ,url: 'data-1.json'
