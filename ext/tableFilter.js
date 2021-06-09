@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.6.1
+ * @version: v1.6.2
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -201,7 +201,12 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         // 同步选中状态
         if (!myTable.url && myTable.page && myTable.data) {
           myTable.data.forEach(function (row) {
-            cache[myTable.id][row[SOUL_ROW_INDEX]] = row
+            for (i = 0; i < cache[myTable.id].length; i++) {
+              if (cache[myTable.id][i][SOUL_ROW_INDEX] === row[SOUL_ROW_INDEX]) {
+                cache[myTable.id][i] = row
+                break;
+              }
+            }
           })
         }
         this.bindFilterClick(myTable);
