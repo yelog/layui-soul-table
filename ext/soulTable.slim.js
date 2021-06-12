@@ -894,7 +894,16 @@ layui.define(['table'], function (exports) {
                             }
                         });
 
-                        var newIndex = $this.index()
+                        var newIndex = $this.index();
+                        var errorRowCount = 0;  // 异常的行 比如子表 等情况插入的 tr 
+                        $.each($this.parent().find('tr'), function (i, o) {
+                            if ($(o).data('index') == undefined) {
+                                errorRowCount++;
+                            } else if ($(o).data('index') == index){
+                                return false;
+                            }
+                        })
+                        newIndex -= errorRowCount;
 
                         if (newIndex !== index) { // 有位置变动
                             var cache = table.cache[tableId],
