@@ -993,6 +993,31 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       }
 
       this.bindFilterClick(myTable);
+      
+      // 根据上次缓存筛选条件中的id最大值作为maxId
+      var cacheFilterSos = where_cache[myTable.id].filterSos;
+      if (!isNullOrUndefined(cacheFilterSos)){
+          maxId = findMaxId(JSON.parse(where_cache[myTable.id].filterSos), []) + 1
+      }
+
+      // 递归遍历筛选条件，并获取id的最大值
+      function findMaxId(json, array){
+          if (!(isNullOrUndefined(json) || json.length==0) ){
+              for(var i=0;i<json.length;i++){
+                  if (!isNullOrUndefined(json[i].id)){
+                      array.push(json[i].id);
+                  }
+                  if (!isNullOrUndefined(json[i].children)){
+                      findMaxId(json[i].children, array);
+                      return array.sort(function(a,b){return b-a;}) [0];
+                  }
+              }
+          }          
+      }
+      function isNullOrUndefined(str){
+          return typeof str == 'undefined' || str == null || $.trim(str) == '';
+      }
+      
     },
     showConditionBoard: function (myTable) {
       var _this = this,
