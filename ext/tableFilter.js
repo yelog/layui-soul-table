@@ -304,11 +304,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         soulFilterList.push('<div id="soul-filter-list' + tableId + '"><form action="" class="layui-form" lay-filter="orm"><ul id="main-list' + tableId + '" style="display: none">');
         soulFilterList.push('<li class="soul-sort" data-value="asc" ><i class="soul-icon soul-icon-asc"></i> 升序排列 </li>');
         soulFilterList.push('<li class="soul-sort" data-value="desc"  style="border-bottom: 1px solid #e6e6e6"><i class="soul-icon soul-icon-desc"></i> 降序排列 </li>');
-        for (i = 0; i < defaultFilterItems.length; i++) {
-          if (defaultFilterItems[i] === 'excel' && !mainExcel) {
+        for (i = 0; i < filterItems.length; i++) {
+          if (filterItems[i] === 'excel' && !mainExcel) {
             continue
           }
-          soulFilterList.push(filterItemsHtml[defaultFilterItems[i]]);
+          soulFilterList.push(filterItemsHtml[filterItems[i]]);
         }
         soulFilterList.push('</ul><ul id="soul-columns' + tableId + '" style="display: none;">');
 
