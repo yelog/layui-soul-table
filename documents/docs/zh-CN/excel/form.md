@@ -51,7 +51,7 @@ layui.use(['form', 'table','soulTable'], function () {
       });
     })
     $('#export2').on('click', function() {
-      if (table.checkStatus('myTable2').data.length > 0) {
+      if (table.checkStatus('myTable').data.length > 0) {
         soulTable.export(myTable, {
             filename: '包含表单元素.xlsx',
             checked: true

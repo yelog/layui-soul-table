@@ -23,7 +23,7 @@ layui.use(['form', 'table','soulTable'], function () {
             {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true, excel: function(row) {
                // row 为当前行数据
                return {
-                   color: row.dynasty === '唐代' ? 'FFFFFF' : '000000', // 唐代显示为黄色
+                   color: row.dynasty === '唐代' ? 'FFFFFF' : '000000', // 唐代显示为白字
                    bgColor: row.dynasty === '唐代' ? '01AAED' : 'FFFFFF', // 唐代显示为浅蓝色底色
                }
             }},
