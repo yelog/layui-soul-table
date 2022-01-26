@@ -2763,31 +2763,33 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
 
       // 处理合计行
       if (totalRow !== false && myTable.totalRow) {
-        // 通过数据解析
-        // var obj = {}, totalRows = {};
-        // for (i = 0; i < columns.length; i++) {
-        //   if (columns[i].totalRowText) {
-        //     obj[columns[i].key] = columns[i].totalRowText
-        //   } else if (columns[i].totalRow) {
-        //     totalRows[columns[i].key] = 0
-        //   }
-        // }
-        // if (JSON.stringify(totalRows) !== '{}') {
-        //   for (i = 0; i < data.length; i++) {
-        //     for (var key in totalRows) {
-        //       totalRows[key] = (parseFloat(totalRows[key]) + (parseFloat(data[i][key]) || 0)).toFixed(2)
-        //     }
-        //   }
-        // }
-        // data.push(Object.assign(obj, totalRows));
-        // 通过 dom 解析
-        var obj = {};
-        for (i = 0; i < columns.length; i++) {
-          if (columns[i].field) {
-            obj[columns[i].key] = $tableTotal.find('[data-field="'+columns[i].field+'"]').text().trim()
+        var obj = {}, totalRows = {};
+        if (typeof totalRow === 'object' && totalRow.type === 'origin') {
+          // 通过 dom 解析
+          for (i = 0; i < columns.length; i++) {
+            if (columns[i].field) {
+              obj[columns[i].key] = $tableTotal.find('[data-field="'+columns[i].field+'"]').text().trim()
+            }
           }
+          data.push(obj);
+        } else {
+          // 通过数据解析
+          for (i = 0; i < columns.length; i++) {
+            if (columns[i].totalRowText) {
+              obj[columns[i].key] = columns[i].totalRowText
+            } else if (columns[i].totalRow) {
+              totalRows[columns[i].key] = 0
+            }
+          }
+          if (JSON.stringify(totalRows) !== '{}') {
+            for (i = 0; i < data.length; i++) {
+              for (var key in totalRows) {
+                totalRows[key] = (parseFloat(totalRows[key]) + (parseFloat(data[i][key]) || 0)).toFixed(2)
+              }
+            }
+          }
+          data.push(Object.assign(obj, totalRows));
         }
-        data.push(obj);
       }
 
       if (customColumns && Array.isArray(customColumns)) {

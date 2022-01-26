@@ -61,7 +61,7 @@ layui.use(['form', 'table','soulTable'], function () {
 ```
 :::
 
-### api返回totalRow，totalRowText
+### 按照 api 返回的 totalRow 导出
 :::demo 通过列的 `excel` 进行设置
 ```html
 <table id="myTable2" lay-filter="myTable2"></table>
@@ -78,7 +78,7 @@ layui.use(['form', 'table','soulTable'], function () {
         ,page: false
         ,totalRow: true
         ,fixTotal: true
-        ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="export"><i class="layui-icon layui-icon-download-circle"></i>导出所有数据（含合计行）</a><a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="export2"><i class="layui-icon layui-icon-download-circle"></i>导出勾选数据（含合计行）</a><a class="layui-btn layui-btn-sm layui-btn-warm" lay-event="export3"><i class="layui-icon layui-icon-download-circle"></i>导出所有数据（不含合计行）</a></div>'
+        ,toolbar: '<div><a class="layui-btn layui-btn-sm" lay-event="export"><i class="layui-icon layui-icon-download-circle"></i>导出所有数据（含合计行）</a></div>'
         ,cols: [[
             {type: 'checkbox', fixed: 'left'},
             {field: 'title', title: '诗词', width: 200, fixed: 'left', sort: true},
@@ -97,22 +97,13 @@ layui.use(['form', 'table','soulTable'], function () {
     table.on('toolbar(myTable2)', function(obj){
         if (obj.event === 'export') {
             soulTable.export(myTable2, {
-              filename: '导出所有数据（含合计行）.xlsx'
+              filename: '导出所有数据（含合计行）.xlsx',
+              totalRow: {
+                // origin 代表合计行按照页面上实际显示的导出（适用于自定义合计内容
+                // 其他或为空，则代表自动计算合计（适用于一般情况
+                type: 'origin'
+              }
             });
-        } else if (obj.event === 'export2') {
-           if (table.checkStatus('myTable2').data.length > 0) {
-             soulTable.export(myTable2, {
-               filename: '导出勾选数据（含合计行）.xlsx',
-               checked: true // 只导出勾选数据
-             });
-           } else {
-             layer.msg('勾选数据不能为空！');
-           }
-       } if (obj.event === 'export3') {
-           soulTable.export(myTable2, {
-             totalRow: false,
-             filename: '导出所有数据（不含合计行）.xlsx'
-           });
         }
     });
     
