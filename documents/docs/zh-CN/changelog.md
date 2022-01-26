@@ -31,6 +31,12 @@
 
 ## 更新日志
 
+### **1.6.4** <small>`2022-01-26`</small>
+
+[修复] excel导出 分页导出时，合计行计算错误的问题，引入参数 totalRow.type，详情请看 [按照 api 返回的 totalRow 导出](#/zh-CN/component/excel/total-row)
+
+[新增] 行拖拽 新增 `before` 方法，如果返回 `false`，则还原拖拽操作
+
 ### **1.6.3** <small>`2022-01-15`</small>
 
 [修复] excel导出 额外内容导出，支持调用 `export` 方法

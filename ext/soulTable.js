@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.6.2
+ * @version: v1.6.4
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 
@@ -807,16 +807,17 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
           return;
         }
         var $this = trigger === 'row' ? $(this) : $(this).parents('tr:eq(0)'),
-          index = parseInt($this.data('index')),
-          $bodyTr = $noFixedBody.children('tbody').children('tr[data-index=' + index + ']'),
-          $cloneTr = $bodyTr.clone().css('visibility', 'hidden'),
-          $FixBodyTr = $fixedBody.children('tbody').children('tr[data-index=' + index + ']'),
+          index = parseInt($this.data('index')), // 被拖拽行索引
+          $bodyTr = $noFixedBody.children('tbody').children('tr[data-index=' + index + ']'), // 被拖拽行（非固定列）
+          $cloneTr = $bodyTr.clone().css('visibility', 'hidden'), // 占位行
+          $FixBodyTr = $fixedBody.children('tbody').children('tr[data-index=' + index + ']'), // 被拖拽行（固定列）
           bodyScrollTop = $tableBox.children('.layui-table-body').scrollTop(), // 记录当前滚动条位置
-          originTop = $this.position().top,
-          disY = e.clientY - originTop; // 鼠标距离被移动元素上侧的距离
+          originTop = $this.position().top, // 被拖拽行当前位置
+          disY = e.clientY - originTop; // 鼠标距离被拖拽行上侧的距离
 
         _BODY.on('mousemove', function (e) {
 
+          // 刚被拖动
           if (!isDragging) {
             isDragging = true;
             // 设置鼠标样式
@@ -912,11 +913,54 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
               }
             });
 
-            var newIndex = $this.index()
+            var newIndex = $this.index(),
+                cache = table.cache[tableId];
 
-            if (newIndex !== index) { // 有位置变动
-              var cache = table.cache[tableId],
-                row = cache.splice(index, 1)[0];
+              if (newIndex !== index) { // 有位置变动
+              // 如果 before 返回 false，则还原拖拽
+              if (typeof rowDragConfig.before === 'function'
+                && rowDragConfig.before.call(myTable, {
+                  row: cache[index],
+                  newIndex: newIndex,
+                  oldIndex: index,
+                  cache: cache
+                }) === false) {
+
+                // 同步 data-index
+                function updateDataIndex($el, setIndex) {
+                  $el.data('index', setIndex);
+                  $el.attr('data-index', setIndex);
+                  return $el
+                }
+
+                // 还原位置和索引
+                if (newIndex < index) {
+                  for (i = newIndex; i < index; i++) {
+                    updateDataIndex($noFixedBody.find('tr[data-index="'+(i+1)+'"]'), i)
+                    updateDataIndex($fixedBody.find('tr[data-index="'+(i+1)+'"]'), i)
+                  }
+                  updateDataIndex($bodyTr, index)
+                  $noFixedBody.find('tr[data-index="'+(index - 1)+'"]').after($bodyTr)
+                  $FixBodyTr.each(function () {
+                    updateDataIndex($(this), index)
+                    $(this).parent().children('tr[data-index="'+(index - 1)+'"]').after($(this))
+                  })
+                } else {
+                  for (i = newIndex; i > index; i--) {
+                    updateDataIndex($noFixedBody.find('tr[data-index="'+(i-1)+'"]'), i)
+                    updateDataIndex($fixedBody.find('tr[data-index="'+(i-1)+'"]'), i)
+                  }
+                  updateDataIndex($bodyTr, index)
+                  $noFixedBody.find('tr[data-index="'+(index + 1)+'"]').before($bodyTr)
+                  $FixBodyTr.each(function () {
+                    updateDataIndex($(this), index)
+                    $(this).parent().children('tr[data-index="'+(index + 1)+'"]').before($(this))
+                  })
+                }
+                return;
+              }
+
+              var row = cache.splice(index, 1)[0];
               cache.splice(newIndex, 0, row);
               if (numberColumnKey && syncNumber) {
                 // 进行序号重排

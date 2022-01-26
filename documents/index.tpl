@@ -83,7 +83,7 @@
       // 自定义模块
         layui.config({
             base: 'ext/',   // 模块目录
-            version: 'v1.6.2'
+            version: 'v1.6.4'
         }).extend({                         // 模块别名
             soulTable: 'soulTable'
         });
