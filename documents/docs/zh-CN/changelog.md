@@ -31,6 +31,10 @@
 
 ## 更新日志
 
+### **1.6.4** <small>`2022-01-30`</small>
+
+[文档] 修复在线运行不显示的问题
+
 ### **1.6.4** <small>`2022-01-26`</small>
 
 [修复] excel导出 分页导出时，合计行计算错误的问题，引入参数 totalRow.type，详情请看 [按照 api 返回的 totalRow 导出](#/zh-CN/component/excel/total-row)
