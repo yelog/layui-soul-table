@@ -1,7 +1,7 @@
 ## 给 layui-table 注入点灵魂
 当前layui版本 `v2.6.7` 
 
-在线demo及文档： [https://saodiyang.gitee.io/layui-soul-table](https://saodiyang.gitee.io/layui-soul-table)
+在线demo及文档： [https://yelog.org/layui-soul-table](https://yelog.org/layui-soul-table)
 
 国内下载地址: [https://gitee.com/saodiyang/layui-soul-table](https://gitee.com/saodiyang/layui-soul-table)
 
@@ -34,8 +34,8 @@
 >soulTable.js     总入口  
   tableFilter.js  表头筛选   
   excel.js        excel导出    
-  tableChild.js   子表 [可单独使用](https://saodiyang.gitee.io/layui-soul-table/#/zh-CN/component/child/alone)   
-  tableMerge.js   单元格合并 [可单独使用](https://saodiyang.gitee.io/layui-soul-table/#/zh-CN/component/merge/alone)     
+  tableChild.js   子表 [可单独使用](https://yelog.org/layui-soul-table/#/zh-CN/component/child/alone)   
+  tableMerge.js   单元格合并 [可单独使用](https://yelog.org/layui-soul-table/#/zh-CN/component/merge/alone)     
 
 源码版位置：`ext`
 压缩版位置：`docs/ext`
@@ -76,7 +76,7 @@ table.render({
 ```
 ## 详细介绍
 ### 一、支持使用的几种情况
-[demo](https://saodiyang.gitee.io/layui-soul-table) 中都有示例
+[demo](https://yelog.org/layui-soul-table) 中都有示例
 1. 前端不分页
 即 `page:false` 
 
