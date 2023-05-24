@@ -3,7 +3,7 @@
 
 为 `layui table` 扩展的插件， 计划和目标（有好的想法/建议/BUG反馈，可以加入QQ群：<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3cbfbd2169afc3f4d11732101388941b0db5330a64755e68f27740b604409629"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="layui-使用交流" title="layui-使用交流"></a>）
 
-当前layui版本 `v2.6.7`
+当前layui版本 `v2.8.3`
 <el-divider >有用的话，帮忙点个 star 吧</el-divider>
 
 开源地址: <el-link href="https://github.com/yelog/layui-soul-table" type="primary" target="_blank">[github]</el-link>      <el-link href="https://gitee.com/saodiyang/layui-soul-table" type="primary" style="margin-left: 20px;" target="_blank">[gitee]</el-link>
@@ -31,7 +31,12 @@
 
 ## 更新日志
 
-### **v1.7.0** <small>`2023-05-24`</small>
+### **v1.8.0** <small>`2023-05-24`</small>
+
+[升级] 升级并兼容 `layui` 版本 `2.8.3`
+[修复] 修复导出包含表单信息时，没有获取到修改后的信息的问题
+
+### **v1.8.0** <small>`2023-05-24`</small>
 
 [文档] 文档系统的 `layui` 版本升级到 `2.7.6`
 

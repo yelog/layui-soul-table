@@ -56,29 +56,39 @@ layui.use(['form', 'table','soulTable'], function () {
 如果想要拖拽列宽也实现`记忆`，重载和刷新浏览器也不会恢复，则可以通过修改源码的方式实现, 在 `lay/modules/table.js` 中找到如下代码，添加一行 `if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict)}`, 上下文如下
 
 ```js
-//拖拽中
-_DOC.on('mousemove', function (e) {
-  if (dict.resizeStart) {
-    e.preventDefault();
-    if (dict.rule) {
-      var setWidth = dict.ruleWidth + e.clientX - dict.offset[0];
-      if (setWidth < dict.minWidth) setWidth = dict.minWidth;
-      dict.rule.style.width = setWidth + 'px';
-      layer.close(that.tipsIndex);
-    }
-    resizing = 1
-  }
-}).on('mouseup', function (e) {
-  if (dict.resizeStart) {
-    if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict) } //这是要添加的那一行
+on('mouseup', function(e){
+  if(thisTable.eventMoveElem){
+    var th = thisTable.eventMoveElem; // 当前触发拖拽的 th 元素
+    var id = th.closest('.' + ELEM_VIEW).attr('lay-id');
+    var thatTable = getThisTable(id);
+
+    if(!thatTable) return;
+
+    var key = th.data('key');
+    var col = thatTable.col(key);
+    var filter = thatTable.config.elem.attr('lay-filter');
+
+    // 重置过度信息
     dict = {};
     _BODY.css('cursor', '');
-    that.scrollPatch();
-  }
-  if (resizing === 2) {
-    resizing = null;
+    thatTable.scrollPatch();
+
+    // 清除当前拖拽信息
+    th.removeData(DATA_MOVE_NAME);
+    delete thisTable.eventMoveElem;
+
+    // 列拖拽宽度后的事件
+    thatTable.getCssRule(key, function(item){
+      col.width = parseFloat(item.style.width);
+      layui.event.call(th[0], MOD_NAME, 'colResized('+ filter +')', {
+        col: col,
+        config: thatTable.config
+      });
+    });
+    if (layui.soulTable) { layui.soulTable.fixTableRemember(thatTable.config, dict) } //这是要添加的那一行
   }
 });
+;
 ```
 
 ### 3.工具栏列显示隐藏 记忆开启
@@ -88,32 +98,35 @@ _DOC.on('mousemove', function (e) {
 
 ```js
 form.on('checkbox(LAY_TABLE_TOOL_COLS)', function(obj){
-    var othis = $(obj.elem)
-    ,checked = this.checked
-    ,key = othis.data('key')
-    ,parentKey = othis.data('parentkey');
+  var othis = $(obj.elem);
+  var checked = this.checked;
+  var key = othis.data('key');
+  var col = that.col(key);
+  var hide = col.hide;
+  var parentKey = othis.data('parentkey');
 
-    layui.each(options.cols, function(i1, item1){
-      layui.each(item1, function(i2, item2){
-        if(i1+ '-'+ i2 === key){
-          var hide = item2.hide;
+  if(!col.key) return;
 
-          //同步勾选列的 hide 值和隐藏样式
-          item2.hide = !checked;
-          that.elem.find('*[data-key="'+ options.index +'-'+ key +'"]')
-          [checked ? 'removeClass' : 'addClass'](HIDE);
+  // 同步勾选列的 hide 值和隐藏样式
+  col.hide = !checked;
+  that.elem.find('*[data-key="'+ key +'"]')[
+    checked ? 'removeClass' : 'addClass'
+    ](HIDE);
 
-          //根据列的显示隐藏，同步多级表头的父级相关属性值
-          if(hide != item2.hide){
-            that.setParentCol(!checked, parentKey);
-          }
+  // 根据列的显示隐藏，同步多级表头的父级相关属性值
+  if(hide != col.hide){
+    that.setParentCol(!checked, parentKey);
+  }
 
-          //重新适配尺寸
-          that.resize();
-        }
-      });
-    });
-    if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict)}   //这是要添加的那一行
+  // 重新适配尺寸
+  that.resize();
+
+  // 列筛选（显示或隐藏）后的事件
+  layui.event.call(this, MOD_NAME, 'colToggled('+ filter +')', {
+    col: col,
+    config: options
+  });
+  if (layui.soulTable) { layui.soulTable.fixTableRemember(that.config, dict)}
 });
 ```
 

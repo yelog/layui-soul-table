@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.7.0
+ * @version: v1.8.0
  */
 layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
 
@@ -119,7 +119,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
       for (i = 0; i < cols.length; i++) {
         col = []
         for (j = 0; j < cols[i].length; j++) {
-          columnKey = myTable.index + '-' + cols[i][j].key;
+          columnKey = cols[i][j].key;
           // 同步列宽
           if (cols[i][j].width && lastKeyMap[cols[i][j].key] !== cols[i][j].width) {
             this.getCssRule(myTable, columnKey, function (item) {
@@ -134,11 +134,11 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
           // 同步顺序
           if (lastKeyMap[cols[i][j].key].oldPos !== (i + '-' + j) || lastKeyMap[cols[i][j].key].fixed !== cols[i][j].fixed) {
-            if (cols[i][j].fixed !== lastKeyMap[cols[i][j].key].fixed) {
-              myTable.cols = cols;
-              table.reload(myTable.id)
-              return;
-            }
+            myTable.cols = cols;
+            table.reload(myTable.id)
+            return;
+            // 实现不 reload 调整列顺序
+
           }
           lastKeyMap[cols[i][j].key].fixed = cols[i][j].fixed;
           lastKeyMap[cols[i][j].key].width = cols[i][j].width;
@@ -245,8 +245,6 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
         function handleColumnWidth(myTable, othis, isHandle) {
           var key = othis.data('key')
-            , keyArray = key.split('-')
-            , curKey = keyArray.length === 3 ? keyArray[1] + '-' + keyArray[2] : ''
           if (othis.attr('colspan') > 1 || othis.data('unresize')) {
             return;
           }
@@ -280,7 +278,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             });
             for (var i = 0; i < myTable.cols.length; i++) {
               for (var j = 0; j < myTable.cols[i].length; j++) {
-                if (myTable.cols[i][j].key === curKey) {
+                if (myTable.cols[i][j].key === key) {
                   myTable.cols[i][j].width = maxWidth;
                   break;
                 }
@@ -336,7 +334,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
 
           var keyArray = key.split('-'),
             curColumn = myTable.cols[keyArray[1]][keyArray[2]],
-            curKey = keyArray[1] + '-' + keyArray[2],
+            curKey = myTable.index + '-' + keyArray[1] + '-' + keyArray[2],
             isInFixed = $this.parents('.layui-table-fixed').length > 0;
           // 绑定鼠标按下事件
           $(this).find('span:first,.laytable-cell-checkbox')
@@ -1174,7 +1172,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
             $('#soul-table-contextmenu-wrapper').on('click', function (e) {
               e.stopPropagation()
             })
-            var curColsOpts = options[name].cols[$(this).data('key').substr($(this).data('key').indexOf('-') + 1)];
+            var curColsOpts = options[name].cols[$(this).data('key')];
             if (curColsOpts === false) {
               return false
             } else if (curColsOpts && curColsOpts.length > 0) {

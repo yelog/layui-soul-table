@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.7.0
+ * @version: v1.8.0
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -2756,7 +2756,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       for (i = 0; i < data.length; i++) {
         for (j = 0; j < columns.length; j++) {
           if ((columns[j].field || columns[j].type === 'numbers') && (customColumns && Array.isArray(customColumns) || !columns[j].hide)) {
-            data[i][columns[j].key] = data[i][columns[j].field || columns[j]['LAY_TABLE_INDEX']]
+            data[i][columns[j].key] = data[i][columns[j].field || columns[j]['LAY_INDEX']]
           }
         }
       }
@@ -3010,8 +3010,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
 
             var value = bodyIndex >= 0 && columnsMap[columnsMap.length - 1][field].templet ?
               typeof columnsMap[columnsMap.length - 1][field].templet === 'function' ?
-                $('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').find(':input').length === 0 ? $('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').text() : $tableBody.children('tbody').children('tr[data-index=' + bodyIndex + ']').children('td[data-field="' + field + '"]').find(':input').val() || handleNull(line[field])
-                : $('<div>' + laytpl($(columnsMap[columnsMap.length - 1][field].templet).html() || String(columnsMap[columnsMap.length - 1][field].templet)).render(line) + '</div>').find(':input').length === 0 ? $('<div>' + laytpl($(columnsMap[columnsMap.length - 1][field].templet).html() || String(columnsMap[columnsMap.length - 1][field].templet)).render(line) + '</div>').text() : $tableBody.children('tbody').children('tr[data-index=' + bodyIndex + ']').children('td[data-field="' + field + '"]').find(':input').val() || handleNull(line[field])
+                $('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').find(':input').length === 0 ? $('<div>' + columnsMap[columnsMap.length - 1][field].templet(line) + '</div>').text() : $tableBody.children('tbody').children('tr[data-index=' + bodyIndex + ']').children('td[data-key="' + field + '"]').find(':input').val() || handleNull(line[field])
+                : $('<div>' + laytpl($(columnsMap[columnsMap.length - 1][field].templet).html() || String(columnsMap[columnsMap.length - 1][field].templet)).render(line) + '</div>').find(':input').length === 0 ? $('<div>' + laytpl($(columnsMap[columnsMap.length - 1][field].templet).html() || String(columnsMap[columnsMap.length - 1][field].templet)).render(line) + '</div>').text() : $tableBody.children('tbody').children('tr[data-index=' + bodyIndex + ']').children('td[data-key="' + field + '"]').find(':input').val() || handleNull(line[field])
               : bodyIndex >= 0 && columnsMap[columnsMap.length - 1][field].type === 'numbers' ? bodyIndex + 1 : handleNull(line[field]);
             return {
               v: value,// v 代表单元格的值
