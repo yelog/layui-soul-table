@@ -1,8 +1,5 @@
 /**
- 
- @Name：transfer 穿梭框组件
- @License：MIT
-
+ * transfer 穿梭框组件
  */
 
 layui.define(['laytpl', 'form'], function(exports){
@@ -171,7 +168,11 @@ layui.define(['laytpl', 'form'], function(exports){
     });
     that.layData.css({
       height: function(){
-        return options.height - that.layHeader.outerHeight() - that.laySearch.outerHeight() - 2
+        var height = options.height - that.layHeader.outerHeight();
+        if(options.showSearch){
+          height -= that.laySearch.outerHeight();
+        }
+        return height - 2;
       }()
     });
     
@@ -321,7 +322,62 @@ layui.define(['laytpl', 'form'], function(exports){
     });
     return selectedData;
   };
-  
+
+  //执行穿梭
+  Class.prototype.transfer = function (_index, elem) {
+    var that = this
+      ,options = that.config
+      ,thisBoxElem = that.layBox.eq(_index)
+      ,arr = []
+
+    if (!elem) {
+      //通过按钮触发找到选中的进行移动
+      thisBoxElem.each(function(_index){
+        var othis = $(this)
+          ,thisDataElem = othis.find('.'+ ELEM_DATA);
+
+        thisDataElem.children('li').each(function(){
+          var thisList = $(this)
+            ,thisElemCheckbox = thisList.find('input[type="checkbox"]')
+            ,isHide = thisElemCheckbox.data('hide');
+
+          if(thisElemCheckbox[0].checked && !isHide){
+            thisElemCheckbox[0].checked = false;
+            thisBoxElem.siblings('.'+ ELEM_BOX).find('.'+ ELEM_DATA).append(thisList.clone());
+            thisList.remove();
+
+            //记录当前穿梭的数据
+            arr.push(thisElemCheckbox[0].value);
+          }
+
+          that.setValue();
+        });
+      });
+    } else {
+      //双击单条记录移动
+      var thisList = elem
+        ,thisElemCheckbox = thisList.find('input[type="checkbox"]')
+
+      thisElemCheckbox[0].checked = false;
+      thisBoxElem.siblings('.'+ ELEM_BOX).find('.'+ ELEM_DATA).append(thisList.clone());
+      thisList.remove();
+
+      //记录当前穿梭的数据
+      arr.push(thisElemCheckbox[0].value);
+
+      that.setValue();
+    }
+
+    that.renderCheckBtn();
+
+    //穿梭时，如果另外一个框正在搜索，则触发匹配
+    var siblingInput = thisBoxElem.siblings('.'+ ELEM_BOX).find('.'+ ELEM_SEARCH +' input')
+    siblingInput.val() === '' ||  siblingInput.trigger('keyup');
+
+    //穿梭时的回调
+    options.onchange && options.onchange(that.getData(arr), _index);
+  }
+
   //事件
   Class.prototype.events = function(){
     var that = this
@@ -342,60 +398,51 @@ layui.define(['laytpl', 'form'], function(exports){
           this.checked = checked;
         });
       }
-      
-      that.renderCheckBtn({stopNone: true});
+
+      setTimeout(function () {
+        that.renderCheckBtn({stopNone: true});
+      }, 0)
     });
-    
-    //按钮事件
+
+    // 双击穿梭
+    that.elem.on('dblclick', '.' + ELEM_DATA + '>li', function(event){
+      var elemThis = $(this)
+        ,thisElemCheckbox = elemThis.children('input[type="checkbox"]')
+        ,thisDataElem = elemThis.parent()
+        ,thisBoxElem = thisDataElem.parent()
+
+      if(thisElemCheckbox[0].disabled) return;
+
+      that.transfer(thisBoxElem.data('index'), elemThis);
+    })
+
+    // 穿梭按钮事件
     that.layBtn.on('click', function(){
       var othis = $(this)
       ,_index = othis.data('index')
-      ,thisBoxElem = that.layBox.eq(_index)
-      ,arr = [];
       if(othis.hasClass(DISABLED)) return;
-      
-      that.layBox.eq(_index).each(function(_index){
-        var othis = $(this)
-        ,thisDataElem = othis.find('.'+ ELEM_DATA);
-        
-        thisDataElem.children('li').each(function(){
-          var thisList = $(this)
-          ,thisElemCheckbox = thisList.find('input[type="checkbox"]')
-          ,isHide = thisElemCheckbox.data('hide');
-          
-          if(thisElemCheckbox[0].checked && !isHide){
-            thisElemCheckbox[0].checked = false;
-            thisBoxElem.siblings('.'+ ELEM_BOX).find('.'+ ELEM_DATA).append(thisList.clone());
-            thisList.remove();
-            
-            //记录当前穿梭的数据
-            arr.push(thisElemCheckbox[0].value);
-          }
-          
-          that.setValue();
-        });
-      });
-      
-      that.renderCheckBtn();
-      
-      //穿梭时，如果另外一个框正在搜索，则触发匹配
-      var siblingInput = thisBoxElem.siblings('.'+ ELEM_BOX).find('.'+ ELEM_SEARCH +' input')
-      siblingInput.val() === '' ||  siblingInput.trigger('keyup');
-      
-      //穿梭时的回调
-      options.onchange && options.onchange(that.getData(arr), _index);
+
+      that.transfer(_index);
     });
     
     //搜索
     that.laySearch.find('input').on('keyup', function(){
-      var value = this.value
-      ,thisDataElem = $(this).parents('.'+ ELEM_SEARCH).eq(0).siblings('.'+ ELEM_DATA)
-      ,thisListElem = thisDataElem.children('li');
+      var value = this.value;
+      var thisDataElem = $(this).parents('.'+ ELEM_SEARCH).eq(0).siblings('.'+ ELEM_DATA);
+      var thisListElem = thisDataElem.children('li');
 
       thisListElem.each(function(){
-        var thisList = $(this)
-        ,thisElemCheckbox = thisList.find('input[type="checkbox"]')
-        ,isMatch = thisElemCheckbox[0].title.indexOf(value) !== -1;
+        var thisList = $(this);
+        var thisElemCheckbox = thisList.find('input[type="checkbox"]');
+        var title = thisElemCheckbox[0].title;
+
+        // 是否区分大小写
+        if(options.showSearch !== 'cs'){
+          title = title.toLowerCase();
+          value = value.toLowerCase();
+        }
+
+        var isMatch = title.indexOf(value) !== -1;
 
         thisList[isMatch ? 'removeClass': 'addClass'](HIDE);
         thisElemCheckbox.data('hide', isMatch ? false : true);

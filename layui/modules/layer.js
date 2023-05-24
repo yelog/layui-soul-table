@@ -1,5 +1,4 @@
-﻿
-/*!
+﻿/**
  * layer - 通用 Web 弹出层组件
  * MIT Licensed 
  */
@@ -671,10 +670,10 @@ Class.pt.callback = function(){
   if(config.success){
     if(config.type == 2){
       layero.find('iframe').on('load', function(){
-        config.success(layero, that.index);
+        config.success(layero, that.index, that);
       });
     } else {
-      config.success(layero, that.index);
+      config.success(layero, that.index, that);
     }
   }
   layer.ie == 6 && that.IE6(layero);
@@ -851,7 +850,7 @@ layer.style = function(index, options, limit){
   }
   
   layero.css(options);
-  btnHeight = layero.find('.'+doms[6]).outerHeight();
+  btnHeight = layero.find('.'+doms[6]).outerHeight() || 0;
   
   if(type === ready.type[2]){
     layero.find('iframe').css({

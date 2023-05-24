@@ -1,5 +1,5 @@
 
-/*! lay 基础 DOM 操作 | MIT Licensed */
+/** lay 基础 DOM 操作 | MIT Licensed */
 
 ;!function(window){ //gulp build: lay-header
   "use strict";
@@ -33,12 +33,14 @@
   
   //普通对象深度扩展
   lay.extend = function(){
-    var ai = 1, args = arguments
+    var ai = 1
+    ,length
+    ,args = arguments
     ,clone = function(target, obj){
-      target = target || (obj.constructor === Array ? [] : {}); 
+      target = target || (layui.type(obj) === 'array' ? [] : {}); //目标对象
       for(var i in obj){
-        //如果值为对象，则进入递归，继续深度合并
-        target[i] = (obj[i] && (obj[i].constructor === Object))
+        //如果值为普通对象，则进入递归，继续深度合并
+        target[i] = (obj[i] && obj[i].constructor === Object)
           ? clone(target[i], obj[i])
         : obj[i];
       }
@@ -46,17 +48,18 @@
     }
 
     args[0] = typeof args[0] === 'object' ? args[0] : {};
+    length = args.length
 
-    for(; ai < args.length; ai++){
+    for(; ai < length; ai++){
       if(typeof args[ai] === 'object'){
-        clone(args[0], args[ai])
+        clone(args[0], args[ai]);
       }
     }
     return args[0];
   };
   
   //lay 模块版本
-  lay.v = '1.0.7';
+  lay.v = '1.0.8';
   
   //ie版本
   lay.ie = function(){
@@ -75,7 +78,7 @@
    * 获取 layui 常见方法，以便用于组件单独版
    */
   
-  lay.layui = layui;
+  lay.layui = layui || {};
   lay.getPath = layui.cache.dir; //获取当前 JS 所在目录
   lay.stope = layui.stope; //中止冒泡
   lay.each = function(){ //遍历
@@ -88,14 +91,16 @@
   
   
   //数字前置补零
-  lay.digit = function(num, length, end){
+  lay.digit = function(num, length){
+    if(!(typeof num === 'string' || typeof num === 'number')) return '';
+
     var str = '';
     num = String(num);
     length = length || 2;
     for(var i = num.length; i < length; i++){
       str += '0';
     }
-    return num < Math.pow(10, length) ? str + (num|0) : num;
+    return num < Math.pow(10, length) ? str + num : num;
   };
   
   //创建元素
@@ -145,11 +150,20 @@
     ,winArea = function(type){
       return document.documentElement[type ? 'clientWidth' : 'clientHeight']
     }, margin = 5, left = rect.left, top = rect.bottom;
+    
+    //相对元素居中
+    if(obj.align === 'center'){
+      left = left - (elemWidth - elem.offsetWidth)/2;
+    } else if(obj.align === 'right'){
+      left = left - elemWidth + elem.offsetWidth;
+    }
 
     //判断右侧是否超出边界
     if(left + elemWidth + margin > winArea('width')){
       left = winArea('width') - elemWidth - margin; //如果超出右侧，则将面板向右靠齐
     }
+    //左侧是否超出边界
+    if(left < margin) left = margin;
     
     //判断底部和顶部是否超出边界
     if(top + elemHeight + margin > winArea()){
@@ -161,6 +175,8 @@
         if(obj.clickType === 'right'){
           top = winArea() - elemHeight - margin*2;
           if(top < 0) top = 0; //不能溢出窗口顶部
+        } else {
+          top = margin; // 位置计算逻辑完备性处理
         }
       }
     }
@@ -406,4 +422,3 @@
   }
   
 }(window, window.document);
-

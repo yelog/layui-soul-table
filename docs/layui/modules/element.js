@@ -1,5 +1,4 @@
-
-/*!
+/**
  * element 常用元素操作
  * MIT Licensed 
  */
@@ -132,9 +131,9 @@ layui.define('jquery', function(exports){
       ,filter = parents.attr('lay-filter');
       
       if(li.hasClass(THIS)){
-        if(li.next()[0]){
+        if (li.next()[0] && li.next().is('li')){
           call.tabClick.call(li.next()[0], null, index + 1);
-        } else if(li.prev()[0]){
+        } else if (li.prev()[0] && li.prev().is('li')){
           call.tabClick.call(li.prev()[0], null, index - 1);
         }
       }

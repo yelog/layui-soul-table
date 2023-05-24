@@ -1,13 +1,10 @@
 /**
-
- @Title: slider 滑块组件
- @License：MIT
-
+ * slider 滑块组件
  */
 
 layui.define('jquery', function(exports){
   "use strict";
-  var $ = layui.jquery
+  var $ = layui.$
 
   //外部接口
   ,slider = {
@@ -114,7 +111,7 @@ layui.define('jquery', function(exports){
     var theme = options.disabled ? '#c2c2c2' : options.theme;
 
     //滑块
-    var temp = '<div class="layui-slider '+ (options.type === 'vertical' ? 'layui-slider-vertical' : '') +'">'+ (options.tips ? '<div class="layui-slider-tips"></div>' : '') + 
+    var temp = '<div class="layui-slider '+ (options.type === 'vertical' ? 'layui-slider-vertical' : '') +'">'+ (options.tips ? '<div class="'+ SLIDER_TIPS +'"></div>' : '') + 
     '<div class="layui-slider-bar" style="background:'+ theme +'; '+ (options.type === 'vertical' ? 'height' : 'width') +':'+ scale +';'+ (options.type === 'vertical' ? 'bottom' : 'left') +':'+ (scaleFir || 0) +';"></div><div class="layui-slider-wrap" style="'+ (options.type === 'vertical' ? 'bottom' : 'left') +':'+ (scaleFir || scale) +';">' +
     '<div class="layui-slider-wrap-btn" style="border: 2px solid '+ theme +';"></div></div>'+ (options.range ? '<div class="layui-slider-wrap" style="'+ (options.type === 'vertical' ? 'bottom' : 'left') +':'+ scaleSec +';"><div class="layui-slider-wrap-btn" style="border: 2px solid '+ theme +';"></div></div>' : '') +'</div>';
 
@@ -177,6 +174,7 @@ layui.define('jquery', function(exports){
     };
 
     //划过滑块显示数值
+    var timer;
     that.elemTemp.find('.' + SLIDER_WRAP_BTN).on('mouseover', function(){
       var sliderWidth = options.type === 'vertical' ? options.height : that.elemTemp[0].offsetWidth
       ,sliderWrap = that.elemTemp.find('.' + SLIDER_WRAP)
@@ -185,12 +183,24 @@ layui.define('jquery', function(exports){
       ,value = $(this).parent().data('value')
       ,tipsTxt = options.setTips ? options.setTips(value) : value;
       that.elemTemp.find('.' + SLIDER_TIPS).html(tipsTxt);
-      if(options.type === 'vertical'){
-        that.elemTemp.find('.' + SLIDER_TIPS).css({"bottom":left + '%', "margin-bottom":"20px", "display":"inline-block"});
-      }else{
-        that.elemTemp.find('.' + SLIDER_TIPS).css({"left":left + '%', "display":"inline-block"});
-      };
+
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        if(options.type === 'vertical'){
+          that.elemTemp.find('.' + SLIDER_TIPS).css({
+            "bottom": left + '%', 
+            "margin-bottom": "20px", 
+            "display": "inline-block"
+          });
+        } else {
+          that.elemTemp.find('.' + SLIDER_TIPS).css({
+            "left": left + '%', 
+            "display": "inline-block"
+          });
+        };
+      }, 300);
     }).on('mouseout', function(){
+      clearTimeout(timer);
       that.elemTemp.find('.' + SLIDER_TIPS).css("display", "none");
     }); 
   };
@@ -309,21 +319,26 @@ layui.define('jquery', function(exports){
       });
     });
     
-    //点击滑块
+    // 点击滑块
     sliderAct.on('click', function(e){
       var main = $('.' + SLIDER_WRAP_BTN);
+      var othis = $(this);
       if(!main.is(event.target) && main.has(event.target).length === 0 && main.length){
-        var left = options.type === 'vertical' ? (sliderWidth() - e.clientY + $(this).offset().top):(e.clientX - $(this).offset().left), index;
-        if(left < 0)left = 0;
-        if(left > sliderWidth())left = sliderWidth();
-        var reaLeft = left / sliderWidth() * 100 / step;
+        var index;
+        var offset = options.type === 'vertical' 
+          ? (sliderWidth() - e.clientY + othis.offset().top - $(window).scrollTop())
+        :(e.clientX - othis.offset().left - $(window).scrollLeft());
+
+        if(offset < 0)offset = 0;
+        if(offset > sliderWidth()) offset = sliderWidth();
+        var reaLeft = offset / sliderWidth() * 100 / step;
         if(options.range){
           if(options.type === 'vertical'){
-            index = Math.abs(left - parseInt($(sliderWrap[0]).css('bottom'))) > Math.abs(left -  parseInt($(sliderWrap[1]).css('bottom'))) ? 1 : 0;
-          }else{
-            index = Math.abs(left - sliderWrap[0].offsetLeft) > Math.abs(left - sliderWrap[1].offsetLeft) ? 1 : 0;
+            index = Math.abs(offset - parseInt($(sliderWrap[0]).css('bottom'))) > Math.abs(offset -  parseInt($(sliderWrap[1]).css('bottom'))) ? 1 : 0;
+          } else {
+            index = Math.abs(offset - sliderWrap[0].offsetLeft) > Math.abs(offset - sliderWrap[1].offsetLeft) ? 1 : 0;
           }
-        }else{
+        } else {
           index = 0;
         };
         change(reaLeft, index);

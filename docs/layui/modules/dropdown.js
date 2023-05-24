@@ -1,8 +1,6 @@
 /**
- 
- @Name：dropdown 下拉菜单组件
- @License：MIT
-
+ * dropdown 
+ * 下拉菜单组件
  */
 
 layui.define(['jquery', 'laytpl', 'lay'], function(exports){
@@ -304,6 +302,7 @@ layui.define(['jquery', 'laytpl', 'lay'], function(exports){
       position: options.position
       ,e: that.e
       ,clickType: options.trigger === 'contextmenu' ? 'right' : null
+      ,align: options.align || null
     });
   };
   
@@ -496,7 +495,7 @@ layui.define(['jquery', 'laytpl', 'lay'], function(exports){
       
       //是否超出底部屏幕
       if(rect.bottom > _WIN.height()){
-        elemPanel.eq(0).css('margin-top', -(rect.bottom - _WIN.height()));
+        elemPanel.eq(0).css('margin-top', -(rect.bottom - _WIN.height() + 5));
       };
     }).on('mouseleave', ELEM_LI_PAR, function(e){
       var othis = $(this)
