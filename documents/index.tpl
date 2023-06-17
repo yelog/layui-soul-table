@@ -238,4 +238,6 @@
        })
      }
   </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7312950143901041"
+       crossorigin="anonymous"></script>
 </html>
