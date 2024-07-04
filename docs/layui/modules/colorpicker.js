@@ -214,7 +214,7 @@ layui.define(['jquery', 'lay'], function(exports){
     ,'</div>'].join(''))
 
     //初始化颜色选择框
-    var elem = options.elem = $(options.elem);  
+    elem = options.elem = $(options.elem);
     options.size && elemColorBox.addClass('layui-colorpicker-'+ options.size); //初始化颜色选择框尺寸
     
     // 插入颜色选择框
@@ -434,7 +434,7 @@ layui.define(['jquery', 'lay'], function(exports){
       }
       
       //回调更改的颜色
-      options.change && options.change(that.elemPicker.find('.' + PICKER_INPUT).find('input').val());
+      options.change && options.change($.trim(that.elemPicker.find('.' + PICKER_INPUT).find('input').val()));
     }
 
     //拖拽元素
@@ -448,11 +448,16 @@ layui.define(['jquery', 'lay'], function(exports){
         elemMove.remove();
       });
     };
+    // 移动端滑动模拟事件中
+    // 1. 不触发游标上绑定的事件，以提高性能，使滑动更流畅
+    // 2. 游标上的事件需要冒泡到颜色拾取区域，用来模拟拖动游标的效果
+    var needTrigger = true;
+    var needStopPropagation = true;
 
     //右侧主色选择
-    slider.on('mousedown', function(e){
-      var oldtop = this.offsetTop
-      ,oldy = e.clientY;
+    slider.on('mousedown', function(e, triggerEvent){
+      var oldtop = this.offsetTop;
+      var oldy = e.clientY === undefined ? triggerEvent.clientY : e.clientY;
       var move = function(e){
         var top = oldtop + (e.clientY - oldy)
         ,maxh = side[0].offsetHeight;
@@ -463,13 +468,12 @@ layui.define(['jquery', 'lay'], function(exports){
         change(h, _s, _b, _a);
         e.preventDefault();
       };
-      
+      needStopPropagation && layui.stope(e);
       createMoveElem(move);
-      //layui.stope(e);
       e.preventDefault();
     });
     
-    side.on('click', function(e){
+    side.on('mousedown', function(e){
       var top = e.clientY - $(this).offset().top + $win.scrollTop();
       if(top < 0)top = 0;
       if(top > this.offsetHeight) top = this.offsetHeight;     
@@ -477,56 +481,57 @@ layui.define(['jquery', 'lay'], function(exports){
       _h = h;
       change(h, _s, _b, _a); 
       e.preventDefault();
+      needTrigger && slider.trigger('mousedown', e);
     });
     
     //中间小圆点颜色选择
-    choose.on('mousedown', function(e){
-      var oldtop = this.offsetTop
-      ,oldleft = this.offsetLeft
-      ,oldy = e.clientY
-      ,oldx = e.clientX;
+    choose.on('mousedown', function(e, triggerEvent){
+      var oldtop = this.offsetTop;
+      var oldleft = this.offsetLeft;
+      var oldy = e.clientY === undefined ? triggerEvent.clientY : e.clientY;
+      var oldx = e.clientX === undefined ?  triggerEvent.clientX : e.clientX;
       var move = function(e){
         var top = oldtop + (e.clientY - oldy)
         ,left = oldleft + (e.clientX - oldx)
-        ,maxh = basis[0].offsetHeight - 3
-        ,maxw = basis[0].offsetWidth - 3;
-        if(top < -3)top = -3;
+        ,maxh = basis[0].offsetHeight
+        ,maxw = basis[0].offsetWidth;
+        if(top < 0)top = 0;
         if(top > maxh)top = maxh;
-        if(left < -3)left = -3;
+        if(left < 0)left = 0;
         if(left > maxw)left = maxw;
-        var s = (left + 3)/260*100
-        ,b = 100 - (top + 3)/180*100;
+        var s = left/260*100
+        ,b = 100 - top/180*100;
         _b = b;
         _s = s;
         change(_h, s, b, _a); 
         e.preventDefault();
       };
-      layui.stope(e);
+      needStopPropagation && layui.stope(e);
       createMoveElem(move);
       e.preventDefault();
     });
     
     basis.on('mousedown', function(e){
-      var top = e.clientY - $(this).offset().top - 3 + $win.scrollTop()
-      ,left = e.clientX - $(this).offset().left - 3 + $win.scrollLeft()
-      if(top < -3)top = -3;
-      if(top > this.offsetHeight - 3)top = this.offsetHeight - 3;
-      if(left < -3)left = -3;
-      if(left > this.offsetWidth - 3)left = this.offsetWidth - 3;
-      var s = (left + 3)/260*100
-      ,b = 100 - (top + 3)/180*100;
+      var top = e.clientY - $(this).offset().top + $win.scrollTop()
+      ,left = e.clientX - $(this).offset().left + $win.scrollLeft()
+      if(top < 0)top = 0;
+      if(top > this.offsetHeight)top = this.offsetHeight;
+      if(left < 0)left = 0;
+      if(left > this.offsetWidth)left = this.offsetWidth;
+      var s = left/260*100
+      ,b = 100 - top/180*100;
       _b = b;
       _s = s;
       change(_h, s, b, _a); 
       layui.stope(e);
       e.preventDefault();
-      choose.trigger(e, 'mousedown');
+      needTrigger && choose.trigger('mousedown', e);
     });
     
     //底部透明度选择
-    alphaslider.on('mousedown', function(e){
-      var oldleft = this.offsetLeft
-      ,oldx = e.clientX;
+    alphaslider.on('mousedown', function(e, triggerEvent){
+      var oldleft = this.offsetLeft;
+      var oldx = e.clientX === undefined ? triggerEvent.clientX : e.clientX;
       var move = function(e){
         var left = oldleft + (e.clientX - oldx)
         ,maxw = alphacolor[0].offsetWidth;
@@ -538,10 +543,11 @@ layui.define(['jquery', 'lay'], function(exports){
         e.preventDefault();
       };
       
+      needStopPropagation && layui.stope(e);
       createMoveElem(move);
       e.preventDefault();
     });
-    alphacolor.on('click', function(e){
+    alphacolor.on('mousedown', function(e){
       var left = e.clientX - $(this).offset().left
       if(left < 0)left = 0;
       if(left > this.offsetWidth)left = this.offsetWidth;
@@ -549,6 +555,7 @@ layui.define(['jquery', 'lay'], function(exports){
       _a = a;
       change(_h, _s, _b, a); 
       e.preventDefault();
+      needTrigger && alphaslider.trigger('mousedown', e);
     });
     
     //预定义颜色选择
@@ -567,6 +574,41 @@ layui.define(['jquery', 'lay'], function(exports){
         change(hsb.h, hsb.s, hsb.b, a);
       })
     });
+
+    if(!lay.touchEventsSupported()) return;
+    // 触摸事件模拟
+    layui.each([
+      {elem: side, eventType: 'mousedown'},
+      {elem: alphacolor, eventType: 'mousedown'},
+      {elem: basis, eventType: 'mousedown'}
+    ], function(i, obj){
+      lay.touchSwipe(obj.elem, {
+        onTouchStart: function(){
+          needTrigger = false;
+          needStopPropagation = false;
+        },
+        onTouchMove: function(e){
+          touchHandler(e, obj.eventType)
+        },
+        onTouchEnd: function(){
+          elemMove.remove();
+          needTrigger = true;
+          needStopPropagation = true;
+        }
+      })
+    })
+
+    function touchHandler(event, eventType) {
+      var pointer = event.touches[0];
+      var simulatedEvent = document.createEvent("MouseEvent");
+
+      simulatedEvent.initMouseEvent(eventType, 
+        true, true, window, 1, 
+        pointer.screenX, pointer.screenY,pointer.clientX, pointer.clientY, 
+        false, false, false, false, 0, null
+      );
+      pointer.target.dispatchEvent(simulatedEvent);
+    }
   };
 
   //颜色选择器hsb转换
@@ -576,16 +618,17 @@ layui.define(['jquery', 'lay'], function(exports){
     var hex = HSBToHEX({h:h, s:100, b:100});
     var color = HSBToHEX({h:h, s:s, b:b});
     var sidetop = h/360*180;
-    var top = 180 - b/100*180 - 3;
-    var left = s/100*260 - 3;
+    var top = 180 - b/100*180;
+    var left = s/100*260;
+    var basisElem = that.elemPicker.find('.' + PICKER_BASIS)[0];
     
     that.elemPicker.find('.' + PICKER_SIDE_SLIDER).css("top", sidetop); //滑块的top
-    that.elemPicker.find('.' + PICKER_BASIS)[0].style.background = '#' + hex; //颜色选择器的背景
+    basisElem.style.background = '#' + hex; //颜色选择器的背景
     
     //选择器的top left
     that.elemPicker.find('.' + PICKER_BASIS_CUR).css({
-      "top": top
-      ,"left": left
+      "top": top / basisElem.offsetHeight * 100 + '%',
+      "left": left / basisElem.offsetWidth * 100 + '%' 
     });
     
     // if(type === 'change') return;
@@ -614,7 +657,7 @@ layui.define(['jquery', 'lay'], function(exports){
       
       //确认
       ,confirm: function(othis, change){
-        var value = elemPickerInput.val()
+        var value =  $.trim(elemPickerInput.val())
         ,colorValue
         ,hsb;
         

@@ -31,7 +31,7 @@
     "markdown-it-anchor": "^5.2.4",
     "markdown-it-chain": "^1.3.0",
     "markdown-it-container": "^2.0.0",
-    "node-sass": "^4.12.0",
+    "sass": "1.26.2",
     "progress-bar-webpack-plugin": "^1.12.1",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
@@ -79,7 +79,7 @@
     "url": "https://github.com/yelog/layui-soul-table/issues"
   },
   "homepage": "https://saodiyang.gitee.io/layui-soul-table",
-  "description": "当前layui版本 `v2.8.3`",
+  "description": "当前layui版本 `v2.9.13`",
   "directories": {
     "doc": "docs"
   }

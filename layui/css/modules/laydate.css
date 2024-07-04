@@ -61,7 +61,7 @@ html #layuicss-laydate{display: none; position: absolute; width: 1989px;}
 .laydate-day-mark::after{position: absolute; content:''; right: 2px; top: 2px; width: 5px; height: 5px; border-radius: 50%;}
 .laydate-day-holidays:before{position: absolute; left: 0; top: 0; font-size: 12px; transform: scale(.7);}
 .laydate-day-holidays:before{content:'\4F11'; color: #FF5722;}
-.laydate-day-holidays[type="work"]:before{content:'\73ED'; color: inherit;}
+.laydate-day-holidays[type="workdays"]:before{content:'\73ED'; color: inherit;}
 .layui-laydate .layui-this .laydate-day-holidays:before{color: #fff;}
 
 /* 底部结构 */
@@ -85,12 +85,14 @@ html #layuicss-laydate{display: none; position: absolute; width: 1989px;}
 .layui-laydate .layui-laydate-list{position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding: 10px; box-sizing: border-box; background-color: #fff;}
 .layui-laydate .layui-laydate-list>li{position: relative; display: inline-block; width: 33.3%; height: 36px; line-height: 36px; margin: 3px 0; vertical-align: middle; text-align: center; cursor: pointer; list-style: none;}
 .layui-laydate .laydate-month-list>li{width: 25%; margin: 17px 0;}
-.laydate-time-list{}
-.layui-laydate .laydate-time-list>li{height: 100%; margin: 0; line-height: normal; cursor: default;}
+.laydate-time-list{display: table;}
+.layui-laydate .laydate-time-list>li{display: table-cell; height: 100%; margin: 0; line-height: normal; cursor: default;}
 .layui-laydate .laydate-time-list p{position: relative; top: -4px; margin: 0; line-height: 29px;}
 .layui-laydate .laydate-time-list ol{height: 181px; overflow: hidden;}
 .layui-laydate .laydate-time-list>li:hover ol{overflow-y: auto;}
 .layui-laydate .laydate-time-list ol li{width: 130%; padding-left: 33px; height: 30px; line-height: 30px; text-align: left; cursor: pointer;}
+.layui-laydate .laydate-time-list-hide-1 ol li{padding-left: 53px;}
+.layui-laydate .laydate-time-list-hide-2 ol li{padding-left: 117px;}
 
 /* 提示 */
 .layui-laydate-hint{position: absolute; top: 115px; left: 50%; width: 250px; margin-left: -125px; line-height: 20px; padding: 15px; text-align: center; font-size: 12px; color: #FF5722;}
@@ -103,6 +105,8 @@ html #layuicss-laydate{display: none; position: absolute; width: 1989px;}
 .layui-laydate-range .laydate-main-list-1 .layui-laydate-content{border-left: 1px solid #e2e2e2;}
 .layui-laydate-range.layui-laydate-linkage .laydate-main-list-0 .laydate-next-m, .layui-laydate-range.layui-laydate-linkage .laydate-main-list-0 .laydate-next-y,
 .layui-laydate-range.layui-laydate-linkage .laydate-main-list-1 .laydate-prev-m, .layui-laydate-range.layui-laydate-linkage .laydate-main-list-1 .laydate-prev-y{display: none;}
+.layui-laydate-range.layui-laydate-linkage .laydate-main-list-1 .layui-laydate-header,
+.layui-laydate-range.layui-laydate-linkage .laydate-main-list-1 .layui-laydate-content{border-left-style: dashed;}
 
 
 /* 默认简约主题 */
@@ -115,29 +119,30 @@ html #layuicss-laydate{display: none; position: absolute; width: 1989px;}
 .layui-laydate-content td{color: #777;}
 .layui-laydate-content td.laydate-day-now{color: #16b777;}
 .layui-laydate-content td.laydate-day-now:after{content: ''; position: absolute; width: 100%; height: 30px; left: 0; top: 0; border: 1px solid #16b777; box-sizing: border-box;}
-.layui-laydate-linkage .layui-laydate-content td.laydate-selected>div{background-color: #00F7DE;}
-.layui-laydate-linkage .laydate-selected:hover>div{background-color: #00F7DE !important;}
+.layui-laydate-linkage .layui-laydate-content td.laydate-selected>div{background-color: #cffae9; transition: all .3s;}
+.layui-laydate-linkage .laydate-selected:hover>div{background-color: #cffae9 !important;}
 .layui-laydate-content td:hover:after,
 .layui-laydate-content td.laydate-selected:after{content: none;}
 .layui-laydate-content td>div:hover,
 .layui-laydate-list li:hover,
-.layui-laydate-shortcut>li:hover{background-color: #eee; color: #333;}
+.layui-laydate-shortcut>li:hover{background-color: #eee; color: #333; transition: all .3s;}
 .laydate-time-list li ol{margin: 0; padding: 0; border: 1px solid #e2e2e2; border-left-width: 0;}
 .laydate-time-list li:first-child ol{border-left-width: 1px;}
 .laydate-time-list>li:hover{background: none;}
 .layui-laydate-content .laydate-day-prev,
 .layui-laydate-content .laydate-day-next{color: #d2d2d2;}
 .layui-laydate-linkage .laydate-selected.laydate-day-prev>div,
-.layui-laydate-linkage .laydate-selected.laydate-day-next>div{background-color: #f8f8f8 !important;}
+.layui-laydate-linkage .laydate-selected.laydate-day-next>div{background: none !important;}
 .layui-laydate-footer{border-top: 1px solid #e2e2e2;}
 .layui-laydate-hint{color: #FF5722;}
 .laydate-day-mark::after{background-color: #16b777;}
 .layui-laydate-content td.layui-this .laydate-day-mark::after{display: none;}
 .layui-laydate-footer span[lay-type="date"]{color: #16b777;}
-.layui-laydate .layui-this,.layui-laydate .layui-this>div{background-color: #16baaa !important; color: #fff !important;}
+.layui-laydate .layui-this,.layui-laydate .layui-this>div{background-color: #16b777 !important; color: #fff !important;}
 .layui-laydate .laydate-disabled,
 .layui-laydate .laydate-disabled:hover{background:none !important; color: #d2d2d2 !important; cursor: not-allowed !important; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none;}
-.layui-laydate-content td>div{padding: 7px 0;height: 100%;}
+.layui-laydate .layui-this.laydate-disabled,.layui-laydate .layui-this.laydate-disabled>div{background-color: #eee !important}
+.layui-laydate-content td>div{padding: 7px 0; height: 100%;}
 
 /* 墨绿/自定义背景色主题 */
 .laydate-theme-molv{border: none;}
@@ -150,6 +155,7 @@ html #layuicss-laydate{display: none; position: absolute; width: 1989px;}
 .laydate-theme-molv .layui-laydate-header span:hover{color: #fff;}
 .laydate-theme-molv .layui-laydate-content{border: 1px solid #e2e2e2; border-top: none; border-bottom: none;}
 .laydate-theme-molv .laydate-main-list-1 .layui-laydate-content{border-left: none;}
+.laydate-theme-molv .layui-this, .laydate-theme-molv .layui-this>div{background-color: #16baaa !important;}
 .laydate-theme-molv .layui-laydate-footer{border: 1px solid #e2e2e2;}
 
 /* 格子主题 */
@@ -183,3 +189,5 @@ html #layuicss-laydate{display: none; position: absolute; width: 1989px;}
 .laydate-theme-fullpanel .laydate-time-show .laydate-set-ym span[lay-type="year"],
 .laydate-theme-fullpanel .laydate-time-show .laydate-set-ym span[lay-type="month"] {display: inline-block !important;}
 .laydate-theme-fullpanel .laydate-btns-time{display: none;}
+.laydate-theme-fullpanel .laydate-time-list-hide-1 ol li{padding-left: 49px;}
+.laydate-theme-fullpanel .laydate-time-list-hide-2 ol li{padding-left: 107px;}
