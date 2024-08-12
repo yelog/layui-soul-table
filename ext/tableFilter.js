@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.9.0
+ * @version: v1.9.1
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -319,7 +319,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             soulFilterList.push('<li class="layui-hide"><input type="checkbox" title="' + columns[i].title + '" /></li>')
             continue;
           }
-          soulFilterList.push('<li data-value="' + columns[i].field + '" data-key="' + i + '"><input type="checkbox" value="' + (myTable.index + '-' + columns[i].key) + '" title="' + columns[i].title + '" data-fixed="' + (columns[i].fixed || "") + '" lay-skin="primary" lay-filter="changeColumns' + tableId + '" ' + (columns[i].hide ? '' : 'checked') + '></li>');
+          soulFilterList.push('<li data-value="' + columns[i].field + '" data-key="' + i + '"><input type="checkbox" value="' + (columns[i].key) + '" title="' + columns[i].title + '" data-fixed="' + (columns[i].fixed || "") + '" lay-skin="primary" lay-filter="changeColumns' + tableId + '" ' + (columns[i].hide ? '' : 'checked') + '></li>');
 
           //存储过滤数据的类型
           if (columns[i].filter && columns[i].filter.type) {
@@ -352,7 +352,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
           // 同步配置
           for (i = 0; i < myTable.cols.length; i++) {
             for (j = 0; j < myTable.cols[i].length; j++) {
-              if ((myTable.index + '-' + myTable.cols[i][j].key) === columnkey) {
+              if (myTable.cols[i][j].key === columnkey) {
                 myTable.cols[i][j]['hide'] = !data.elem.checked
               }
             }

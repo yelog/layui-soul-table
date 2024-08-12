@@ -80,7 +80,7 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
   // lay 函数可以处理 Selector，HTMLElement，JQuery 类型
   // 无效的 CSS 选择器字符串，会抛出 SyntaxError 异常，此时直接返回 laytpl 模板字符串
   var resolveTplStr = function(templet){
-    try{ 
+    try{
       return lay(templet).html();
     }catch(err){
       return templet;
@@ -1781,7 +1781,7 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
         if(!isCheckAll && !isCheckMult){
           var currTr = tr.filter('[data-index="'+ i +'"]');
           currTr[checked ? 'addClass' : 'removeClass'](ELEM_CHECKED);
-  
+
           // 若为 radio 类型，则取消其他行选中背景色
           if(opts.type === 'radio'){
             currTr.siblings().removeClass(ELEM_CHECKED);
@@ -1923,7 +1923,7 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
     var options = that.config;
 
     if(options.loading){
-      that.layBox.find(ELEM_INIT).toggleClass(HIDE_V, !show); 
+      that.layBox.find(ELEM_INIT).toggleClass(HIDE_V, !show);
     }
   };
 
@@ -2079,7 +2079,7 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
    */
   /**
    * 更新指定行
-   * @param {updateRowOptions | updateRowOptions[]} opts 
+   * @param {updateRowOptions | updateRowOptions[]} opts
    * @param {(field: string, value: any) => void} [callback] - 更新每个字段时的回调函数
    */
   Class.prototype.updateRow = function(opts, callback){
@@ -2131,7 +2131,7 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
   /**
    * 更新指定行
    * @param {string} id - table ID
-   * @param {updateRowOptions | updateRowOptions[]} options 
+   * @param {updateRowOptions | updateRowOptions[]} options
    */
   table.updateRow = function (id, options){
     var that = getThisTable(id);
@@ -2317,6 +2317,7 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
               config: thatTable.config
             });
           });
+          if (layui.soulTable) { layui.soulTable.fixTableRemember(thatTable.config, dict) } //这是要添加的那一行
         }
       });
     }
@@ -2720,7 +2721,7 @@ layui.define(['lay', 'laytpl', 'laypage', 'form', 'util'], function(exports){
           $this.remove();
           // 重置单元格滚动条位置
           elemCell.scrollTop(0);
-          elemCell.scrollLeft(0); 
+          elemCell.scrollLeft(0);
         });
       }
 
