@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>soulTable 全功能测试 - layui 2.13.3</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="soulTable.css" media="all"/>
+    <style>
+        html, body { height: 100%; margin: 0; background: #f2f2f2; }
+        .test-header {
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        .test-header h1 { font-size: 22px; color: #393D49; margin: 0 0 5px 0; }
+        .test-header .info { color: #999; font-size: 13px; }
+        .test-header .info span { margin-right: 15px; }
+        .layui-tab { margin: 0; }
+        .layui-tab-content { padding: 10px; }
+        .layui-tab-item { height: calc(100vh - 160px); overflow: auto; }
+        .table-wrap { background: #fff; padding: 10px; border-radius: 4px; }
+        .double-table { display: flex; gap: 10px; }
+        .double-table > div { flex: 1; min-width: 0; }
+        .feature-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 2px;
+            background: #5FB878;
+            color: #fff;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .feature-tag.off { background: #ccc; }
+    </style>
+</head>
+<body>
+<div class="test-header">
+    <h1>soulTable 全功能兼容性测试</h1>
+    <div class="info">
+        <span>插件版本: v1.9.2</span>
+        <span>layui 版本: <b style="color:#FF5722">2.13.3</b></span>
+        <span>构建: <b style="color:#5FB878" id="deployVer">08141356</b></span>
+    </div>
+</div>
+
+<div class="layui-tab layui-tab-brief" lay-filter="testTabs">
+    <ul class="layui-tab-title">
+        <li class="layui-this">基础筛选&amp;拖拽</li>
+        <li>前端分页</li>
+        <li>子表（表中表）</li>
+        <li>行拖拽</li>
+        <li>右键菜单</li>
+        <li>多表格页面</li>
+        <li>日期筛选</li>
+        <li>导出Excel</li>
+        <li>合计行固定列</li>
+        <li>单元格合并</li>
+    </ul>
+    <div class="layui-tab-content">
+
+        <!-- Tab 1: 基础筛选&拖拽 -->
+        <div class="layui-tab-item layui-show">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">表头筛选</span>
+                    <span class="feature-tag">列拖拽</span>
+                    <span class="feature-tag">双击自适应列宽</span>
+                    <span class="feature-tag">列隐藏/显示</span>
+                    <span class="feature-tag">Excel导出</span>
+                    <span class="feature-tag">内容溢出提示</span>
+                    <span class="feature-tag">列记忆</span>
+                </p>
+                <table id="tableBasic" lay-filter="tableBasic"></table>
+            </div>
+        </div>
+
+        <!-- Tab 2: 前端分页 -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">前端分页</span>
+                    <span class="feature-tag">表头筛选</span>
+                    <span class="feature-tag">排序</span>
+                </p>
+                <table id="tablePage" lay-filter="tablePage"></table>
+            </div>
+        </div>
+
+        <!-- Tab 3: 子表 -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">子表展开</span>
+                    <span class="feature-tag">无限嵌套</span>
+                    <span class="feature-tag">子表筛选</span>
+                    <span class="feature-tag">子表排序</span>
+                </p>
+                <table id="tableChild" lay-filter="tableChild"></table>
+            </div>
+        </div>
+
+        <!-- Tab 4: 行拖拽 -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">行拖拽排序</span>
+                    <span class="feature-tag">序号同步</span>
+                </p>
+                <table id="tableRowDrag" lay-filter="tableRowDrag"></table>
+            </div>
+        </div>
+
+        <!-- Tab 5: 右键菜单 -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">右键菜单-单元格</span>
+                    <span class="feature-tag">右键菜单-表头</span>
+                </p>
+                <table id="tableContextmenu" lay-filter="tableContextmenu"></table>
+            </div>
+        </div>
+
+        <!-- Tab 6: 多表格页面（测试 form.on tableId 修复） -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">多表格共存</span>
+                    <span class="feature-tag">独立筛选</span>
+                    <span class="feature-tag">互不干扰</span>
+                </p>
+                <div class="double-table">
+                    <div>
+                        <h4 style="margin-bottom:5px">表格 A — 诗词</h4>
+                        <table id="tableMultiA" lay-filter="tableMultiA"></table>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom:5px">表格 B — 朝代</h4>
+                        <table id="tableMultiB" lay-filter="tableMultiB"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 7: 日期筛选 -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">日期类型筛选</span>
+                    <span class="feature-tag">昨天/本周/上周/本月/上月</span>
+                </p>
+                <table id="tableDate" lay-filter="tableDate"></table>
+            </div>
+        </div>
+
+        <!-- Tab 8: 导出Excel -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px">
+                    <span class="feature-tag">Excel导出</span>
+                    <span class="feature-tag">自定义样式</span>
+                    <span class="feature-tag">筛选后导出</span>
+                    <span class="feature-tag">隐藏列不导出</span>
+                    <span class="feature-tag">列顺序同步</span>
+                </p>
+                <div style="margin-bottom:8px">
+                    <button class="layui-btn layui-btn-sm" id="btnExport1"><i class="layui-icon layui-icon-download-circle"></i> 导出当前表格</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-primary" id="btnExport2"><i class="layui-icon layui-icon-download-circle"></i> 导出(自定义文件名)</button>
+                    <span style="color:#999;font-size:12px;margin-left:10px">也可通过表头下拉菜单 → "导出excel" 操作</span>
+                </div>
+                <table id="tableExport" lay-filter="tableExport"></table>
+            </div>
+        </div>
+
+        <!-- Tab 9: 合计行固定列 -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">合计行</span>
+                    <span class="feature-tag">固定列合计</span>
+                    <span class="feature-tag">fixTotal</span>
+                </p>
+                <table id="tableTotal" lay-filter="tableTotal"></table>
+            </div>
+        </div>
+
+        <!-- Tab 10: 单元格合并 -->
+        <div class="layui-tab-item">
+            <div class="table-wrap">
+                <p style="margin-bottom:10px;color:#666">
+                    <span class="feature-tag">单元格合并</span>
+                    <span class="feature-tag">同值合并</span>
+                </p>
+                <table id="tableMerge" lay-filter="tableMerge"></table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Templates -->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="childBar">
+    <a class="layui-btn layui-btn-xs" lay-event="childEdit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="childDel">删除</a>
+</script>
+
+<script src="layui/layui.js"></script>
+<script>
+// ========== 自定义 layui 模块配置 ==========
+layui.config({
+    base: 'ext/',
+    version: '08141356'
+}).extend({
+    soulTable: 'soulTable',
+    tableFilter: 'tableFilter',
+    tableChild: 'tableChild',
+    tableMerge: 'tableMerge',
+    excel: 'excel'
+});
+
+// ========== 通用工具 ==========
+function makeCols(withDate) {
+    var cols = [[
+        {type: 'checkbox', fixed: 'left'},
+        {field: 'title', title: '诗词', width: 200, fixed: 'left', sort: true, filter: true},
+        {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+        {field: 'author', title: '作者', width: 120, filter: true},
+        {field: 'type', title: '类型', width: 120, filter: {split: ','}, sort: true},
+        {field: 'content', title: '内容', width: 350, filter: true},
+        {field: 'heat', title: '点赞数', width: 100, filter: true, sort: true},
+        {title: '操作', width: 150, fixed: 'right', toolbar: '#barDemo'}
+    ]];
+    if (withDate) {
+        cols[0].splice(6, 0, {field: 'createTime', title: '录入时间', width: 180, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort: true});
+    }
+    return cols;
+}
+
+// 通用 loader
+function loadTable(id, config) {
+    return layui.table.render(layui.$.extend({
+        elem: '#' + id,
+        url: (id === 'tableChild' || id === 'tableTotal') ? 'child.json' : 'data.json',
+        height: 'full-80',
+        limit: 30,
+        page: false,
+        totalRow: false,
+        cols: makeCols(),
+        filter: {cache: true},
+        drag: true,
+        rowDrag: false,
+        autoColumnWidth: {dblclick: true},
+        fixTotal: false,
+        fixFixedScroll: true,
+        overflow: {type: 'tips'},
+        excel: {on: true, filename: '导出数据.xlsx'},
+        done: function() { layui.soulTable.render(this); }
+    }, config));
+}
+
+layui.use(['table', 'soulTable', 'form', 'layer'], function() {
+    var table = layui.table,
+        soulTable = layui.soulTable,
+        $ = layui.$;
+
+    // ===== Tab 1: 基础筛选&拖拽 =====
+    loadTable('tableBasic', {
+        height: 'full-80',
+        filter: {cache: true, bottom: true},
+        overflow: {type: 'tips'},
+        excel: {filename: '诗词导出.xlsx'},
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 2: 前端分页 =====
+    loadTable('tablePage', {
+        page: true,
+        limit: 15,
+        limits: [10, 15, 20, 30],
+        height: 'full-80',
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 3: 子表 =====
+    table.render({
+        elem: '#tableChild',
+        url: 'child.json',
+        height: 'full-80',
+        limit: 30,
+        page: false,
+        cols: [[
+            {title: '#', width: 50, children: [{
+                title: '子表一（诗词详情）',
+                url: 'data.json',
+                height: 300,
+                limit: 1000000,
+                page: false,
+                toolEvent: function(obj) {
+                    if (obj.event === 'childEdit') {
+                        layer.open({type: 1, title: '子表编辑', shadeClose: true, content: '诗词: ' + obj.data.title});
+                    } else if (obj.event === 'childDel') {
+                        layer.msg('模拟删除: ' + obj.data.title);
+                    }
+                },
+                cols: [[
+                    {type: 'checkbox', fixed: 'left'},
+                    {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+                    {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+                    {field: 'author', title: '作者', width: 120, filter: true},
+                    {field: 'type', title: '类型', width: 120, filter: {split: ','}, sort: true},
+                    {field: 'content', title: '内容', width: 400, filter: true},
+                    {field: 'heat', title: '点赞数', width: 100, filter: true, sort: true},
+                    {title: '操作', width: 150, toolbar: '#childBar'}
+                ]],
+                done: function() { soulTable.render(this); }
+            }, {
+                title: '子表二（当前行数据）',
+                height: 200,
+                limit: 1000000,
+                data: function(d) { return [d]; },
+                toolEvent: function(obj) {
+                    if (obj.event === 'childEdit') layer.msg('编辑: ' + obj.data.title);
+                },
+                page: false,
+                cols: [[
+                    {field: 'title', title: '诗词', width: 200},
+                    {field: 'dynasty', title: '朝代', width: 100},
+                    {field: 'author', title: '作者', width: 120},
+                    {field: 'heat', title: '点赞数', width: 100}
+                ]],
+                done: function() { soulTable.render(this); }
+            }]},
+            {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+            {field: 'author', title: '作者', width: 120, filter: true},
+            {field: 'type', title: '类型', width: 120, filter: {split: ','}, sort: true},
+            {field: 'heat', title: '点赞数', width: 100, filter: true, sort: true},
+            {title: '操作', width: 150, toolbar: '#barDemo'}
+        ]],
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 4: 行拖拽 =====
+    table.render({
+        elem: '#tableRowDrag',
+        url: 'data-1.json',
+        height: 'full-80',
+        limit: 1000000,
+        page: false,
+        cols: [[
+            {type: 'numbers', title: '序号', width: 60},
+            {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+            {field: 'author', title: '作者', width: 120, filter: true},
+            {field: 'content', title: '内容', width: 400},
+            {field: 'heat', title: '点赞数', width: 100, sort: true},
+            {title: '操作', width: 150, toolbar: '#barDemo'}
+        ]],
+        rowDrag: {
+            trigger: 'row',
+            numbers: true,
+            done: function(info) {
+                console.log('行移动: 从', info.oldIndex, '到', info.newIndex, info.row.title);
+            }
+        },
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 5: 右键菜单 =====
+    var tableCtx = table.render({
+        elem: '#tableContextmenu',
+        url: 'data.json',
+        height: 'full-80',
+        limit: 20,
+        page: false,
+        cols: [[
+            {field: 'title', title: '诗词', width: 200, sort: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true},
+            {field: 'author', title: '作者', width: 120},
+            {field: 'type', title: '类型', width: 120},
+            {field: 'content', title: '内容', width: 350},
+            {field: 'heat', title: '点赞数', width: 100, sort: true}
+        ]],
+        contextmenu: {
+            body: [
+                {name: '查看详情', icon: 'layui-icon layui-icon-about', click: function(o) {
+                    layer.open({type: 1, title: '查看详情', shadeClose: true, content: '<div style="padding:20px"><b>' + o.row.title + '</b><br>作者: ' + o.row.author + '<br>朝代: ' + o.row.dynasty + '</div>'});
+                }},
+                {name: '复制内容', icon: 'layui-icon layui-icon-read', click: function(o) {
+                    soulTable.copy(o.text);
+                    layer.msg('已复制到剪贴板');
+                }},
+                {name: '高亮行', icon: 'layui-icon layui-icon-fire', click: function(o) {
+                    o.trElem.css('background-color', '#FFFDE7');
+                    layer.msg('已高亮');
+                }}
+            ],
+            header: [
+                {name: '升序排列', icon: 'layui-icon layui-icon-up', click: function(o) {
+                    table.sort('tableContextmenu', o.field);
+                }},
+                {name: '降序排列', icon: 'layui-icon layui-icon-down', click: function(o) {
+                    table.sort('tableContextmenu', o.field + ' desc');
+                }},
+                {name: '整列复制', icon: 'layui-icon layui-icon-read', click: function(o) {
+                    var texts = [];
+                    table.cache['tableContextmenu'].forEach(function(row) { texts.push(row[o.field]); });
+                    soulTable.copy(texts.join('\n'));
+                    layer.msg('已复制整列数据');
+                }}
+            ]
+        },
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 6: 多表格页面 =====
+    table.render({
+        elem: '#tableMultiA',
+        url: 'data.json',
+        height: 'full-120',
+        limit: 15,
+        page: false,
+        cols: [[
+            {type: 'checkbox', fixed: 'left'},
+            {field: 'title', title: '诗词', width: 180, sort: true, filter: true},
+            {field: 'dynasty', title: '朝代', width: 90, sort: true, filter: true},
+            {field: 'author', title: '作者', width: 100, filter: true},
+            {field: 'heat', title: '点赞数', width: 90, sort: true},
+            {title: '操作', width: 100, toolbar: '#barDemo'}
+        ]],
+        filter: {bottom: true, items: ['column', 'data', 'condition', 'editCondition', 'excel']},
+        done: function() { soulTable.render(this); }
+    });
+    table.render({
+        elem: '#tableMultiB',
+        url: 'data.json',
+        height: 'full-120',
+        limit: 15,
+        page: false,
+        cols: [[
+            {field: 'dynasty', title: '朝代', width: 120, sort: true, filter: true},
+            {field: 'author', title: '作者', width: 120, filter: true},
+            {field: 'type', title: '类型', width: 200, filter: {split: ','}},
+            {field: 'heat', title: '点赞数', width: 100, sort: true, filter: true},
+            {title: '操作', width: 100, toolbar: '#barDemo'}
+        ]],
+        filter: {bottom: true, items: ['column', 'data', 'condition', 'editCondition', 'excel']},
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 7: 日期筛选 =====
+    loadTable('tableDate', {
+        cols: makeCols(true),
+        height: 'full-80',
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 8: 导出Excel =====
+    var tableExportIns = table.render({
+        elem: '#tableExport',
+        url: 'data.json',
+        height: 'full-160',
+        limit: 30,
+        page: false,
+        cols: [[
+            {type: 'checkbox', fixed: 'left'},
+            {field: 'title', title: '诗词', width: 200, sort: true, filter: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+            {field: 'author', title: '作者', width: 120, filter: true},
+            {field: 'type', title: '类型', width: 120, filter: {split: ','}, sort: true},
+            {field: 'content', title: '内容', width: 350, filter: true},
+            {field: 'heat', title: '点赞数', width: 100, sort: true},
+            {title: '操作', width: 150, toolbar: '#barDemo'}
+        ]],
+        excel: {
+            on: true,
+            filename: '诗词数据.xlsx',
+            head: {family: 'Microsoft YaHei', size: 14, color: 'FFFFFF', bgColor: '4472C4'},
+            font: {family: 'Microsoft YaHei', size: 11, color: '333333', bgColor: 'FFFFFF'}
+        },
+        filter: {bottom: true},
+        done: function() { soulTable.render(this); }
+    });
+
+    // 按钮1: 调用 soulTable.export
+    $('#btnExport1').on('click', function() {
+        soulTable.export(tableExportIns);
+    });
+
+    // 按钮2: 带自定义文件名导出
+    $('#btnExport2').on('click', function() {
+        soulTable.export(tableExportIns, {
+            filename: '诗词导出_' + new Date().toISOString().slice(0, 10) + '.xlsx'
+        });
+    });
+
+    // ===== Tab 9: 合计行固定列 =====
+    table.render({
+        elem: '#tableTotal',
+        url: 'data-1-total-row.json',
+        height: 'full-80',
+        totalRow: true,
+        limit: 1000000,
+        page: false,
+        cols: [[
+            {type: 'checkbox', fixed: 'left'},
+            {field: 'title', title: '诗词', width: 200, fixed: 'left', totalRowText: '合计', sort: true, filter: true},
+            {field: 'dynasty', title: '朝代', width: 100, sort: true, filter: true},
+            {field: 'author', title: '作者', width: 120, filter: true},
+            {field: 'type', title: '类型', width: 120, filter: {split: ','}},
+            {field: 'content', title: '内容', width: 300, filter: true},
+            {field: 'heat', title: '点赞数', width: 100, totalRow: true, sort: true},
+            {field: 'createTime', title: '录入时间', width: 180, filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}},
+            {title: '操作', width: 150, fixed: 'right', toolbar: '#barDemo'}
+        ]],
+        fixTotal: true,
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 9: 单元格合并 =====
+    table.render({
+        elem: '#tableMerge',
+        url: 'merge.json',
+        height: 'full-80',
+        limit: 1000000,
+        page: false,
+        cols: [[
+            {field: 'dynasty', title: '朝代', width: 100, merge: true},
+            {field: 'name', title: '诗人', width: 100, merge: true},
+            {field: 'poetry', title: '诗词', width: 220, sort: true},
+            {field: 'type', title: '类型', width: 80, merge: true},
+            {field: 'sentences', title: '名句', width: 400}
+        ]],
+        done: function() { soulTable.render(this); }
+    });
+
+    // ===== Tab 切换时 resize =====
+    layui.element.on('tab(testTabs)', function(data) {
+        // 触发 resize 让隐藏表格重新计算宽度
+        setTimeout(function() {
+            ['tableBasic', 'tablePage', 'tableChild', 'tableRowDrag', 'tableContextmenu',
+             'tableMultiA', 'tableMultiB', 'tableDate', 'tableExport', 'tableTotal', 'tableMerge'].forEach(function(id) {
+                try { table.resize(id); } catch(e) {}
+            });
+        }, 100);
+    });
+
+    // ===== 全局导出按钮 =====
+    $(document).on('click', '[lay-filter="export"]', function() {
+        soulTable.export(layui.table.config['tableBasic']);
+    });
+
+    // ===== 通用工具栏事件 =====
+    table.on('tool(tableBasic)', toolHandler);
+    table.on('tool(tablePage)', toolHandler);
+    table.on('tool(tableChild)', toolHandler);
+    table.on('tool(tableRowDrag)', toolHandler);
+    table.on('tool(tableContextmenu)', toolHandler);
+    table.on('tool(tableMultiA)', toolHandler);
+    table.on('tool(tableMultiB)', toolHandler);
+    table.on('tool(tableDate)', toolHandler);
+    table.on('tool(tableExport)', toolHandler);
+    table.on('tool(tableTotal)', toolHandler);
+
+    function toolHandler(obj) {
+        var data = obj.data;
+        if (obj.event === 'edit') {
+            layer.open({
+                type: 1, title: '编辑', shadeClose: true, area: ['400px', '300px'],
+                content: '<div style="padding:20px"><p><b>诗词:</b> ' + data.title + '</p><p><b>作者:</b> ' + data.author + '</p><p><b>朝代:</b> ' + data.dynasty + '</p><p><b>点赞:</b> ' + data.heat + '</p></div>'
+            });
+        } else if (obj.event === 'del') {
+            layer.confirm('确认删除「' + data.title + '」？', {icon: 3, title: '删除'}, function(index) {
+                obj.del();
+                layer.close(index);
+                layer.msg('已删除');
+            });
+        }
+    }
+
+    console.log('soulTable 全功能测试页面已就绪 - layui 2.13.3');
+});
+</script>
+</body>
+</html>

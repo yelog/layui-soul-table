@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.9.1
+ * @version: v1.9.2
  */
 layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
 
@@ -13,7 +13,8 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
     laytpl = layui.laytpl,
     tableChildren = {},
     HIDE = 'layui-hide',
-    ELEM_HOVER = 'soul-table-hover';
+    ELEM_HOVER = 'soul-table-hover',
+    sortBound = {};
 
   // 封装方法
   var mod = {
@@ -87,18 +88,18 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
       }
 
       if (childIndex.length > 0) {
+        if (soulSort && !(myTable.url && myTable.page) && !sortBound[tableId]) {
+          sortBound[tableId] = true;
+          // 前台排序：非循环注册，避免重复绑定
+          table.on('sort(' + $table.attr('lay-filter') + ')', function () {
+            _this.render(myTable)
+          });
+        }
         for (i = 0; i < childIndex.length; i++) {
           (function f() {
             var child = columns[childIndex[i]]
               , curIndex = childIndex[i]
               , icon = child.icon || ['layui-icon layui-icon-right', 'layui-icon layui-icon-down'];
-
-            if (soulSort && !(myTable.url && myTable.page)) {
-              // 前台排序
-              table.on('sort(' + $table.attr('lay-filter') + ')', function () {
-                _this.render(myTable)
-              });
-            }
 
             if (child.isChild && typeof child.isChild === 'function') {
               $tableBody.find('tr').find('td[data-key$="' + child.key + '"]>div').each(function () {
@@ -484,6 +485,15 @@ layui.define(['table', 'element', 'form', 'laytpl'], function (exports) {
         typeof param.where === 'function' && (param.where = param.where(data));
         typeof param.data === 'function' && (param.data = param.data(data));
         typeof param.url === 'function' && (param.url = param.url(data));
+        // 2.13.3 兼容：重置 tab-item 高度为 auto（2.13.3 会将其拉伸至父容器高度）
+        var _done = param.done;
+        param.done = function() {
+          var $w = $("#" + childTableId).closest(".soul-table-child-wrapper");
+          $w.find(".layui-tab-item").css({"height": "auto", "flex": "none", "min-height": "0"});
+          $w.find(".layui-tab-content").css({"height": "auto", "flex": "none"});
+          $w.css({"height": "auto"});
+          if (typeof _done === "function") { _done.apply(this, arguments); }
+        };
         thisTableChild = table.render(param);
         if (!child.lazy && i !== 0) {
           $('#' + childTableId).parents('.layui-tab-item:eq(0)').removeClass('layui-show'); //解决隐藏时计算表格高度有问题

@@ -4,7 +4,7 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.9.1
+ * @version: v1.9.2
  */
 layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (exports) {
 
@@ -21,6 +21,8 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
     bfColumnTimeOut,
     bfCond1TimeOut,
     isFilterReload = {},
+    dropListFormBound = {}, // 记录每个表格的 form.on(checkbox(soulDropList...)) 是否已经注册过，避免重复绑定导致叠加触发
+    dropListReloadLock = {}, // 兜底重入锁：防止同一轮同步调用栈内 updateDropList 被反复触发导致雪崩式 reload
     SOUL_ROW_INDEX = 'SOUL_ROW_INDEX',
     cache = {},
     HIDE = 'layui-hide',
@@ -340,9 +342,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
 
 
         // 显示隐藏列
-        var liClick = true;
         form.on('checkbox(changeColumns' + tableId + ')', function (data) {
-          liClick = false;
           var columnkey = data.value
           if (data.elem.checked) {
             $table.next().find('[data-key=' + columnkey + ']').removeClass(HIDE);
@@ -363,12 +363,27 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
           $table.next().children('.layui-table-box').children('.layui-table-body').children('table').children('tbody').children('tr.childTr').children('td').attr('colspan', $table.next().children('.layui-table-box').children('.layui-table-header').find('thead>tr>th:visible').length)
           table.resize(tableId)
         });
-        $('#soul-columns' + tableId + '>li[data-value]').on('click', function () {
-          if (!$(this).find(':checkbox').is(':disabled')) { //disabled禁止点击
-            if (liClick) {
-              $(this).find('div.layui-form-checkbox').trigger('click');
+        $('#soul-columns' + tableId).off('click', 'li[data-value]').on('click', 'li[data-value]', function (e) {
+          // 直接触发 layui skin div 的 click，走原生链路：勾选切换 → 皮肤更新 → form.on 处理列显隐
+          // 排除 skin div 和 input 本身的点击，防止递归
+          if (!$(this).find(':checkbox').is(':disabled') && $(e.target).closest('div.layui-form-checkbox, input[type=checkbox]').length === 0) {
+            var $skin = $(this).find('div.layui-form-checkbox');
+            if ($skin.length) {
+              $skin.trigger('click');
             }
-            liClick = true;
+            // form.on 回调已处理 DOM 列显隐/colspan/resize，这里只需同步 table.cols 数据模型
+            var $checkbox = $(this).find('input[type=checkbox]');
+            var columnkey = $checkbox.val();
+            for (i = 0; i < myTable.cols.length; i++) {
+              for (j = 0; j < myTable.cols[i].length; j++) {
+                if (myTable.cols[i][j].key === columnkey) {
+                  myTable.cols[i][j]['hide'] = !$checkbox.prop('checked');
+                }
+              }
+            }
+            if (layui.soulTable) {
+              layui.soulTable.fixTableRemember(myTable)
+            }
           }
         });
 
@@ -482,18 +497,25 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             form.render('checkbox', 'orm');
           }, 1);
 
-          // 监听筛选数据
-          var liClick = true;
-          form.on('checkbox(soulDropList' + tableId + ')', function (data) {
-            liClick = false;
-            _this.updateDropList(myTable, field);
-          });
+          // 监听筛选数据（修复：form.on 只注册一次，避免每次 hover 叠加监听导致点击时重复触发 soulReload/table.reload ）
+          if (!dropListFormBound[tableId]) {
+            dropListFormBound[tableId] = {field: field};
+            form.on('checkbox(soulDropList' + tableId + ')', function (data) {
+              _this.updateDropList(myTable, dropListFormBound[tableId].field);
+            });
+          } else {
+            dropListFormBound[tableId].field = field;
+          }
 
-          $('#soul-dropList' + tableId + '>ul>li[data-value]').on('click', function () {
-            if (liClick) {
-              $(this).find('div.layui-form-checkbox').trigger('click');
+          $('#soul-dropList' + tableId).off('click', 'li[data-value]').on('click', 'li[data-value]', function (e) {
+            // 直接触发 layui skin div 的 click，走原生链路：勾选切换 → 皮肤更新 → form.on → updateDropList
+            // 排除 skin div 和 input 本身的点击，防止递归
+            if ($(e.target).closest('div.layui-form-checkbox, input[type=checkbox]').length === 0) {
+              var $skin = $(this).find('div.layui-form-checkbox');
+              if ($skin.length) {
+                $skin.trigger('click');
+              }
             }
-            liClick = true;
           })
         });
 
@@ -545,7 +567,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
               }
             }
             // 查询条件
-            var selectStr = "<select lay-filter='conditionChange'>";
+            var selectStr = "<select lay-filter='conditionChange" + tableId + "'>";
             for (var key in conditionChangeItems) {
               selectStr += '<option value="' + key + '">' + conditionChangeItems[key] + '</option>';
             }
@@ -564,11 +586,11 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
                   conditionHtml.push(
                     '<td>' +
                     '   <div>' +
-                    '      <input type="checkbox" name="switch" lay-filter="soul-coondition-switch" lay-skin="switch" lay-text="与|或" ' + (!prefix || prefix === 'and' ? 'checked' : '') + '>' +
+                    '      <input type="checkbox" name="switch" lay-filter="soul-coondition-switch' + tableId + '" lay-skin="switch" lay-text="与|或" ' + (!prefix || prefix === 'and' ? 'checked' : '') + '>' +
                     '    </div>' +
                     '</td>')
                 }
-                conditionHtml.push('<td style="width: 110px;"><div class="layui-block" ><select lay-filter="conditionChange">');
+                conditionHtml.push('<td style="width: 110px;"><div class="layui-block" ><select lay-filter="conditionChange' + tableId + '">');
                 for (var key in conditionChangeItems) {
                   conditionHtml.push('<option value="' + key + '" ' + (key === type ? 'selected' : '') + '>' + conditionChangeItems[key] + '</option>');
                 }
@@ -688,7 +710,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             function updateTrWhere($tr) {
               var id = $tr.data('id'),
                 groupId = $('#soul-condition' + tableId).data('id'),
-                prefix = $tr.find('input[lay-filter="soul-coondition-switch"]:checked').prop('checked') ? 'and' : 'or',
+                prefix = $tr.find('input[lay-filter="soul-coondition-switch' + tableId + '"]:checked').prop('checked') ? 'and' : 'or',
                 type = $tr.find('select').val(),
                 value = $tr.find('.value').val(),
                 head = $('#soul-condition' + tableId).data('head');
@@ -730,7 +752,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             }
 
             // select同步筛选条件
-            form.on('select(conditionChange)', function (data) {
+            form.on('select(conditionChange' + tableId + ')', function (data) {
               if (data.value === 'null' || data.value === 'notNull') {
                 $(this).parents('tr').find('input.value').hide();
               } else {
@@ -740,7 +762,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             })
 
             // radio同步筛选条件
-            form.on('switch(soul-coondition-switch)', function (data) {
+            form.on('switch(soul-coondition-switch' + tableId + ')', function (data) {
               updateTrWhere($(this).parents('tr:eq(0)'));
             });
 
@@ -1018,7 +1040,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       }
       filterBoard.push('<div class="soul-edit-out">')
       filterBoard.push('<div class="layui-form" lay-filter="soul-edit-out">')
-      filterBoard.push('<div><a class="layui-btn layui-btn-sm" data-type="addOne"><i class="layui-icon layui-icon-add-1"></i> 添加条件</a><a class="layui-btn layui-btn-sm" data-type="addGroup"><i class="layui-icon layui-icon-add-circle" ></i> 添加分组</a><a class="layui-btn layui-btn-sm" data-type="search" style="float: right"><i class="layui-icon layui-icon-search"></i> 查询</a><span style="float: right"><input type="checkbox" lay-filter="out_auto" class="out_auto" title="实时更新"></span></div>')
+      filterBoard.push('<div><a class="layui-btn layui-btn-sm" data-type="addOne"><i class="layui-icon layui-icon-add-1"></i> 添加条件</a><a class="layui-btn layui-btn-sm" data-type="addGroup"><i class="layui-icon layui-icon-add-circle" ></i> 添加分组</a><a class="layui-btn layui-btn-sm" data-type="search" style="float: right"><i class="layui-icon layui-icon-search"></i> 查询</a><span style="float: right"><input type="checkbox" lay-filter="out_auto' + tableId + '" class="out_auto" title="实时更新"></span></div>')
       filterBoard.push('<hr>')
       filterBoard.push('<ul>')
       for (i = 0; i < filterSos.length; i++) {
@@ -1036,7 +1058,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       })
       form.render(null, 'soul-edit-out');
 
-      form.on('checkbox(out_auto)', function (data) {
+      form.on('checkbox(out_auto' + tableId + ')', function (data) {
         if (data.elem.checked) {
           _this.soulReload(myTable);
         }
@@ -1051,7 +1073,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
         filterBoard.push('<li data-id="' + id + '" data-field="' + field + '" ' + (isLast ? 'class="last"' : '') + ' data-mode="' + mode + '" data-type="' + type + '" data-value="' + (typeof filterSo.value === 'undefined' ? '' : filterSo.value) + '" >');
         filterBoard.push('<div><table><tbody><tr><td data-type="top"></td></tr><tr><td data-type="bottom"></td></tr></tbody></table></div>')
         // if (!isFirst) { //第一个隐藏 与或
-        filterBoard.push('<div><input type="checkbox" name="switch" lay-filter="soul-edit-switch" lay-skin="switch" lay-text="与|或" ' + (isOr ? '' : 'checked') + '></div>')
+        filterBoard.push('<div><input type="checkbox" name="switch" lay-filter="soul-edit-switch' + tableId + '" lay-skin="switch" lay-text="与|或" ' + (isOr ? '' : 'checked') + '></div>')
         // }
         switch (mode) {
           case 'in':
@@ -1091,7 +1113,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
       }
 
       // prefix
-      form.on('switch(soul-edit-switch)', function (data) {
+      form.on('switch(soul-edit-switch' + tableId + ')', function (data) {
         changePrefix(data)
       })
 
@@ -1252,18 +1274,25 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
               $('#soul-dropList' + tableId + '>.filter-search>input').focus() // 聚焦搜索框
             }, 1);
 
-            // 监听筛选数据
-            var liClick = true;
-            form.on('checkbox(soulDropList' + tableId + ')', function (data) {
-              liClick = false;
-              _this.updateDropList(myTable, field);
-            });
+            // 监听筛选数据（修复：与其他入口共用同一个绑定状态，避免重复注册 form.on）
+            if (!dropListFormBound[tableId]) {
+              dropListFormBound[tableId] = {field: field};
+              form.on('checkbox(soulDropList' + tableId + ')', function (data) {
+                _this.updateDropList(myTable, dropListFormBound[tableId].field);
+              });
+            } else {
+              dropListFormBound[tableId].field = field;
+            }
 
-            $('#soul-dropList' + tableId + '>ul>li[data-value]').on('click', function () {
-              if (liClick) {
-                $(this).find('div.layui-form-checkbox').trigger('click');
+            $('#soul-dropList' + tableId).off('click', 'li[data-value]').on('click', 'li[data-value]', function (e) {
+              // 直接触发 layui skin div 的 click，走原生链路：勾选切换 → 皮肤更新 → form.on → updateDropList
+              // 排除 skin div 和 input 本身的点击，防止递归
+              if ($(e.target).closest('div.layui-form-checkbox, input[type=checkbox]').length === 0) {
+                var $skin = $(this).find('div.layui-form-checkbox');
+                if ($skin.length) {
+                  $skin.trigger('click');
+                }
               }
-              liClick = true;
             })
             break;
           case 'date':
@@ -1334,7 +1363,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
 
             filterBoard.push('<li data-id="' + filterSo.id + '" data-field="' + filterSo.field + '" data-mode="' + filterSo.mode + '" data-type="' + filterSo.type + '" data-value="' + filterSo.value + '" data-prefix="' + filterSo.prefix + '" class="last">');
             filterBoard.push('<div><table><tbody><tr><td data-type="top"></td></tr><tr><td data-type="bottom"></td></tr></tbody></table></div>');
-            filterBoard.push('<div><input type="checkbox" name="switch" lay-filter="soul-edit-switch" lay-skin="switch" lay-text="与|或" checked></div>')
+            filterBoard.push('<div><input type="checkbox" name="switch" lay-filter="soul-edit-switch' + tableId + '" lay-skin="switch" lay-text="与|或" checked></div>')
             filterBoard.push('<div class="layui-firebrick item-field">' + fieldMap[filterSo.field].title + '</div>');
             filterBoard.push('<div class="layui-deeppink item-type">等于</div>');
             filterBoard.push('<div class="layui-blueviolet item-value">请输入...</div>');
@@ -1356,7 +1385,7 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
 
             filterBoard.push('<li data-id="' + filterSo.id + '" class="last">');
             filterBoard.push('<div><table><tbody><tr><td data-type="top"></td></tr><tr><td data-type="bottom"></td></tr></tbody></table></div>');
-            filterBoard.push('<div><input type="checkbox" name="switch" lay-filter="soul-edit-switch" lay-skin="switch" lay-text="与|或" checked></div>')
+            filterBoard.push('<div><input type="checkbox" name="switch" lay-filter="soul-edit-switch' + tableId + '" lay-skin="switch" lay-text="与|或" checked></div>')
             filterBoard.push('<div class="layui-firebrick">分组</div>')
             filterBoard.push('<div><a class="layui-btn layui-btn-xs" data-type="addOne"><i class="layui-icon layui-icon-add-1"></i> 添加条件</a><a class="layui-btn layui-btn-xs" data-type="addGroup"><i class="layui-icon layui-icon-add-circle"></i> 添加分组</a></div>')
             filterBoard.push('<div class="layui-red delete-item"><i class="layui-icon layui-icon-close-fill"></i></div>');
@@ -1656,6 +1685,14 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
      * @param field
      */
     , updateDropList: function (myTable, field) {
+      // 兜底重入锁：不管是谁在同一轮同步调用栈里重复触发这个入口（无论是事件冒泡、
+      // layui 内部重新广播，还是别的原因），同一张表只允许真正执行一次，
+      // 其余重复调用直接跳过，避免雪崩式反复 reload 卡死浏览器。
+      if (dropListReloadLock[myTable.id]) {
+        return;
+      }
+      dropListReloadLock[myTable.id] = true;
+      setTimeout(function () { dropListReloadLock[myTable.id] = false; }, 0);
       var _this = this,
         $table = $(myTable.elem),
         tableId = myTable.id,
@@ -1829,7 +1866,9 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
               , isSoulFrontFilter: true
               , data: newData
             })
-            inst.config.url = url;
+            if (inst) {
+              inst.config.url = url;
+            }
           }
           myTable.data = newData
 
@@ -2378,18 +2417,25 @@ layui.define(['table', 'form', 'laydate', 'util', 'excel', 'laytpl'], function (
             }, 1);
 
 
-            // 监听筛选数据
-            var liClick = true;
-            form.on('checkbox(soulDropList' + tableId + ')', function (data) {
-              liClick = false;
-              _this.updateDropList(myTable, field);
-            });
+            // 监听筛选数据（修复：与其他入口共用同一个绑定状态，避免重复注册 form.on）
+            if (!dropListFormBound[tableId]) {
+              dropListFormBound[tableId] = {field: field};
+              form.on('checkbox(soulDropList' + tableId + ')', function (data) {
+                _this.updateDropList(myTable, dropListFormBound[tableId].field);
+              });
+            } else {
+              dropListFormBound[tableId].field = field;
+            }
 
-            $('#soul-dropList' + tableId + '>ul>li[data-value]').on('click', function () {
-              if (liClick) {
-                $(this).find('div.layui-form-checkbox').trigger('click');
+            $('#soul-dropList' + tableId).off('click', 'li[data-value]').on('click', 'li[data-value]', function (e) {
+              // 直接触发 layui skin div 的 click，走原生链路：勾选切换 → 皮肤更新 → form.on → updateDropList
+              // 排除 skin div 和 input 本身的点击，防止递归
+              if ($(e.target).closest('div.layui-form-checkbox, input[type=checkbox]').length === 0) {
+                var $skin = $(this).find('div.layui-form-checkbox');
+                if ($skin.length) {
+                  $skin.trigger('click');
+                }
               }
-              liClick = true;
             })
             break;
           case 'date':

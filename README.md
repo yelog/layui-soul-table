@@ -1,7 +1,10 @@
 ## 给 layui-table 注入点灵魂
-当前 `layui` 版本 `v2.9.13` 
+
+当前版本 `v1.9.2`，支持 `layui v2.9.13` ~ `v2.13.3`
 
 在线demo及文档： [https://yelog.org/layui-soul-table](https://yelog.org/layui-soul-table)
+
+全功能兼容性测试页（layui 2.13.3）：[test-all.html](test-all.html)
 
 国内下载地址: [https://gitee.com/saodiyang/layui-soul-table](https://gitee.com/saodiyang/layui-soul-table)
 
@@ -343,6 +346,65 @@ var myTable = table.render({
 |:-|:-|:-|
 | layui | https://github.com/sentsin/layui | 土壤框架 |
 | layui-excel | https://github.com/wangerzi/layui-excel | excel文件导出 |
+
+## 调试与排错
+
+### 浏览器控制台日志
+
+soulTable 内置调试日志（`tableFilter.js`），在浏览器 F12 控制台可查看：
+
+- `[filter] render START id=<tableId>` — 表格渲染开始
+- `[filter] render <tableId>: Xms` — 表格渲染耗时
+- `[filter] updateDropList START field=<field>` — 筛选下拉更新
+- `[filter] soulReload START` — 筛选触发表格重载
+
+### 常见问题
+
+**1. 子表展开后大片留白（layui 2.13.3）**
+
+症状：子表展开后底部出现大面积空白，子表行高度远超实际内容。
+
+原因：2.13.3 的 tab 组件会将 `.layui-tab-item` 拉伸至父容器高度。
+
+解决：升级到 `v1.9.2`，该版本在子表 `done` 回调中自动重置 tab-item 高度。
+
+**2. 多表格页面筛选互相干扰**
+
+症状：页面有多个 soulTable 表格时，表头筛选操作作用到错误的表格。
+
+原因：`form.on` 筛选器未区分表格 ID，2.13.3 中同名 filter 会替换而非叠加。
+
+解决：`v1.9.2` 已为所有 form.on 事件添加 tableId 后缀。
+
+**3. 右键菜单图标和文字重叠**
+
+症状：layui 2.13.3 下右键菜单的图标和文字堆叠。
+
+原因：2.13.3 新增的 dropdown 组件全局样式干扰了 `.soul-table-contextmenu` 的布局。
+
+解决：`v1.9.2` 已将菜单改为 flex 布局。
+
+**4. 手动开启详细日志**
+
+在控制台执行以下命令可查看所有内部状态：
+
+```js
+// 查看所有已注册的表格实例
+layui.table.cache
+
+// 查看筛选状态
+layui.tableFilter.cache
+
+// 暂停/恢复拖拽功能
+layui.soulTable.suspend('tableId', 'drag', true)   // 暂停
+layui.soulTable.suspend('tableId', 'drag', false)  // 恢复
+
+// 清除列记忆缓存
+layui.soulTable.clearCache('tableId')
+
+// 手动触发表格导出
+layui.soulTable.export(layui.table.config['tableId'])
+```
 
 ## 最后
 当然具体的可以clone下来代码查看，有问题可以在 issue 区提问，我会尽可能快的回复。
