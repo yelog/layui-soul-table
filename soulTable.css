@@ -351,6 +351,13 @@
 .layui-table tbody tr.noHover:hover {
     background-color: white;
 }
+.soul-table-child-wrapper .layui-table-page,
+.soul-table-child-wrapper .layui-table-total {
+    display: none;
+}
+tr.childTr .layui-table-view {
+    margin-bottom: 0 !important;
+}
 
 /*编辑筛选*/
 .soul-edit-out .layui-form-radio {
@@ -715,22 +722,34 @@
     background: white;
 }
 .soul-table-contextmenu li {
-    line-height: 26px;
-    padding: 0 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 12px 0 8px;
     cursor: pointer;
-    word-break: keep-all;
+    white-space: nowrap;
+    font-size: 14px;
+    color: #606266;
+    min-width: 120px;
 }
 .soul-table-contextmenu li:hover {
-    background: #c5c5c5;
+    background: #ecf5ff;
+    color: #409EFF;
 }
 .soul-table-contextmenu li i.prefixIcon{
-    position: absolute;
-    left: 8px;
+    width: 20px;
+    margin-right: 8px;
+    text-align: center;
+    flex-shrink: 0;
 }
 
 .soul-table-contextmenu li i.endIcon{
-    position: absolute;
-    right: 8px;
+    margin-left: auto;
+    padding-left: 16px;
+    text-align: center;
+    flex-shrink: 0;
 }
 
 /*拖拽相关*/

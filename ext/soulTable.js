@@ -4,9 +4,9 @@
  * @author: yelog
  * @link: https://github.com/yelog/layui-soul-table
  * @license: MIT
- * @version: v1.9.1
+ * @version: v1.9.2
  */
-layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exports) {
+layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge', 'layer'], function (exports) {
 
   var tableFilter = layui.tableFilter,
     tableChild = layui.tableChild,
@@ -157,7 +157,7 @@ layui.define(['table', 'tableFilter', 'tableChild', 'tableMerge'], function (exp
       function innerHandler(_this, domName) {
         for (i = 0; i < cols.length; i++) {
           for (j = 0; j < cols[i].length; j++) {
-            columnKey = myTable.index + '-' + cols[i][j].key;
+            columnKey = cols[i][j].key;
             var curKey = $(_this).children(domName + ':eq(' + j + ')').attr('data-key');
             if (curKey !== columnKey) {
               $(_this).children(domName + ':eq(' + j + ')').before($(_this).children(domName + '[data-key="' + columnKey + '"]'))
